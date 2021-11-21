@@ -1,0 +1,247 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 6.0 6.0.0.5908 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl Material__37
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 14.9285
+map_Kd tyre.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__33
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_part3.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__32
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_part2.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__39
+Ka 0.282353 0.282353 0.282353
+Kd 0.282353 0.282353 0.282353
+Ks 0.9 0.9 0.9
+illum 2
+Ns 4
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__34
+Ka 0.52549 0.52549 0.52549
+Kd 0.52549 0.52549 0.52549
+Ks 0.9 0.9 0.9
+illum 2
+Ns 14.9285
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl _1___Default
+Ka 0.588235 0.588235 0.588235
+Kd 0.588235 0.588235 0.588235
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl _1___Default0
+Ka 0.588235 0.588235 0.588235
+Kd 0.588235 0.588235 0.588235
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_Fuse_L.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__26
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_Fuse_R.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__31
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_part.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__29
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_wing_R.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__27
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_wing_L.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__28
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_wing1_L.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__30
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 22.6274
+map_Kd S1_wing1_R.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__36
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0.9 0.9 0.9
+illum 2
+Ns 42.2243
+map_Kd S1_Interior.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__38
+Ka 0.0117647 0.0862745 0.129412
+Kd 0.0117647 0.0862745 0.129412
+Ks 0.9 0.9 0.9
+illum 2
+Ns 32
+d 0.38
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

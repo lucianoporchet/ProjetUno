@@ -1,0 +1,42 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+# Multi/Sub smdimportmtl (1) to come 
+#
+newmtl police_car.tga
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  0.0
+illum 2
+map_Kd police_car.tga
+#
+# Multi/Sub smdimportmtl done 
+#
+# Multi/Sub smdimportmtl (1) to come 
+#
+newmtl car_glass.tga
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  0.0
+illum 2
+map_Kd car_glass.tga
+#
+# Multi/Sub smdimportmtl done 
+#
+# Multi/Sub smdimportmtl (1) to come 
+#
+newmtl police_car3.tga
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  0.0
+illum 2
+map_Kd police_car3.tga
+#
+# Multi/Sub smdimportmtl done 
+#
+# EOF

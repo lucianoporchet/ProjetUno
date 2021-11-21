@@ -1,0 +1,6 @@
+newmtl Model001_Material001
+map_Kd Jin_head_d.dds
+
+newmtl Model001_Material002
+map_Kd Jin_body_d.dds
+
