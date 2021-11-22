@@ -231,12 +231,14 @@ protected:
 		std::unique_ptr<Obstacle> obs = std::make_unique<Obstacle>(filename, XMFLOAT3(10.0f, 10.0f, 10.0f), pDispositif);
 		obs->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		ListeScene.emplace_back(std::move(obs));*/
-	/*	params.NomChemin = ".\\modeles\\Planete\\";
-		params.NomFichier = "Planet3.obj";
+			
+		/*params.NomChemin = ".\\modeles\\Player\\Soucoupe1\\";
+		params.NomFichier = "UFO1.obj";
 		chargeur.Chargement(params);*/
 
 		// //Constructeur avec format binaire
-		player = std::make_unique<Player>(".\\modeles\\Planete\\Planet3.obm", pDispositif);
+		//std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif);
+		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
 		player->setCam(&freeCam);
 		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		 //Puis, il est ajouté à la scène
@@ -246,7 +248,7 @@ protected:
 			std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
 
 
-			// Lui assigner une texture
+			 //Lui assigner une texture
 			//pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 
 
