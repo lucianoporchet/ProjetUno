@@ -81,6 +81,7 @@ CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispos
 	// Initialisation de l'effet
 	InitEffet();
 
+	
 	matWorld = XMMatrixScaling(scale, scale, scale);
 }
 
@@ -391,6 +392,11 @@ void CObjetMesh::Draw()
 			pImmediateContext->DrawIndexed(indexDrawAmount, indexStart, 0);
 		}
 	}
+}
+
+void CObjetMesh::setMatWorld(XMMATRIX& matworld)
+{
+	matWorld = matworld;
 }
 
 void CObjetMesh::TransfertObjet(const IChargeur& chargeur)

@@ -10,6 +10,7 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Obstacle.h"
+#include "Player.h"
 
 #include "GestionnaireDeTextures.h"
 #include "AfficheurSprite.h"
@@ -18,6 +19,7 @@
 
 #include "PanneauPE.h"
 #include "PhysXManager.h"
+
 
 
 namespace PM3D
@@ -189,7 +191,7 @@ protected:
 		// Initialisation des matrices View et Proj
 		// Dans notre cas, ces matrices sont fixes
 		m_MatView = XMMatrixLookAtRH(
-			XMVectorSet(0.0f, 0.0f, 1000.0f, 1.0f),
+			XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
@@ -207,7 +209,7 @@ protected:
 		// Calcul de VP à l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 
-		freeCam.Init(XMVectorSet(0.0f, 0.0f, 1000.0f, 1.0f),
+		freeCam.Init(XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj);
 		freeCam.angleDirectionCamera = XM_PI / 2.0f;
@@ -234,8 +236,8 @@ protected:
 		chargeur.Chargement(params);*/
 
 		// //Constructeur avec format binaire
-		std::unique_ptr<CObjetMesh> pMesh =
-			std::make_unique<CObjetMesh>(".\\modeles\\Planete\\Planet3.obm", pDispositif, 100.0f);
+		std::unique_ptr<Player> pMesh =
+			std::make_unique<Player>(".\\modeles\\Planete\\Planet3.obm", pDispositif);
 
 		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		 //Puis, il est ajouté à la scène
@@ -309,7 +311,7 @@ protected:
 		// Prendre en note l'état de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
 
-		freeCam.UpdateFree(tempsEcoule);
+		//freeCam.UpdateFree(tempsEcoule);
 
 		for (auto& object3D : ListeScene)
 		{

@@ -94,6 +94,8 @@ public:
 	virtual void Anime(float tempsEcoule) override;
 	virtual void Draw() override;
 
+	void setMatWorld(XMMATRIX& matworld);
+
 private:
 	void TransfertObjet(const IChargeur& chargeur);
 	void InitEffet();

@@ -71,13 +71,8 @@ void PhysXManager::addToScene(PxActor* actor)
 PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 1.0f);
-	//dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
 	setupFiltering(dynamic, FilterGroup::eObstacle, FilterGroup::eObstacle);
-	//dynamic->setLinearDamping(0.1);
-	//dynamic->setMass(100);
-	//dynamic->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	//dynamic->setMaxLinearVelocity(20);
 	gScene->addActor(*dynamic);
 	return dynamic;
 }

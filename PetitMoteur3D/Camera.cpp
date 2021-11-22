@@ -41,12 +41,6 @@ namespace PM3D {
 			XMStoreFloat3(&pos, position);
 			updateView();
 		}
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_S))
-		{
-			position -= foward * cameraSpeed * tempsEcoule;
-			XMStoreFloat3(&pos, position);
-			updateView();
-		}
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_Z))
 		{
 			position -= up * cameraSpeed * tempsEcoule;

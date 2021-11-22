@@ -218,6 +218,7 @@
     <ClCompile Include="PanneauPE.cpp" />
     <ClCompile Include="PetitMoteur3D.cpp" />
     <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="sommetbloc.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -254,6 +255,7 @@
     <ClInclude Include="PanneauPE.h" />
     <ClInclude Include="PetitMoteur3D.h" />
     <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="sommetbloc.h" />
