@@ -2,6 +2,7 @@
 #include "objet3d.h"
 #include "ObjetMesh.h"
 #include "PhysXManager.h"
+#include "Camera.h"
 
 
 class PM3D::IChargeur;
@@ -20,6 +21,8 @@ public:
 	void moveDown();
 	void moveRight();
 
+	void setCam(PM3D::CCamera* cam);
+
 private:
 
 	PxRigidDynamic* body;
@@ -28,6 +31,8 @@ private:
 	float			speed = 3;
 	PxVec3			mDir;
 	float			scale;
+
+	PM3D::CCamera* camera;
 
 };
 

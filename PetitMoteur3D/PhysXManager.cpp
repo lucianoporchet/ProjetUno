@@ -115,25 +115,21 @@ PxFilterFlags FilterShader(
 		return PxFilterFlag::eDEFAULT;
 	}*/
 
-	if (filterData0.word0 == PhysXManager::FilterGroup::eObstacle && filterData1.word0 == PhysXManager::FilterGroup::eObstacle)
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	/*if (filterData1.word0 == FilterGroup::eCargo && filterData0.word0 == FilterGroup::eCapsule)
+	/*if (filterData0.word0 == PhysXManager::FilterGroup::eObstacle && filterData1.word0 == PhysXManager::FilterGroup::eObstacle)
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
 	}*/
 
-	if (filterData0.word0 == PhysXManager::FilterGroup::ePlayer && filterData1.word0 != 0) {
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	if (filterData1.word0 == PhysXManager::FilterGroup::ePlayer && filterData0.word0 != 0) {
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
+
+	//if (filterData0.word0 == PhysXManager::FilterGroup::ePlayer && filterData1.word0 != 0) {
+	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+	//	return PxFilterFlag::eDEFAULT;
+	//}
+	//if (filterData1.word0 == PhysXManager::FilterGroup::ePlayer && filterData0.word0 != 0) {
+	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+	//	return PxFilterFlag::eDEFAULT;
+	//}
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;

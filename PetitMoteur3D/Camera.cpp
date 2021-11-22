@@ -225,6 +225,12 @@ namespace PM3D {
 		updateView();
 	}
 
+	void CCamera::updateCam(XMFLOAT3 camPos)
+	{
+		position = XMLoadFloat3(&camPos);
+		updateView();
+	}
+
 	void CCamera::updateView() {
 
 		XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);

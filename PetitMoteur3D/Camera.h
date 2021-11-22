@@ -43,6 +43,7 @@ namespace PM3D {
 			XMMATRIX* pMatView_in,
 			XMMATRIX* pMatProj_in,
 			XMMATRIX* pMatViewProj_in);
+		void updateCam(XMFLOAT3 camPos);
 		void UpdateFree(float);
 		void UpdateLevel(float);
 		inline void SetPosition(const XMVECTOR& position_in) { position = position_in; };

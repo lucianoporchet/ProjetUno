@@ -273,6 +273,7 @@ void CObjetMesh::Draw()
 	const UINT offset = 0;
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
+
 	// ***** OMBRES ---- Premier Rendu - Création du Shadow Map
 	// Utiliser la surface de la texture comme surface de rendu
 	pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView,

@@ -236,23 +236,22 @@ protected:
 		chargeur.Chargement(params);*/
 
 		// //Constructeur avec format binaire
-		std::unique_ptr<Player> pMesh =
-			std::make_unique<Player>(".\\modeles\\Planete\\Planet3.obm", pDispositif);
-
+		player = std::make_unique<Player>(".\\modeles\\Planete\\Planet3.obm", pDispositif);
+		player->setCam(&freeCam);
 		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		 //Puis, il est ajouté à la scène
-		ListeScene.push_back(std::move(pMesh));
+		ListeScene.push_back(std::move(player));
 
-		//for (int i = 0; i < 10; i++) {
-		//	std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
-
-
-		//	// Lui assigner une texture
-		//	pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
+		for (int i = 0; i < 10; i++) {
+			std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
 
 
-		//	ListeScene.push_back(std::move(pBloc));
-		//}
+			// Lui assigner une texture
+			//pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
+
+
+			ListeScene.push_back(std::move(pBloc));
+		}
 
 		//return true;
 		 //Constructeur avec format binaire
@@ -358,6 +357,7 @@ protected:
 	PhysXManager& physXManager = PhysXManager::get();
 
 	CCamera freeCam;
+	std::unique_ptr<Player> player;
 };
 
 } // namespace PM3D

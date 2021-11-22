@@ -42,6 +42,10 @@ void Player::Anime(float tempEcoule)
 	{
 		moveBackwards();
 	}
+	mDir.normalize();
+	PxVec3 posCam = body->getGlobalPose().p - mDir * 10;
+	XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
+	camera->updateCam(camPos);
 
 
 	PxVec3 pos = body->getGlobalPose().p;
@@ -76,4 +80,9 @@ void Player::moveLeft() {
 	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 	viewY.normalize();
 	body->addForce(viewY * -speed, PxForceMode::eIMPULSE);
+}
+
+void Player::setCam(PM3D::CCamera* cam)
+{
+	camera = cam;
 }

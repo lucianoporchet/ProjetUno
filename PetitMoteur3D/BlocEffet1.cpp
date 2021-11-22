@@ -54,8 +54,9 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 		bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 	}
 	
-	bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
-	bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
+	/*bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
+	bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);*/
+	bloc->setMass(100);
 	PhysXManager::get().addToScene(bloc);
 
 	Anime(0.0f);
