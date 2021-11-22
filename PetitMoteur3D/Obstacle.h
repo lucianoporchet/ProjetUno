@@ -7,6 +7,7 @@
 #include "ChargeurOBJ.h"
 #include "Texture.h"
 #include "LectureFichier.h"
+#include <string>
 
 namespace PM3D 
 {
@@ -15,7 +16,7 @@ namespace PM3D
 	class Obstacle : public CObjet3D
 	{
 	public:
-		Obstacle(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif);
+		Obstacle(std::string filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif);
 
 		virtual ~Obstacle();
 
@@ -41,7 +42,7 @@ namespace PM3D
 		std::vector<CSommetBloc> sommets;
 		//CSommetBloc* sommets;
 
-		char* filename;
+		std::string filename;
 		CDispositifD3D11* pDispositif;
 		void InitShaders();
 		void InitEffect();

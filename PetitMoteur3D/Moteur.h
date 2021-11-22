@@ -109,6 +109,8 @@ public:
 	const XMMATRIX& GetMatProj() const { return m_MatProj; }
 	const XMMATRIX& GetMatViewProj() const { return m_MatViewProj; }
 
+	CCamera& GetFreeCamera() { return freeCam; }
+
 	CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
 	CDIManipulateur& GetGestionnaireDeSaisie() { return GestionnaireDeSaisie; }
 
@@ -144,7 +146,7 @@ protected:
 	// Fonctions de rendu et de présentation de la scène
 	virtual bool RenderScene()
 	{
-		BeginRenderSceneSpecific();
+		//BeginRenderSceneSpecific();
 
 		//pPanneauPE->DebutPostEffect();
 
@@ -162,7 +164,7 @@ protected:
 
 		//pPanneauPE->Draw();
 
-		EndRenderSceneSpecific();
+		//EndRenderSceneSpecific();
 
 		return true;
 	}
@@ -187,14 +189,14 @@ protected:
 		// Initialisation des matrices View et Proj
 		// Dans notre cas, ces matrices sont fixes
 		m_MatView = XMMatrixLookAtRH(
-			XMVectorSet(0.0f, 0.0f, 10.0f, 1.0f),
+			XMVectorSet(0.0f, 0.0f, 1000.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
 		const float champDeVision = XM_PI / 4; 	// 45 degrés
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
-		const float planEloigne = 3000.0;
+		const float planEloigne = 30000.0;
 
 		m_MatProj = XMMatrixPerspectiveFovRH(
 			champDeVision,
@@ -205,7 +207,7 @@ protected:
 		// Calcul de VP à l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 
-		freeCam.Init(XMVectorSet(0.0f, 0.0f, 10.0f, 1.0f),
+		freeCam.Init(XMVectorSet(0.0f, 0.0f, 1000.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj);
 		freeCam.angleDirectionCamera = XM_PI / 2.0f;
@@ -227,36 +229,39 @@ protected:
 		std::unique_ptr<Obstacle> obs = std::make_unique<Obstacle>(filename, XMFLOAT3(10.0f, 10.0f, 10.0f), pDispositif);
 		obs->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		ListeScene.emplace_back(std::move(obs));*/
-		/*params.NomChemin = "";
-		params.NomFichier = "Planet.obj";
+	/*	params.NomChemin = ".\\modeles\\Planete\\";
+		params.NomFichier = "Planet3.obj";
 		chargeur.Chargement(params);*/
-		 //Constructeur avec format binaire
-		//std::unique_ptr<CObjetMesh> pMesh =
-		//	std::make_unique<CObjetMesh>("Planet.OMB", pDispositif);
-		//// Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pMesh));
 
-		for (int i = 0; i < 10; i++) {
-			std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
+		// //Constructeur avec format binaire
+		std::unique_ptr<CObjetMesh> pMesh =
+			std::make_unique<CObjetMesh>(".\\modeles\\Planete\\Planet3.obm", pDispositif, 100.0f);
+
+		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
+		 //Puis, il est ajouté à la scène
+		ListeScene.push_back(std::move(pMesh));
+
+		//for (int i = 0; i < 10; i++) {
+		//	std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
 
 
-			// Lui assigner une texture
-			pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
+		//	// Lui assigner une texture
+		//	pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 
 
-			ListeScene.push_back(std::move(pBloc));
-		}
+		//	ListeScene.push_back(std::move(pBloc));
+		//}
 
 		//return true;
 		 //Constructeur avec format binaire
 
-		std::unique_ptr<CObjetMesh> pMesh =
-			std::make_unique<CObjetMesh>("Planet.OMB", pDispositif);
-		// Puis, il est ajouté à la scène
-		ListeScene.push_back(std::move(pMesh));
-		std::unique_ptr<CObjetMesh> pMesh2 = std::make_unique<CObjetMesh>(".\\modeles\\jin\\jin.OMB", pDispositif);
-		 //Puis, il est ajouté à la scène
-		ListeScene.push_back(std::move(pMesh2));
+		//std::unique_ptr<CObjetMesh> pMesh =
+		//	std::make_unique<CObjetMesh>("Planet.OMB", pDispositif);
+		//// Puis, il est ajouté à la scène
+		//ListeScene.push_back(std::move(pMesh));
+		//std::unique_ptr<CObjetMesh> pMesh2 = std::make_unique<CObjetMesh>(".\\modeles\\jin\\jin.OMB", pDispositif);
+		// //Puis, il est ajouté à la scène
+		//ListeScene.push_back(std::move(pMesh2));
 
 		// //Création de l'afficheur de sprites et ajout des sprites
 		//std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
@@ -313,20 +318,22 @@ protected:
 
 		return true;
 	}
+public:
+	// Le dispositif de rendu
+	TClasseDispositif* pDispositif;
 
+	// La seule scène
+	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 protected:
 	// Variables pour le temps de l'animation
 	int64_t TempsSuivant;
 	int64_t TempsCompteurPrecedent;
 
-	// Le dispositif de rendu
-	TClasseDispositif* pDispositif;
 
 	CChargeurOBJ chargeur;
 	CParametresChargement params;
 
-	// La seule scène
-	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
+
 
 	// Les matrices
 	XMMATRIX m_MatView;

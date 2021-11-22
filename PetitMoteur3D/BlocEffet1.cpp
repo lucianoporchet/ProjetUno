@@ -28,7 +28,7 @@ struct ShadersParams
 //		dx, dy, dz:	dimension en x, y, et z
 //		pDispositif: pointeur sur notre objet dispositif
 CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
-	CDispositifD3D11* pDispositif_)
+	CDispositifD3D11* pDispositif_, bool multiplicateur)
 	: pDispositif(pDispositif_) // Prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -44,7 +44,16 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 	const float x = static_cast<float>(RandomGenerator::get().next(-10, 10));
 	const float y = static_cast<float>(RandomGenerator::get().next(-10, 10));
 	const float z = static_cast<float>(RandomGenerator::get().next(-20, -10));
-	bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx, dy, dz), PxVec3(0, 0, 0));
+	
+	if (multiplicateur)
+	{
+		bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eDebris);
+	}
+	else
+	{
+		bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+	}
+	
 	bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
 	bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
 	PhysXManager::get().addToScene(bloc);
@@ -184,8 +193,15 @@ void CBlocEffet1::Draw()
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 
+	XMVECTOR camPos;
+
+	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
+	camPos = moteur.GetFreeCamera().getPosition();
+
+	
+
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
-	sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
+	sp.vCamera = camPos;
 	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

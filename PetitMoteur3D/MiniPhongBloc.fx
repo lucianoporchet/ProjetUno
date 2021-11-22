@@ -1,5 +1,5 @@
 cbuffer param
-{ 
+{
 	float4x4 matWorldViewProj;   // la matrice totale 
 	float4x4 matWorld;		// matrice de transformation dans le monde 
 	float4 vLumiere; 		// la position de la source d'éclairage (Point)
@@ -8,11 +8,6 @@ cbuffer param
 	float4 vAMat; 			// la valeur ambiante du matériau
 	float4 vDEcl; 			// la valeur diffuse de l'éclairage 
 	float4 vDMat; 			// la valeur diffuse du matériau 
-	float4 vSEcl; 			// la valeur spéculaire de l'éclairage 
-	float4 vSMat; 			// la valeur spéculaire du matériau 
-	float puissance;
-	int bTex;		    // Booléen pour la présence de texture
-	float2 remplissage;
 }
 
 struct VS_Sortie
@@ -21,10 +16,10 @@ struct VS_Sortie
 	float3 Norm :    TEXCOORD0;
 	float3 vDirLum : TEXCOORD1;
 	float3 vDirCam : TEXCOORD2;
-	float2 coordTex : TEXCOORD3; 
+	float2 coordTex : TEXCOORD3;
 };
 
-VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex: TEXCOORD)
+VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
 	VS_Sortie sortie = (VS_Sortie)0;
 
@@ -43,52 +38,48 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 }
 
 Texture2D textureEntree;  // la texture
+
 SamplerState SampleState;  // l'état de sampling
 
-float4 MiniPhongPS( VS_Sortie vs ) : SV_Target
+float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
 
-	// Normaliser les paramètres
-	float3 N = normalize(vs.Norm);
-	float3 L = normalize(vs.vDirLum);
-	float3 V = normalize(vs.vDirCam);
+// Normaliser les paramètres
+float3 N = normalize(vs.Norm);
+float3 L = normalize(vs.vDirLum);
+float3 V = normalize(vs.vDirCam);
 
-	// Valeur de la composante diffuse
-	float3 diff = saturate(dot(N, L));
+// Valeur de la composante diffuse
+float3 diff = saturate(dot(N, L));
 
-	// R = 2 * (N.L) * N – L
-	float3 R = normalize(2 * diff * N - L);
- 
-	// Calcul de la spécularité 
-	float3 S = pow(saturate(dot(R, V)), puissance);
+// R = 2 * (N.L) * N – L
+float3 R = normalize(2 * diff * N - L);
 
-	float3 couleurTexture;
+// Puissance de 4 - pour l'exemple
+float S = pow(saturate(dot(R, V)), 4.0f);
 
-	if (bTex>0)
-	{
-		// Échantillonner la couleur du pixel à partir de la texture
-		couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
+// Échantillonner la couleur du pixel à partir de la texture
+float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
 
-		// I = A + D * N.L + (R.V)n
-		couleur =  couleurTexture * vAEcl.rgb  + 
-				   couleurTexture * vDEcl.rgb * diff +
-				   vSEcl.rgb * vSMat.rgb * S;
-	}
-	else
-	{
-		couleur =  vAEcl.rgb * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff  +
-					vSEcl.rgb * vSMat.rgb * S;
-	}
-	return float4(couleur, 1.0f);
+//float3 couleurFinale;
+
+
+// I = A + D * N.L + (R.V)n
+couleur =	couleurTexture * vAEcl.rgb * vAMat.rgb +
+			couleurTexture * vDEcl.rgb * vDMat.rgb * diff;
+
+couleur += S;
+
+return float4(couleur, 1.0f);
 }
 
 technique11 MiniPhong
 {
 	pass pass0
 	{
-		SetVertexShader(CompileShader(vs_4_0, MiniPhongVS()));
-		SetPixelShader(CompileShader(ps_4_0, MiniPhongPS()));
+		SetVertexShader(CompileShader(vs_5_0, MiniPhongVS()));
+		SetPixelShader(CompileShader(ps_5_0, MiniPhongPS()));
 		SetGeometryShader(NULL);
 	}
 }

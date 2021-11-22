@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PhysXManager.h"
 
+
 #define PX_RELEASE(x) if(x) { x->release(); x = NULL; }
 
 
@@ -10,6 +11,7 @@ PhysXManager::PhysXManager() {
 
 void PhysXManager::initPhysics()
 {
+	MyContactModification* contact = new MyContactModification;
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 
 	gPvd = PxCreatePvd(*gFoundation);
@@ -22,8 +24,10 @@ void PhysXManager::initPhysics()
 	sceneDesc.gravity = PxVec3(0.0f, 0.0f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = FilterShader;
 	gScene = gPhysics->createScene(sceneDesc);
+	gScene->setContactModifyCallback(contact);
+	gScene->setSimulationEventCallback(contact);
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
@@ -56,6 +60,7 @@ void PhysXManager::cleanupPhysics()
 		PX_RELEASE(transport);
 	}
 	PX_RELEASE(gFoundation);
+	
 }
 
 void PhysXManager::addToScene(PxActor* actor)
@@ -63,11 +68,12 @@ void PhysXManager::addToScene(PxActor* actor)
 	gScene->addActor(*actor);
 }
 
-PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 1.0f);
 	//dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
+	setupFiltering(dynamic, FilterGroup::eObstacle, FilterGroup::eObstacle);
 	//dynamic->setLinearDamping(0.1);
 	//dynamic->setMass(100);
 	//dynamic->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
@@ -79,5 +85,62 @@ PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeomet
 PhysXManager& PhysXManager::get() {
 	static PhysXManager instance;
 	return instance;
+}
+
+void PhysXManager::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask)
+{
+	PxFilterData filterData;
+	filterData.word0 = filterGroup; // word0 = own ID
+	filterData.word1 = filterMask;  // word1 = ID mask to filter pairs that trigger a
+									// contact callback;
+	const PxU32 numShapes = actor->getNbShapes();
+	PxShape** shapes = (PxShape**)malloc(sizeof(PxShape*) * numShapes);
+	actor->getShapes(shapes, numShapes);
+	for (PxU32 i = 0; i < numShapes; i++)
+	{
+		PxShape* shape = shapes[i];
+		shape->setSimulationFilterData(filterData);
+	}
+	free(shapes);
+}
+
+
+void PhysXManager::removeActor(PxActor& actor) {
+	gScene->removeActor(actor);
+}
+
+PxFilterFlags FilterShader(
+	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{/*
+	if (filterData0.word0 == FilterGroup::eBALL && filterData1.word0 == FilterGroup::eBALL)
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}*/
+
+	if (filterData0.word0 == PhysXManager::FilterGroup::eObstacle && filterData1.word0 == PhysXManager::FilterGroup::eObstacle)
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	/*if (filterData1.word0 == FilterGroup::eCargo && filterData0.word0 == FilterGroup::eCapsule)
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}*/
+
+	if (filterData0.word0 == PhysXManager::FilterGroup::ePlayer && filterData1.word0 != 0) {
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if (filterData1.word0 == PhysXManager::FilterGroup::ePlayer && filterData0.word0 != 0) {
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	return PxFilterFlag::eDEFAULT;
 }
 

@@ -70,7 +70,7 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier,
 }
 
 // Constructeur pour lecture d'un objet de format OMB
-CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif)
+CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif, float scale)
 	: pDispositif(_pDispositif) // prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -80,6 +80,8 @@ CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispos
 
 	// Initialisation de l'effet
 	InitEffet();
+
+	matWorld = XMMatrixScaling(scale, scale, scale);
 }
 
 CObjetMesh::~CObjetMesh()
@@ -249,53 +251,8 @@ void CObjetMesh::InitEffet()
 
 void CObjetMesh::Anime(float tempsEcoule)
 {
-	//rotation =  rotation + ( (XM_PI * 2.0f) / 10.0f * tempsEcoule );
-	//
-	//// modifier la matrice de l'objet bloc
-	//matWorld = XMMatrixRotationY( rotation );
 
-	// Pour les mouvements, nous utilisons le gestionnaire de saisie
-	CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
-	CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
-
-	// Vérifier l'état de la touche gauche
-	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT))
-	{
-		rotation = rotation + ((XM_PI * 2.0f) / 7.0f * tempsEcoule);
-
-		// modifier la matrice de l'objet X
-		matWorld = XMMatrixRotationY(rotation);
-	}
-
-	// Vérifier l'état de la touche droite
-	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT))
-	{
-		rotation = rotation - ((XM_PI * 2.0f) / 7.0f * tempsEcoule);
-
-		// modifier la matrice de l'objet X
-		matWorld = XMMatrixRotationY(rotation);
-	}
-
-	// ******** POUR LA SOURIS ************
-	// Vérifier si déplacement vers la gauche
-	if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) &&
-		(rGestionnaireDeSaisie.EtatSouris().lX < 0))
-	{
-		rotation = rotation + ((XM_PI * 2.0f) / 4.0f * tempsEcoule);
-
-		// modifier la matrice de l'objet X
-		matWorld = XMMatrixRotationY(rotation);
-	}
-
-	// Vérifier si déplacement vers la droite
-	if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) &&
-		(rGestionnaireDeSaisie.EtatSouris().lX > 0))
-	{
-		rotation = rotation - ((XM_PI * 2.0f) / 4.0f * tempsEcoule);
-
-		// modifier la matrice de l'objet X
-		matWorld = XMMatrixRotationY(rotation);
-	}
+	
 }
 
 void CObjetMesh::Draw()

@@ -19,7 +19,7 @@ class CBlocEffet1 : public CObjet3D
 {
 public:
 	CBlocEffet1(const float dx, const float dy, const float dz,
-		CDispositifD3D11* pDispositif);
+		CDispositifD3D11* pDispositif, bool multiplicateur = 0);
 
 	virtual ~CBlocEffet1();
 
@@ -31,6 +31,7 @@ public:
 	PxRigidDynamic* bloc;
 
 private:
+	bool multi;
 	void InitEffet();
 
 	CDispositifD3D11* pDispositif;

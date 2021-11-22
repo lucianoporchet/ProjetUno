@@ -21,7 +21,7 @@ namespace PM3D {
 	};
 
 
-	Obstacle::Obstacle(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif)
+	Obstacle::Obstacle(std::string filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif)
 		: pDispositif(pDispositif) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, rotation(0.0f)
@@ -31,24 +31,31 @@ namespace PM3D {
 		, pPixelShader(nullptr)
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
-		, filename(filename) 
+		, filename(filename)
 	{
 		params.NomChemin = "";
 		params.NomFichier = filename;
 		
 
 		
-		body = PhysXManager::get().createDynamic(PxTransform(RandomGenerator::get().randomVec3(-100, 100)), PxSphereGeometry(100.0f), PxVec3(0, 0, 0));
+		body = PhysXManager::get().createDynamic(PxTransform(RandomGenerator::get().randomVec3(-100, 100)), PxSphereGeometry(100.0f), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 		//body->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
 		//body->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
 		PhysXManager::get().addToScene(body);
 
 		chargeur.Chargement(params);
 
-		for (int i = 0; i < chargeur.GetNombreSommets(); ++i) {
-			//sommets.push_back(CSommetBloc{ chargeur.Position[i], chargeur.Normale[0], chargeur.CoordTex[i] });
+		const size_t nombreSommets = chargeur.GetNombreSommets();
+		std::unique_ptr<CSommetBloc[]> ts(new CSommetBloc[nombreSommets]);
+
+		for (uint32_t i = 0; i < nombreSommets; ++i)
+		{
+			ts[i].setPosition(chargeur.GetPosition(i));
+			ts[i].setNormal(chargeur.GetNormale(i));
+			ts[i].setTexture(chargeur.GetCoordTex(i));
 		}
-		//LectureFichier file(filename);
+
+		
 
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
@@ -56,13 +63,13 @@ namespace PM3D {
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.ByteWidth = sizeof(CSommetBloc) * (UINT)sommets.size();
+		bd.ByteWidth = static_cast<uint32_t>(sizeof(CSommetBloc) * nombreSommets);
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA InitData;
 		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = &sommets[0];
+		InitData.pSysMem = ts.get();
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
@@ -70,12 +77,12 @@ namespace PM3D {
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.ByteWidth = sizeof(unsigned int) * (UINT)chargeur.GetNombreIndex();
+		bd.ByteWidth = static_cast<uint32_t>(sizeof(uint32_t) * chargeur.GetNombreIndex());
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
 		ZeroMemory(&InitData, sizeof(InitData));
-		//InitData.pSysMem = &chargeur.getVecteurIndex()[0];
+		InitData.pSysMem = chargeur.GetIndexData();
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 			DXE_CREATIONINDEXBUFFER);
@@ -138,7 +145,7 @@ namespace PM3D {
 
 		// Activation de la texture
 		ID3DX11EffectShaderResourceVariable* variableTexture1;
-		variableTexture1 = pEffet->GetVariableByName("textureEntree1")->AsShaderResource();
+		variableTexture1 = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 		variableTexture1->SetResource(pTextureD3D1);
 
 		//ID3DX11EffectShaderResourceVariable* variableTexture2;
@@ -176,7 +183,7 @@ namespace PM3D {
 
 		// Pour l’effet
 		ID3DBlob* pFXBlob = NULL;
-		DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0,
+		DXEssayer(D3DCompileFromFile(L"MiniPhongBloc.fx", 0, 0, 0,
 			"fx_5_0", 0, 0,
 			&pFXBlob, 0),
 			DXE_ERREURCREATION_FX);

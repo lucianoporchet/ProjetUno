@@ -87,7 +87,7 @@ private:
 public:
 	CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
 	CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier, CDispositifD3D11* _pDispositif);
-	CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif);
+	CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif, float scale = 1);
 
 	virtual ~CObjetMesh();
 

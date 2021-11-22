@@ -212,6 +212,7 @@
     <ClCompile Include="LectureFichier.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="MoteurWindows.cpp" />
+    <ClCompile Include="MyContactModification.cpp" />
     <ClCompile Include="ObjetMesh.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="PanneauPE.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="LectureFichier.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="MoteurWindows.h" />
+    <ClInclude Include="MyContactModification.h" />
     <ClInclude Include="objet3d.h" />
     <ClInclude Include="ObjetMesh.h" />
     <ClInclude Include="Obstacle.h" />
