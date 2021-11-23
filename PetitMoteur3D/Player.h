@@ -12,7 +12,7 @@ class Player : public PM3D::CObjetMesh {
 
 public:
 	Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);
-	virtual void Anime(float tempEcoule) override;
+	virtual void Anime(float tempEcoule);
 
 	void moveFoward();
 	void moveBackwards();
