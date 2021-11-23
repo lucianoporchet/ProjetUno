@@ -338,7 +338,7 @@ void CObjetMesh::Draw()
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 
-	sp.vLumiere = XMVectorSet(-30.0f, 30.0f, -30.0f, 1.0f);
+	sp.vLumiere = XMVectorSet(-30.0f, 50.0f, 30.0f, 1.0f);
 	sp.vCamera = XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f);
 	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

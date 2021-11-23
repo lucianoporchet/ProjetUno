@@ -8,15 +8,12 @@
 
 
 Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale)
-	: CObjetMesh(nomfichier, _pDispositif, scale), scale{scale}
+	: Ship(nomfichier, _pDispositif, scale)
 {
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(0.0f, 0.0f, 0.0f)), PxBoxGeometry(0.8f *scale, 0.2f * scale, 0.8f *scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::ePlayer);
 	/*body->addTorque(PxVec3(100000, 1000000000, 0), PxForceMode::eIMPULSE);
 	body->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);*/
 	body->setLinearDamping(0.5f);
-	mDir = PxVec3(0, 0, -1);
-	mMouseX = 0;
-	mMouseY = 0;
 	PhysXManager::get().addToScene(body);
 }
 
@@ -82,8 +79,8 @@ void Player::Anime(float tempEcoule)
 
 
 
-
-	const PxVec3 pos = body->getGlobalPose().p;
+	Ship::Anime(tempEcoule);
+	/*const PxVec3 pos = body->getGlobalPose().p;
 	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
 	const XMVECTOR posVec = XMLoadFloat3(&posF3);
 
@@ -91,7 +88,7 @@ void Player::Anime(float tempEcoule)
 	const XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
-	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
+	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));*/
 }
 	
 void Player::moveFoward() {
@@ -138,9 +135,9 @@ void Player::roateRight() {
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
 
-	PxQuat quat(0.01f, PxVec3(0, 1, 0));
+	/*PxQuat quat(0.01f, PxVec3(0, 1, 0));
 	mDir = quat.rotate(mDir);
-	mDir.normalize();
+	mDir.normalize();*/
 
 	/*PxQuat rotation(-PxHalfPi / 16.0f, { 0, 1, 0 });
 
@@ -183,9 +180,9 @@ void Player::roateLeft() {
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
 
-	PxQuat quat(-0.01f, PxVec3(0, 1, 0));
-	mDir = quat.rotate(mDir);
-	mDir.normalize();
+	//PxQuat quat(-0.01f, PxVec3(0, 1, 0));
+	//mDir = quat.rotate(mDir);
+	//mDir.normalize();
 	/*PxQuat rotation(PxHalfPi / 16.0f, { 0, 1, 0 });
 
 	PxQuat newRotation = body->getGlobalPose().q * rotation.getNormalized();

@@ -2,24 +2,25 @@
 #include "objet3d.h"
 #include "ObjetMesh.h"
 #include "PhysXManager.h"
+#include "Camera.h"
 
 
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
-class Obstacle : public PM3D::CObjetMesh {
+class Ship : public PM3D::CObjetMesh {
 
 public:
-	Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1, bool planet = false);
+	Ship(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);
 	virtual void Anime(float tempEcoule) override;
 
-
-private:
+protected:
 
 	PxRigidDynamic* body;
+	PxVec3			mDir;
 	float			speed = 3;
 	float			scale;
-	bool			planet = false;
+	float			angleRotation = PxPi / 2;
 };
 
 

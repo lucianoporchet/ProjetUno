@@ -245,14 +245,14 @@ protected:
 		ListeScene.push_back(std::move(player));
 
 		for (int i = 0; i < 10; i++) {
-			std::unique_ptr<CBlocEffet1> pBloc = std::make_unique<CBlocEffet1>(2.0f, 2.0f, 2.0f, pDispositif);
+			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\Planet3.obm", pDispositif, 10.0f, true);
 
 
 			 //Lui assigner une texture
 			//pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 
 
-			ListeScene.push_back(std::move(pBloc));
+			ListeScene.push_back(std::move(planet));
 		}
 
 		//return true;
