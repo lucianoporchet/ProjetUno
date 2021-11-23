@@ -16,10 +16,10 @@ public:
 
 	void moveFoward();
 	void moveBackwards();
-	void moveLeft();
+	void roateLeft();
 	void moveUp();
 	void moveDown();
-	void moveRight();
+	void roateRight();
 
 	void setCam(PM3D::CCamera* cam);
 
@@ -31,6 +31,7 @@ private:
 	float			speed = 3;
 	PxVec3			mDir;
 	float			scale;
+	float			angleRotation = PxPi/2;
 
 	PM3D::CCamera* camera;
 

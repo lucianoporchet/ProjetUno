@@ -225,10 +225,15 @@ namespace PM3D {
 		updateView();
 	}
 
-	void CCamera::updateCam(XMFLOAT3 camPos)
+	void CCamera::updateCam(XMFLOAT3 camPos, XMFLOAT3 camDir)
 	{
 		position = XMLoadFloat3(&camPos);
-		updateView();
+		direction = XMLoadFloat3(&camDir);
+		//updateView();
+		*pMatView = XMMatrixLookAtRH(position,
+			direction,
+			up);
+		*pMatViewProj = (*pMatView) * (*pMatProj);
 	}
 
 	void CCamera::updateView() {

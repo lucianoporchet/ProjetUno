@@ -28,11 +28,11 @@ void Player::Anime(float tempEcoule)
 	// Vérifier l’état de la touche gauche
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A))
 	{
-		moveLeft();
+		roateLeft();
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_D))
 	{
-		moveRight();
+		roateRight();
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W))
 	{
@@ -58,8 +58,29 @@ void Player::Anime(float tempEcoule)
 
 	mDir.normalize();
 	const PxVec3 posCam = body->getGlobalPose().p - mDir * 10;
+	
 	const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
-	camera->updateCam(camPos);
+	//const XMFLOAT3 pPos(body->getGlobalPose().p.x, body->getGlobalPose().p.y, body->getGlobalPose().p.z);
+	const XMFLOAT3 camDir(mDir.x, mDir.y, mDir.z);
+
+	camera->updateCam(camPos, camDir);
+	/*PxVec3 dirc(1.0, 0.0, 0.0);
+	PxVec3 turnc = PxVec3(0.0f, 1.0f, 0.0f);
+	
+	PxQuat anglerotc(angleRotation, turnc);
+	dirc = anglerotc.rotate(dirc);
+	PxVec3 pov(-13.0f, 0.0f, 0.0f);
+	pov = anglerotc.rotate(pov);
+
+	const XMFLOAT3 dirc3(dirc.x, dirc.y, dirc.z);
+	PxVec3 position = body->getGlobalPose().p;
+
+	
+	const XMFLOAT3 pov3(pov.x + position.x, pov.y + position.y, pov.z + position.z);
+
+	camera->updateCam(pov3, dirc3);*/
+
+
 
 
 	const PxVec3 pos = body->getGlobalPose().p;
@@ -102,9 +123,9 @@ void Player::moveBackwards() {
 	}
 }
 
-void Player::moveRight() {
+void Player::roateRight() {
 
-	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+	/*PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 	viewY.normalize();
 	body->addForce(viewY * (speed/2), PxForceMode::eIMPULSE);
 	const float tilt = body->getGlobalPose().q.x;
@@ -115,12 +136,41 @@ void Player::moveRight() {
 	else
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
-	}
+	}*/
+
+	PxQuat quat(0.01f, PxVec3(0, 1, 0));
+	mDir = quat.rotate(mDir);
+	mDir.normalize();
+
+	/*PxQuat rotation(-PxHalfPi / 16.0f, { 0, 1, 0 });
+
+	PxQuat newRotation = body->getGlobalPose().q * rotation.getNormalized();
+
+	body->setGlobalPose(PxTransform(body->getGlobalPose().p, newRotation.getNormalized()));
+
+	mDir = rotation.rotate(mDir).getNormalized();*/
+	
+	/*PxVec3 pos = body->getGlobalPose().p;
+	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+	PxMat33 rm(mDir.cross(viewY), viewY, -mDir);*/
+
+	//body->setGlobalPose(PxTransform(pos, PxQuat(rm)));
 	
 }
-void Player::moveLeft() {
+void Player::roateLeft() {
 
-	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+	/*PxVec3 pos = body->getGlobalPose().p;
+	float toRot = PxHalfPi / 180;
+	angleRotation += toRot;
+	
+	PxQuat angle(angleRotation, PxVec3(0.0f,1.0f,0.0f));
+	mDir = angle.rotate(PxVec3(1.0f, 0.0f, 0.0f));
+	body->setGlobalPose(PxTransform(pos, angle));
+	*/
+	
+	
+	
+	/*PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 	viewY.normalize();
 	body->addForce(viewY * -(speed/2), PxForceMode::eIMPULSE);
 	const float tilt = body->getGlobalPose().q.x;
@@ -131,7 +181,23 @@ void Player::moveLeft() {
 	else
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
-	}
+	}*/
+
+	PxQuat quat(-0.01f, PxVec3(0, 1, 0));
+	mDir = quat.rotate(mDir);
+	mDir.normalize();
+	/*PxQuat rotation(PxHalfPi / 16.0f, { 0, 1, 0 });
+
+	PxQuat newRotation = body->getGlobalPose().q * rotation.getNormalized();
+
+	body->setGlobalPose(PxTransform(body->getGlobalPose().p, newRotation.getNormalized()));
+
+	mDir = rotation.rotate(mDir).getNormalized();*/
+	/*PxVec3 pos = body->getGlobalPose().p;
+	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+	PxMat33 rm(mDir.cross(viewY), viewY, -mDir);*/
+
+	//body->setGlobalPose(PxTransform(pos, PxQuat(rm)));
 	
 }
 
