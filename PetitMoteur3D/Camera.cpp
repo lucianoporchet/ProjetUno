@@ -228,6 +228,9 @@ namespace PM3D {
 	void CCamera::updateCam(XMFLOAT3 camPos, XMFLOAT3 camDir)
 	{
 		position = XMLoadFloat3(&camPos);
+		rot.x = camDir.x;
+		rot.y = camDir.y;
+		rot.z = camDir.z;
 		//direction = XMLoadFloat3(&camDir);
 		//updateView();
 		updateView();
@@ -235,20 +238,23 @@ namespace PM3D {
 
 	void CCamera::updateView() {
 
-		XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+		XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(0.0f, -rot.x, 0.0f);
 
 		direction = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		direction += position;
 
-		up = XMVector3TransformCoord(DEFAULT_UP, camRotationM);
+		// up never changes for our camera.
+		//up = XMVector3TransformCoord(DEFAULT_UP, camRotationM);
 
 		*pMatView = XMMatrixLookAtRH(position,
 			direction,
 			up);
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 
-		foward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
-		right = XMVector3TransformCoord(DEFAULT_RIGHT, camRotationM);
+		XMMATRIX vecRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+		// this does changes though.
+		foward = XMVector3TransformCoord(DEFAULT_FOWARD, vecRotationM);
+		right = XMVector3TransformCoord(DEFAULT_RIGHT, vecRotationM);
 	}
 
 

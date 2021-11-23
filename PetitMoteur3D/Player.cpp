@@ -54,7 +54,9 @@ void Player::Anime(float tempEcoule)
 	}
 
 	mDir.normalize();
-	const PxVec3 posCam = body->getGlobalPose().p - mDir * 10;
+	const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10);
+	// if we use this line, we gotta angle down a bit
+	//const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10) + PxVec3{ 0, 3, 0 };
 	
 	const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
 	//const XMFLOAT3 pPos(body->getGlobalPose().p.x, body->getGlobalPose().p.y, body->getGlobalPose().p.z);
@@ -135,9 +137,11 @@ void Player::roateRight() {
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
 
-	/*PxQuat quat(0.01f, PxVec3(0, 1, 0));
+	PxQuat quat(0.01f, PxVec3(0, 1, 0));
+	// Aussi faire tourner le corps
+	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 	mDir = quat.rotate(mDir);
-	mDir.normalize();*/
+	mDir.normalize();
 
 	/*PxQuat rotation(-PxHalfPi / 16.0f, { 0, 1, 0 });
 
@@ -180,9 +184,12 @@ void Player::roateLeft() {
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
 
-	//PxQuat quat(-0.01f, PxVec3(0, 1, 0));
-	//mDir = quat.rotate(mDir);
-	//mDir.normalize();
+	PxQuat quat(-0.01f, PxVec3(0, 1, 0));
+	// Aussi faire tourner le corps
+	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	mDir = quat.rotate(mDir);
+	mDir.normalize();
+
 	/*PxQuat rotation(PxHalfPi / 16.0f, { 0, 1, 0 });
 
 	PxQuat newRotation = body->getGlobalPose().q * rotation.getNormalized();
