@@ -20,6 +20,8 @@
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 
+#include <vector>
+#include <string>
 
 
 namespace PM3D
@@ -236,6 +238,10 @@ protected:
 		params.NomFichier = "UFO1.obj";
 		chargeur.Chargement(params);*/
 
+		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(30000.0f, 30000.0f, 30000.0f, pDispositif);
+		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
+		ListeScene.push_back(std::move(skybox));
+
 		// //Constructeur avec format binaire
 		//std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif);
 		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
@@ -360,6 +366,8 @@ protected:
 
 	CCamera freeCam;
 	std::unique_ptr<Player> player;
+
+
 };
 
 } // namespace PM3D

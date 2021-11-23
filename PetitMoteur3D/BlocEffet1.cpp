@@ -41,23 +41,23 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 	, pSampleState(nullptr)
 	, pTextureD3D(nullptr)
 {
-	const float x = static_cast<float>(RandomGenerator::get().next(-10, 10));
+	/*const float x = static_cast<float>(RandomGenerator::get().next(-10, 10));
 	const float y = static_cast<float>(RandomGenerator::get().next(-10, 10));
 	const float z = static_cast<float>(RandomGenerator::get().next(-20, -10));
-	
-	if (multiplicateur)
-	{
-		bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eDebris);
-	}
-	else
-	{
-		bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
-	}
-	
-	/*bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
-	bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);*/
-	bloc->setMass(100);
-	PhysXManager::get().addToScene(bloc);
+	*/
+	//if (multiplicateur)
+	//{
+	//	bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eDebris);
+	//}
+	//else
+	//{
+	//	bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+	//}
+	//
+	///*bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
+	//bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);*/
+	//bloc->setMass(100);
+	//PhysXManager::get().addToScene(bloc);
 
 	Anime(0.0f);
 	// Les points
@@ -157,7 +157,7 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 
 void CBlocEffet1::Anime(float tempsEcoule)
 {
-	PxVec3 pos = bloc->getGlobalPose().p;
+	/*PxVec3 pos = bloc->getGlobalPose().p;
 	XMFLOAT3 posF3(pos.x, pos.y, pos.z);
 	XMVECTOR posVec = XMLoadFloat3(&posF3);
 
@@ -165,7 +165,7 @@ void CBlocEffet1::Anime(float tempsEcoule)
 	XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
 	XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
-	matWorld = XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec);
+	matWorld = XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec);*/
 }
 
 void CBlocEffet1::Draw()

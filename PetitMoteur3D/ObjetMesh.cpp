@@ -6,6 +6,7 @@
 #include "moteurWindows.h"
 #include "util.h"
 #include "resource.h"
+#include "DispositifD3D11.h"
 
 namespace PM3D
 {
@@ -23,7 +24,7 @@ UINT CObjetMesh::CSommetMesh::numElements;
 struct ShadersParams // toujours un multiple de 16 pour les constantes
 {
 	XMMATRIX matWorldViewProj;	// la matrice totale 
-	XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
+	//XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
 	XMVECTOR vLumiere; 			// la position de la source d'éclairage (Point)
 	XMVECTOR vCamera; 			// la position de la caméra
@@ -34,7 +35,7 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	XMVECTOR vSEcl; 			// la valeur spéculaire de l'éclairage 
 	XMVECTOR vSMat; 			// la valeur spéculaire du matériau 
 	float puissance;
-	int bTex;					// Texture ou materiau 
+	int32_t bTex;					// Texture ou materiau 
 	XMFLOAT2 remplissage;
 };
 
@@ -120,13 +121,13 @@ void CObjetMesh::InitEffet()
 	bd.ByteWidth = sizeof(ShadersParams);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	HRESULT hr = pD3DDevice->CreateBuffer(&bd, nullptr, &pConstantBuffer);
+	DXEssayer(pD3DDevice->CreateBuffer(&bd, nullptr, &pConstantBuffer));
 
 	// Pour l'effet
 	ID3DBlob* pFXBlob = nullptr;
 
-	DXEssayer(D3DCompileFromFile(L"MiniPhongSM.fx", 0, 0, 0,
-		"fx_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pFXBlob, 0),
+	DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0,
+		"fx_5_0", 0, 0, &pFXBlob, 0),
 		DXE_ERREURCREATION_FX);
 
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
@@ -136,51 +137,25 @@ void CObjetMesh::InitEffet()
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
 
-	// Créer l'organisation des sommets pour les VS de notre effet
+	// Créer l'organisation des sommets pour le VS de notre effet
 	D3DX11_PASS_SHADER_DESC effectVSDesc;
+	pPasse->GetVertexShaderDesc(&effectVSDesc);
+
 	D3DX11_EFFECT_SHADER_DESC effectVSDesc2;
-	const void *vsCodePtr;
-	unsigned vsCodeLen;
+	effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+	const void* vsCodePtr = effectVSDesc2.pBytecode;
+	const uint32_t vsCodeLen = effectVSDesc2.BytecodeLength;
+
+	pVertexLayout = nullptr;
+
 	CSommetMesh::numElements = ARRAYSIZE(CSommetMesh::layout);
-
-	// 1 pour le shadowmap
-	pTechnique = pEffet->GetTechniqueByName("ShadowMap");
-	pPasse = pTechnique->GetPassByIndex(0);
-	pPasse->GetVertexShaderDesc(&effectVSDesc);
-	effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex,
-		&effectVSDesc2);
-
-	vsCodePtr = effectVSDesc2.pBytecode;
-	vsCodeLen = effectVSDesc2.BytecodeLength;
-
-	pVertexLayout = nullptr;
-
-	DXEssayer(pD3DDevice->CreateInputLayout(CSommetMesh::layout,
-		CSommetMesh::numElements,
-		vsCodePtr,
-		vsCodeLen,
-		&pVertexLayoutShadow),
-		DXE_CREATIONLAYOUT);
-
-	// 2 pour miniphong
-	pTechnique = pEffet->GetTechniqueByName("MiniPhong");
-	pPasse = pTechnique->GetPassByIndex(0);
-	pPasse->GetVertexShaderDesc(&effectVSDesc);
-	effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex,
-		&effectVSDesc2);
-
-	vsCodePtr = effectVSDesc2.pBytecode;
-	vsCodeLen = effectVSDesc2.BytecodeLength;
-
-	pVertexLayout = nullptr;
-
 	DXEssayer(pD3DDevice->CreateInputLayout(CSommetMesh::layout,
 		CSommetMesh::numElements,
 		vsCodePtr,
 		vsCodeLen,
 		&pVertexLayout),
 		DXE_CREATIONLAYOUT);
-
 
 	// Initialisation des paramètres de sampling de la texture
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -201,53 +176,6 @@ void CObjetMesh::InitEffet()
 
 	// Création de l'état de sampling
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
-
-	D3D11_TEXTURE2D_DESC textureDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-
-	// Description de la texture
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
-
-	// Cette texture sera utilisée comme cible de rendu et 
-	// comme ressource de shader
-	textureDesc.Width = SHADOWMAP_DIM;
-	textureDesc.Height = SHADOWMAP_DIM;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32_FLOAT;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
-
-	// Création de la texture
-	pD3DDevice->CreateTexture2D(&textureDesc, nullptr, &pTextureShadowMap);
-
-	// VUE - Cible de rendu
-	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	// Création de la vue.
-	pD3DDevice->CreateRenderTargetView(pTextureShadowMap,
-		&renderTargetViewDesc,
-		&pRenderTargetView);
-
-	// VUE – Ressource de shader
-	shaderResourceViewDesc.Format = textureDesc.Format;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	// Création de la vue.
-	pD3DDevice->CreateShaderResourceView(pTextureShadowMap,
-		&shaderResourceViewDesc,
-		&pShadowMapView);
-
-	InitDepthBuffer();
-	InitMatricesShadowMap();
 }
 
 void CObjetMesh::Anime(float tempsEcoule)
@@ -258,87 +186,30 @@ void CObjetMesh::Anime(float tempsEcoule)
 
 void CObjetMesh::Draw()
 {
-	// ***** OMBRES ---- Valide pour les deux rendus
 	// Obtenir le contexte
 	ID3D11DeviceContext* pImmediateContext = pDispositif->GetImmediateContext();
 
 	// Choisir la topologie des primitives
 	pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	// input layout des sommets
+	pImmediateContext->IASetInputLayout(pVertexLayout);
+
 	// Index buffer
 	pImmediateContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
 	// Vertex buffer
 	UINT stride = sizeof(CSommetMesh);
-	const UINT offset = 0;
+	UINT offset = 0;
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-
-
-	// ***** OMBRES ---- Premier Rendu - Création du Shadow Map
-	// Utiliser la surface de la texture comme surface de rendu
-	pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView,
-		pDepthStencilView);
-
-	// Effacer le shadow map 
-	float Couleur[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	pImmediateContext->ClearRenderTargetView(pRenderTargetView, Couleur);
-	pImmediateContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	// Modifier les dimension du viewport
-	pDispositif->SetViewPortDimension(512, 512);
-
-	// Choix de la technique
-	pTechnique = pEffet->GetTechniqueByName("ShadowMap");
-	pPasse = pTechnique->GetPassByIndex(0);
-
-	// input layout des sommets
-	pImmediateContext->IASetInputLayout(pVertexLayoutShadow);
 
 	// Initialiser et sélectionner les «constantes» de l'effet
 	ShadersParams sp;
-	sp.matWorldViewProjLight = XMMatrixTranspose(matWorld * mVPLight);
-
-	// Nous n'avons qu'un seul CBuffer
-	ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
-	pCB->SetConstantBuffer(pConstantBuffer);
-	pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
-
-	// Dessiner les subsets non-transparents
-	for (int i = 0; i < NombreSubset; ++i)
-	{
-		const int indexStart = SubsetIndex[i];
-		const int indexDrawAmount = SubsetIndex[i + 1] - SubsetIndex[i];
-		if (indexDrawAmount)
-		{
-			// IMPORTANT pour ajuster les param.
-			pPasse->Apply(0, pImmediateContext);
-
-			pImmediateContext->DrawIndexed(indexDrawAmount, indexStart, 0);
-		}
-	}
-
-	// ***** OMBRES ---- Deuxième Rendu - Affichage de l'objet avec ombres
-		// Ramener la surface de rendu
-	ID3D11RenderTargetView* tabRTV[1];
-	tabRTV[0] = pDispositif->GetRenderTargetView();
-	pImmediateContext->OMSetRenderTargets(1,
-		tabRTV,
-		pDispositif->GetDepthStencilView());
-
-	// Dimension du viewport - défaut
-	pDispositif->ResetViewPortDimension();
-
-	// Choix de la technique
-	pTechnique = pEffet->GetTechniqueByName("MiniPhong");
-	pPasse = pTechnique->GetPassByIndex(0);
-
-	// Initialiser et sélectionner les «constantes» de l'effet
-	XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+	const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 
-	sp.vLumiere = XMVectorSet(-30.0f, 50.0f, 30.0f, 1.0f);
+	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
 	sp.vCamera = XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f);
 	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
@@ -349,20 +220,11 @@ void CObjetMesh::Draw()
 	variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
 	variableSampler->SetSampler(0, pSampleState);
 
-	// input layout des sommets
-	pImmediateContext->IASetInputLayout(pVertexLayout);
-
-	ID3DX11EffectShaderResourceVariable* pShadowMap;
-	pShadowMap = pEffet->GetVariableByName("ShadowTexture")->AsShaderResource();
-	pShadowMap->SetResource(pShadowMapView);
-
-	pDispositif->SetNormalRSState();
-
 	// Dessiner les subsets non-transparents
-	for (int i = 0; i < NombreSubset; ++i)
+	for (int32_t i = 0; i < NombreSubset; ++i)
 	{
-		const int indexStart = SubsetIndex[i];
-		const int indexDrawAmount = SubsetIndex[i + 1] - SubsetIndex[i];
+		int32_t indexStart = SubsetIndex[i];
+		int32_t indexDrawAmount = SubsetIndex[i + 1] - SubsetIndex[i];
 		if (indexDrawAmount)
 		{
 			sp.vAMat = XMLoadFloat4(&Material[SubsetMaterialIndex[i]].Ambient);
@@ -374,8 +236,7 @@ void CObjetMesh::Draw()
 			if (Material[SubsetMaterialIndex[i]].pTextureD3D != nullptr)
 			{
 				ID3DX11EffectShaderResourceVariable* variableTexture;
-				variableTexture =
-					pEffet->GetVariableByName("textureEntree")->AsShaderResource();
+				variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 				variableTexture->SetResource(Material[SubsetMaterialIndex[i]].pTextureD3D);
 				sp.bTex = 1;
 			}
@@ -387,6 +248,7 @@ void CObjetMesh::Draw()
 			// IMPORTANT pour ajuster les param.
 			pPasse->Apply(0, pImmediateContext);
 
+			ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");  // Nous n'avons qu'un seul CBuffer
 			pCB->SetConstantBuffer(pConstantBuffer);
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
@@ -491,17 +353,9 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		int32_t index;
 		for (index = 0; index < Material.size(); ++index)
 		{
-			if (Material[index].NomMateriau == chargeur.GetMaterialName(i))
-			{
-				break;
-			}
+			if (Material[index].NomMateriau == chargeur.GetMaterialName(i)) break;
 		}
-
-		if (index >= Material.size())
-		{
-			index = 0;  // valeur de défaut
-		}
-
+		if (index >= Material.size()) index = 0;  // valeur de défaut
 		SubsetMaterialIndex.push_back(index);
 	}
 
@@ -717,57 +571,5 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 	}
 }
 
-void CObjetMesh::InitDepthBuffer()
-{
-	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
-
-	D3D11_TEXTURE2D_DESC depthTextureDesc;
-	ZeroMemory(&depthTextureDesc, sizeof(depthTextureDesc));
-	depthTextureDesc.Width = 512;
-	depthTextureDesc.Height = 512;
-	depthTextureDesc.MipLevels = 1;
-	depthTextureDesc.ArraySize = 1;
-	depthTextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthTextureDesc.SampleDesc.Count = 1;
-	depthTextureDesc.SampleDesc.Quality = 0;
-	depthTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthTextureDesc.CPUAccessFlags = 0;
-	depthTextureDesc.MiscFlags = 0;
-
-	DXEssayer(
-		pD3DDevice->CreateTexture2D(&depthTextureDesc, nullptr, &pDepthTexture),
-		DXE_ERREURCREATIONTEXTURE);
-
-	// Création de la vue du tampon de profondeur (ou de stencil)
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSView;
-	ZeroMemory(&descDSView, sizeof(descDSView));
-	descDSView.Format = depthTextureDesc.Format;
-	descDSView.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSView.Texture2D.MipSlice = 0;
-	DXEssayer(
-		pD3DDevice->CreateDepthStencilView(pDepthTexture, &descDSView, &pDepthStencilView),
-		DXE_ERREURCREATIONDEPTHSTENCILTARGET);
-}
-
-void CObjetMesh::InitMatricesShadowMap()
-{
-	// Matrice de la vision vu par la lumière - Le point TO est encore 0,0,0
-	mVLight = XMMatrixLookAtLH(
-		XMVectorSet(-5.0f, 5.0f, -5.0f, 1.0f),
-		XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
-		XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-
-	const float champDeVision = XM_PI / 4;  // 45 degrés
-	const float ratioDAspect = 1.0f; 	// 512/512
-	const float planRapproche = 2.0f; 	// Pas besoin d'être trop près
-	const float planEloigne = 100.0f;	// Suffisemment pour avoir tous les objets
-	mPLight = XMMatrixPerspectiveFovLH(champDeVision,
-		ratioDAspect,
-		planRapproche,
-		planEloigne);
-
-	mVPLight = mVLight * mPLight;
-}
 
 } // namespace PM3D
