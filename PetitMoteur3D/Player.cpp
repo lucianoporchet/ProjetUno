@@ -77,7 +77,6 @@ void Player::moveFoward() {
 
 	mDir.normalize();
 	body->addForce(mDir * speed, PxForceMode::eACCELERATION);
-	const float angle = body->getGlobalPose().q.getAngle();
 	const float tilt = body->getGlobalPose().q.x;
 	if (tilt >= -0.1)
 	{
@@ -92,7 +91,6 @@ void Player::moveBackwards() {
 
 	mDir.normalize();
 	body->addForce(mDir * -speed, PxForceMode::eACCELERATION);
-	const float angle = body->getGlobalPose().q.getAngle();
 	const float tilt = body->getGlobalPose().q.x;
 	if (tilt <= 0.1)
 	{
@@ -108,28 +106,32 @@ void Player::moveRight() {
 
 	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 	viewY.normalize();
-	body->addForce(viewY * speed, PxForceMode::eIMPULSE);
-	const float angle = body->getGlobalPose().q.getAngle();
-	
-	body->setAngularVelocity(PxVec3(0.1f, 0.0f, 0.0f)/(angle+0.05f));
-	/*if (angle <= 0.45)
+	body->addForce(viewY * (speed/2), PxForceMode::eIMPULSE);
+	const float tilt = body->getGlobalPose().q.x;
+	if (tilt <= 0.15)
 	{
-		body->setAngularVelocity(PxVec3(0.1f, 0.0f, 0.0f));
+		body->setAngularVelocity(PxVec3(0.05f, 0.0f, 0.0f));
 	}
 	else
 	{
-		body->setAngularVelocity(PxVec3(0.01f));
-	}*/
+		body->setAngularVelocity(PxVec3(0.0f));
+	}
 	
 }
 void Player::moveLeft() {
 
 	PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 	viewY.normalize();
-	body->addForce(viewY * -speed, PxForceMode::eIMPULSE);
-	const float angle = body->getGlobalPose().q.getAngle();
-
-	body->setAngularVelocity(PxVec3(0.1f, 0.0f, 0.0f) / (angle + 0.05f));
+	body->addForce(viewY * -(speed/2), PxForceMode::eIMPULSE);
+	const float tilt = body->getGlobalPose().q.x;
+	if (tilt <= 0.15)
+	{
+		body->setAngularVelocity(PxVec3(0.05f, 0.0f, 0.0f));
+	}
+	else
+	{
+		body->setAngularVelocity(PxVec3(0.0f));
+	}
 	
 }
 
@@ -139,6 +141,7 @@ void Player::moveUp()
 	viewZ.normalize();
 	body->addForce(viewZ * -(speed/3), PxForceMode::eIMPULSE);
 }
+
 void Player::moveDown()
 {
 	PxVec3 viewZ = mDir.cross(PxVec3(1, 0, 0)).getNormalized();
