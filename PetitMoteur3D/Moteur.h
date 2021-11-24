@@ -201,7 +201,7 @@ protected:
 		const float champDeVision = XM_PI / 4; 	// 45 degrés
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
-		const float planEloigne = 5000.0;
+		const float planEloigne = 2000.0;
 
 		m_MatProj = XMMatrixPerspectiveFovRH(
 			champDeVision,
@@ -240,7 +240,7 @@ protected:
 		chargeur.Chargement(params);
 		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
 
-		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(5000.0f, 5000.0f, 5000.0f, pDispositif);
+		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(2000.0f, 2000.0f, 2000.0f, pDispositif);
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
 		ListeScene.push_back(std::move(skybox));
 
