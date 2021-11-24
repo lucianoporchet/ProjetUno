@@ -240,17 +240,15 @@ namespace PM3D {
 		////updateView();
 		//updateView();
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
-			CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
+		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		if ((0x80)) {
-			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
-			{
-				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
-				//pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
-				rot = XMFLOAT3(0.0f, yaw * 0.001f, 0.0f);
+		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80)) {
+			
+				yaw -= static_cast<float>(rGestionnaireDeSaisie.EtatSouris().lX);
+				pitch -= static_cast<float>(rGestionnaireDeSaisie.EtatSouris().lY);
+				rot = XMFLOAT3(pitch * 0.001f, yaw * 0.001f, 0.0f);
 				rotation = XMLoadFloat3(&rot);
 				rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
-			}
 		}
 		updateView();
 	}

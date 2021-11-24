@@ -21,8 +21,7 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 void Player::Anime(float tempEcoule)
 {
 	PM3D::CMoteurWindows& rMoteur = PM3D::CMoteurWindows::GetInstance();
-	const PM3D::CDIManipulateur& rGestionnaireDeSaisie =
-		rMoteur.GetGestionnaireDeSaisie();
+	const PM3D::CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
 	/*PxQuat quat(0.02f, mUp);
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));*/
@@ -50,11 +49,6 @@ void Player::Anime(float tempEcoule)
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_SPACE))
 	{
 		moveUp();
-	}
-	//au click gauche 
-	if (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] != 0)
-	{
-		
 	}
 
 	mDir.normalize();
