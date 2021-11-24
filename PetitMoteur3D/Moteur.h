@@ -252,8 +252,9 @@ protected:
 		 //Puis, il est ajouté à la scène
 		ListeScene.push_back(std::move(player));
 
-		for (int i = 0; i < 10; i++) {
-			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], 100.0f, true);
+		for (int i = 0; i < 15; i++) {
+			float size = static_cast<float>(RandomGenerator::get().next(75, 150));
+			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], size , true);
 
 
 			 //Lui assigner une texture

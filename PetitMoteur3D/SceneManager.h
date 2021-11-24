@@ -6,17 +6,22 @@ class SceneManager
 {
 public:
 
-	const physx::PxVec3 planetePos[10] = {
-		physx::PxVec3(-100.0f, -100.0f, -100.0f),
-		physx::PxVec3(100.0f, 100.0f, 80.0f),
-		physx::PxVec3(-500.0f, -80.0f, -50.0f),
-		physx::PxVec3(-80.0f, 700.0f, 100.0f),
-		physx::PxVec3(-30.0f, 900.0f, -300.0f),
-		physx::PxVec3(400.0f, -100.0f, -100.0f),
-		physx::PxVec3(500.0f, 600.0f, -900.0f),
-		physx::PxVec3(750.0f, -400.0f, -100.0f),
-		physx::PxVec3(600.0f, 450.0f, -70.0f),
-		physx::PxVec3(10.0f, 650.0f, 100.0f)
+	const physx::PxVec3 planetePos[15] = {
+		physx::PxVec3(1032.0f, -782.0f, 0.0f),
+		physx::PxVec3(-877.0f, -12520.0f, 296.0f),
+		physx::PxVec3(-103.0f, -947.0f, -890.0f),
+		physx::PxVec3(-1234.0f, 94.0f, 833.0f),
+		physx::PxVec3(1075.0f, -186.0f, 805.0f),
+		physx::PxVec3(133.0f, 1021.0f, 785.0f),
+		physx::PxVec3(486.0f, 208.0f, 25.0f),
+		physx::PxVec3(-1407.0f, 1061.0f, 399.0f),
+		physx::PxVec3(1082.0f, 775.0f, -282.0f),
+		physx::PxVec3(-828.0f, -96.0f, -271.0f),
+		physx::PxVec3(47.0f, -485.0f, -712.0f),
+		physx::PxVec3(-542.0f, 729.0f, -935.0f),
+		physx::PxVec3(-1337.0f, -414.0f, -1158.0f),
+		physx::PxVec3(625.0f, 1311.0f, -1086.0f),
+		physx::PxVec3(834.0f, -1237.0f, -1163.0f)
 	};
 	std::vector<PM3D::CObjetMesh> objectList;
 

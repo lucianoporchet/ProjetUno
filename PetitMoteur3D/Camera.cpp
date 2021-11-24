@@ -223,7 +223,7 @@ namespace PM3D {
 
 		cursorPosx = CMoteurWindows::GetInstance().pDispositif->GetHauteur() / 2;
 		cursorPosy = CMoteurWindows::GetInstance().pDispositif->GetLargeur() / 2;
-		std::cout << "oui" << std::endl;
+		
 
 		updateView();
 	}
