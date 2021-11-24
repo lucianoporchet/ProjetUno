@@ -231,16 +231,28 @@ namespace PM3D {
 
 	void CCamera::updateCam(XMFLOAT3 camPos)
 	{
-		position = XMLoadFloat3(&camPos);
+		XMStoreFloat3(&pos, position);
+		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
+		pos.x = pos.x + dir.x * 0.15f;
+		pos.y = pos.y + dir.y * 0.15f;
+		pos.z = pos.z + dir.z * 0.15f;
+		position = XMLoadFloat3(&pos);
+		
+
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80)) {
-				yaw -= static_cast<float>(rGestionnaireDeSaisie.EtatSouris().lX);
-				rot = XMFLOAT3(0.0f, yaw * 0.001f, 0.0f);
+		if ((0x80)) {
+			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
+			{
+				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
+				pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
+				rot = XMFLOAT3(pitch * 0.0009f, yaw * 0.0009f, 0.0f);
 				rotation = XMLoadFloat3(&rot);
-				rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
+				
+			}
 		}
+		rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		updateView();
 	}
 

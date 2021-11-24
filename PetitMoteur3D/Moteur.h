@@ -19,6 +19,7 @@
 
 #include "PanneauPE.h"
 #include "PhysXManager.h"
+#include "SceneManager.h"
 
 #include <vector>
 #include <string>
@@ -200,7 +201,7 @@ protected:
 		const float champDeVision = XM_PI / 4; 	// 45 degrés
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
-		const float planEloigne = 30000.0;
+		const float planEloigne = 5000.0;
 
 		m_MatProj = XMMatrixPerspectiveFovRH(
 			champDeVision,
@@ -239,7 +240,7 @@ protected:
 		chargeur.Chargement(params);
 		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
 
-		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(30000.0f, 30000.0f, 30000.0f, pDispositif);
+		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(5000.0f, 5000.0f, 5000.0f, pDispositif);
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
 		ListeScene.push_back(std::move(skybox));
 
@@ -252,7 +253,7 @@ protected:
 		ListeScene.push_back(std::move(player));
 
 		for (int i = 0; i < 10; i++) {
-			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\2\\Planete.obm", pDispositif, 10.0f, true);
+			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], 100.0f, true);
 
 
 			 //Lui assigner une texture
@@ -343,7 +344,7 @@ protected:
 	CChargeurOBJ chargeur;
 	CParametresChargement params;
 
-
+	SceneManager sceneManager;
 
 	// Les matrices
 	XMMATRIX m_MatView;

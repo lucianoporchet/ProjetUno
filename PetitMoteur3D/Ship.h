@@ -2,7 +2,7 @@
 #include "objet3d.h"
 #include "ObjetMesh.h"
 #include "PhysXManager.h"
-#include "Camera.h"
+
 
 
 class PM3D::IChargeur;

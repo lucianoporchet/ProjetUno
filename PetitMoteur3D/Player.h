@@ -22,6 +22,7 @@ public:
 	void roateRight();
 
 	void setCam(PM3D::CCamera* cam);
+	void updateCam();
 
 private:
 

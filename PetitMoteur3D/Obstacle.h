@@ -10,7 +10,7 @@ class PM3D::CDispositifD3D11;
 class Obstacle : public PM3D::CObjetMesh {
 
 public:
-	Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1, bool planet = false);
+	Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float scale = 1, bool planet = false);
 	virtual void Anime(float tempEcoule) override;
 
 

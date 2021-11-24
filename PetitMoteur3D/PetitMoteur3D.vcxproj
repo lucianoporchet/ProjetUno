@@ -210,6 +210,7 @@
     <ClCompile Include="Horloge.cpp" />
     <ClCompile Include="InfoDispositif.cpp" />
     <ClCompile Include="LectureFichier.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="MoteurWindows.cpp" />
     <ClCompile Include="MyContactModification.cpp" />
@@ -221,6 +222,7 @@
     <ClCompile Include="PhysXManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Ship.cpp" />
     <ClCompile Include="sommetbloc.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -248,6 +250,7 @@
     <ClInclude Include="Horloge.h" />
     <ClInclude Include="InfoDispositif.h" />
     <ClInclude Include="LectureFichier.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="MoteurWindows.h" />
     <ClInclude Include="MyContactModification.h" />
@@ -261,6 +264,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Ship.h" />
     <ClInclude Include="sommetbloc.h" />
     <ClInclude Include="sommetTerrain.h" />

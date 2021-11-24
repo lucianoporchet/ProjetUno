@@ -7,14 +7,14 @@
 #include "resource.h"
 
 
-Obstacle::Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, bool planet)
+Obstacle::Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float scale, bool planet)
 	: CObjetMesh(nomfichier, _pDispositif, scale), scale{ scale }, planet{ planet }
 {
-	const float x = static_cast<float>(RandomGenerator::get().next(-25, 25));
+	/*const float x = static_cast<float>(RandomGenerator::get().next(-25, 25));
 	const float y = static_cast<float>(RandomGenerator::get().next(-25, 25));
-	const float z = static_cast<float>(RandomGenerator::get().next(-200, -100));
+	const float z = static_cast<float>(RandomGenerator::get().next(-200, -100));*/
 	if (planet) {
-		body = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+		body = PhysXManager::get().createDynamic(PxTransform(pos), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 		body->addTorque(PxVec3(scale * 1000, scale * 1000, 0), PxForceMode::eIMPULSE);
 		body->setLinearDamping(0.5f);
 	}
