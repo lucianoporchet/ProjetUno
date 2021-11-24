@@ -234,16 +234,17 @@ protected:
 		obs->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
 		ListeScene.emplace_back(std::move(obs));*/
 			
-		/*params.NomChemin = ".\\modeles\\Player\\Soucoupe1\\";
-		params.NomFichier = "UFO1.obj";
-		chargeur.Chargement(params);*/
+	/*	params.NomChemin = ".\\modeles\\Asteroides\\";
+		params.NomFichier = "asteroide1.obj";
+		chargeur.Chargement(params);
+		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
 
 		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(30000.0f, 30000.0f, 30000.0f, pDispositif);
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
 		ListeScene.push_back(std::move(skybox));
 
 		// //Constructeur avec format binaire
-		//std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif);
+		
 		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
 		player->setCam(&freeCam);
 		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
@@ -251,7 +252,7 @@ protected:
 		ListeScene.push_back(std::move(player));
 
 		for (int i = 0; i < 10; i++) {
-			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\Planet3.obm", pDispositif, 10.0f, true);
+			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\2\\Planete.obm", pDispositif, 10.0f, true);
 
 
 			 //Lui assigner une texture

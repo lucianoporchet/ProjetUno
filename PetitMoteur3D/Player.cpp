@@ -60,9 +60,14 @@ void Player::Anime(float tempEcoule)
 	
 	const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
 	//const XMFLOAT3 pPos(body->getGlobalPose().p.x, body->getGlobalPose().p.y, body->getGlobalPose().p.z);
-	const XMFLOAT3 camDir(mDir.x, mDir.y, mDir.z);
+	//const XMFLOAT3 camDir(mDir.x, mDir.y, mDir.z);
+	camera->updateCam(camPos);
 
-	camera->updateCam(camPos, camDir);
+	XMFLOAT3 dir, up;
+	XMStoreFloat3(&dir, camera->foward);
+	XMStoreFloat3(&up, camera->up);
+	mDir = PxVec3(dir.x, dir.y, dir.z);
+	mUp = PxVec3(up.x, up.y, up.z);
 	/*PxVec3 dirc(1.0, 0.0, 0.0);
 	PxVec3 turnc = PxVec3(0.0f, 1.0f, 0.0f);
 	
@@ -82,15 +87,6 @@ void Player::Anime(float tempEcoule)
 
 
 	Ship::Anime(tempEcoule);
-	/*const PxVec3 pos = body->getGlobalPose().p;
-	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
-	const XMVECTOR posVec = XMLoadFloat3(&posF3);
-
-	const PxQuat quat = body->getGlobalPose().q;
-	const XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
-	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
-
-	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));*/
 }
 	
 void Player::moveFoward() {
@@ -136,12 +132,14 @@ void Player::roateRight() {
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
-
+	
 	PxQuat quat(0.01f, PxVec3(0, 1, 0));
 	// Aussi faire tourner le corps
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	
 	mDir = quat.rotate(mDir);
 	mDir.normalize();
+	
 
 	/*PxQuat rotation(-PxHalfPi / 16.0f, { 0, 1, 0 });
 
@@ -207,16 +205,15 @@ void Player::roateLeft() {
 
 void Player::moveUp()
 {
-	PxVec3 viewZ = mDir.cross(PxVec3(1, 0, 0)).getNormalized();
-	viewZ.normalize();
-	body->addForce(viewZ * -(speed/3), PxForceMode::eIMPULSE);
+	//PxVec3 viewZ = mDir.cross(PxVec3(1, 0, 0)).getNormalized();
+	mUp.normalize();
+	body->addForce(mUp * (speed/3), PxForceMode::eIMPULSE);
 }
 
 void Player::moveDown()
 {
-	PxVec3 viewZ = mDir.cross(PxVec3(1, 0, 0)).getNormalized();
-	viewZ.normalize();
-	body->addForce(viewZ * (speed/3), PxForceMode::eIMPULSE);
+	mUp.normalize();
+	body->addForce(mUp * -(speed / 3), PxForceMode::eIMPULSE);
 }
 
 

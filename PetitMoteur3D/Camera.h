@@ -12,9 +12,9 @@ namespace PM3D {
 	private:
 		XMVECTOR position;
 		XMVECTOR direction;
-		XMVECTOR up;
+		
 		XMVECTOR rotation;
-		XMVECTOR foward;
+		
 		XMVECTOR right;
 
 		XMFLOAT3 rot{ 0.0f, 0.0f, 0.0f }, pos;
@@ -43,7 +43,7 @@ namespace PM3D {
 			XMMATRIX* pMatView_in,
 			XMMATRIX* pMatProj_in,
 			XMMATRIX* pMatViewProj_in);
-		void updateCam(XMFLOAT3 camPos, XMFLOAT3 camDir);
+		void updateCam(XMFLOAT3 camPos);
 		void UpdateFree(float);
 		void UpdateLevel(float);
 		inline void SetPosition(const XMVECTOR& position_in) { position = position_in; };
@@ -62,6 +62,9 @@ namespace PM3D {
 		XMMATRIX* pMatViewProj;
 		//XMMATRIX matWorld;
 		float angleDirectionCamera;
+
+		XMVECTOR foward;
+		XMVECTOR up;
 	};
 }
 

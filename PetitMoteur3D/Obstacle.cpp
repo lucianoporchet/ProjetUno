@@ -23,7 +23,7 @@ Obstacle::Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisp
 		body->addTorque(PxVec3(scale, scale, 0), PxForceMode::eIMPULSE);
 		body->addForce(RandomGenerator::get().randomVec3(static_cast<int>(-scale) * 10, static_cast<int>(scale) * 10), PxForceMode::eIMPULSE);
 	}	
-	body->setMass(scale);
+	body->setMass(scale*10000);
 	PhysXManager::get().addToScene(body);
 }
 

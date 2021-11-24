@@ -11,6 +11,7 @@ Ship::Ship(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, 
 	: CObjetMesh(nomfichier, _pDispositif, scale), scale{ scale }
 {
 	mDir = PxVec3(0, 0, -1);
+	mUp = PxVec3(0, 1, 0);
 }
 
 void Ship::Anime(float tempEcoule)
