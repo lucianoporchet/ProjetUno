@@ -12,6 +12,8 @@ namespace PM3D {
 	private:
 		XMVECTOR position;
 		XMVECTOR direction;
+		int cursorPosx;
+		int cursorPosy;
 		
 		XMVECTOR rotation;
 		

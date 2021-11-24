@@ -222,6 +222,10 @@ namespace PM3D {
 		XMStoreFloat3(&pos, position);
 		/*XMVector4Normalize(direction);*/
 
+		cursorPosx = CMoteurWindows::GetInstance().pDispositif->GetHauteur() / 2;
+		cursorPosy = CMoteurWindows::GetInstance().pDispositif->GetLargeur() / 2;
+		std::cout << "oui" << std::endl;
+
 		updateView();
 	}
 
@@ -238,14 +242,14 @@ namespace PM3D {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 			CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80)) {
+		if ((0x80)) {
 			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
 			{
 				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
 				//pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
 				rot = XMFLOAT3(0.0f, yaw * 0.001f, 0.0f);
 				rotation = XMLoadFloat3(&rot);
-				
+				rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 			}
 		}
 		updateView();

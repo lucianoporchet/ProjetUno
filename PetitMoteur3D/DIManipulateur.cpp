@@ -80,6 +80,8 @@ bool CDIManipulateur::Init(HINSTANCE hInstance, HWND hWnd)
 		DXEssayer(pSouris->SetDataFormat(&c_dfDIMouse), ERREUR_CREATION_FORMATSOURIS);
 
 		pSouris->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		ShowCursor(FALSE); 
+		//SetCursorPos( / 2, CLIENT_HEIGHT / 2);
 
 		pSouris->Acquire();
 
@@ -130,10 +132,14 @@ void CDIManipulateur::Unaquire()
 	if (bDejaInit) {
 
 		pClavier->Unacquire();
-
 		pSouris->Unacquire();
 	}
 
+}
+
+void CDIManipulateur::setSourisPosition(int x, int y)
+{
+	SetCursorPos(x, y);
 }
 
 } // namespace PM3D

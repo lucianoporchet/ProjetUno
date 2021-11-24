@@ -16,6 +16,7 @@ public:
 
 	void Aquire(HWND hWnd);
 	void Unaquire();
+	void setSourisPosition(int x, int y);
 
 	const DIMOUSESTATE& EtatSouris() const { return mouseState; }
 
