@@ -13,8 +13,7 @@ namespace PM3D {
 	void CCamera::UpdateFree(float tempsEcoule) {
 		// Matrice de la vision
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
-		CDIManipulateur& rGestionnaireDeSaisie =
-			rMoteur.GetGestionnaireDeSaisie();
+		const CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
 		// Vérifier l’état de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A))
@@ -233,20 +232,12 @@ namespace PM3D {
 	void CCamera::updateCam(XMFLOAT3 camPos)
 	{
 		position = XMLoadFloat3(&camPos);
-		//rot.x = camDir.x;
-		//rot.y = camDir.y;
-		//rot.z = camDir.z;
-		////direction = XMLoadFloat3(&camDir);
-		////updateView();
-		//updateView();
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80)) {
-			
 				yaw -= static_cast<float>(rGestionnaireDeSaisie.EtatSouris().lX);
-				pitch -= static_cast<float>(rGestionnaireDeSaisie.EtatSouris().lY);
-				rot = XMFLOAT3(pitch * 0.001f, yaw * 0.001f, 0.0f);
+				rot = XMFLOAT3(0.0f, yaw * 0.001f, 0.0f);
 				rotation = XMLoadFloat3(&rot);
 				rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		}
@@ -254,35 +245,14 @@ namespace PM3D {
 	}
 
 	void CCamera::updateView() {
-
-		//XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(0.0f, -rot.x, 0.0f);
-
-		//direction = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
-		//direction += position;
-
-		//// up never changes for our camera.
-		////up = XMVector3TransformCoord(DEFAULT_UP, camRotationM);
-
-		//*pMatView = XMMatrixLookAtRH(position,
-		//	direction,
-		//	up);
-		//*pMatViewProj = (*pMatView) * (*pMatProj);
-
-		//XMMATRIX vecRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
-		//// this does changes though.
-		//foward = XMVector3TransformCoord(DEFAULT_FOWARD, vecRotationM);
-		//right = XMVector3TransformCoord(DEFAULT_RIGHT, vecRotationM);
-
-		XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+		const XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
 
 		direction = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		direction += position;
 
 		up = XMVector3TransformCoord(DEFAULT_UP, camRotationM);
 
-		*pMatView = XMMatrixLookAtRH(position,
-			direction,
-			up);
+		*pMatView = XMMatrixLookAtRH(position,direction,up);
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 
 		foward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
