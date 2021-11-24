@@ -16,10 +16,10 @@ public:
 
 	void moveFoward();
 	void moveBackwards();
-	void roateLeft();
+	void rotateLeft();
 	void moveUp();
 	void moveDown();
-	void roateRight();
+	void rotateRight();
 
 	void setCam(PM3D::CCamera* cam);
 	void updateCam();

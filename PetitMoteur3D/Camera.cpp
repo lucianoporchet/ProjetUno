@@ -30,13 +30,13 @@ namespace PM3D {
 		}
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W))
 		{
-			position += foward * cameraSpeed * tempsEcoule;
+			position += forward * cameraSpeed * tempsEcoule;
 			XMStoreFloat3(&pos, position);
 			updateView();
 		}
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_S))
 		{
-			position -= foward * cameraSpeed * tempsEcoule;
+			position -= forward * cameraSpeed * tempsEcoule;
 			XMStoreFloat3(&pos, position);
 			updateView();
 		}
@@ -267,7 +267,7 @@ namespace PM3D {
 		*pMatView = XMMatrixLookAtRH(position,direction,up);
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 
-		foward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
+		forward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		right = XMVector3TransformCoord(DEFAULT_RIGHT, camRotationM);
 	}
 

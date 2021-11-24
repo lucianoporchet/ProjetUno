@@ -34,7 +34,6 @@ inline void DXValider(const void* UnPointeur, const Type& unCode)
 		throw unCode;
 	}
 }
-
 // Relâcher un objet COM (un objet DirectX dans notre cas)
 template <class Type>
 inline void DXRelacher(Type& UnPointeur)
