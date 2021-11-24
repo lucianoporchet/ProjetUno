@@ -29,11 +29,11 @@ void Player::Anime(float tempEcoule)
 	// Vérifier l’état de la touche gauche
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A))
 	{
-		roateLeft();
+		rotateLeft();
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_D))
 	{
-		roateRight();
+		rotateRight();
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W))
 	{
@@ -56,25 +56,24 @@ void Player::Anime(float tempEcoule)
 	Ship::Anime(tempEcoule);
 }
 	
-void Player::moveFoward() {
-
+void Player::moveFoward() 
+{
 	mDir.normalize();
 	body->addForce(mDir * speed, PxForceMode::eACCELERATION);
 }
-void Player::moveBackwards() {
-
+void Player::moveBackwards() 
+{
 	mDir.normalize();
 	body->addForce(mDir * -speed, PxForceMode::eACCELERATION);
 }
 
-void Player::roateRight() {
-
+void Player::rotateRight() 
+{
 	const PxQuat quat(0.05f, mDir);
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
-void Player::roateLeft() {
-
-	
+void Player::rotateLeft() 
+{
 	const PxQuat quat(-0.05f, mDir);
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
@@ -101,14 +100,15 @@ void Player::setCam(PM3D::CCamera* cam)
 	camera = cam;
 }
 
-void Player::updateCam() {
+void Player::updateCam() 
+{
 	mDir.normalize();
 	const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10);
 	const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
 	camera->updateCam(camPos);
 
 	XMFLOAT3 dir, up;
-	XMStoreFloat3(&dir, camera->foward);
+	XMStoreFloat3(&dir, camera->forward);
 	XMStoreFloat3(&up, camera->up);
 	mDir = PxVec3(dir.x, dir.y, dir.z);
 	mUp = PxVec3(up.x, up.y, up.z);

@@ -65,7 +65,7 @@ namespace PM3D {
 		//XMMATRIX matWorld;
 		float angleDirectionCamera;
 
-		XMVECTOR foward;
+		XMVECTOR forward;
 		XMVECTOR up;
 	};
 }
