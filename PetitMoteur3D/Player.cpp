@@ -14,7 +14,9 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 	/*body->addTorque(PxVec3(100000, 1000000000, 0), PxForceMode::eIMPULSE);
 	body->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);*/
 	body->setLinearDamping(0.5f);
+	body->setAngularDamping(0.5f);
 	PhysXManager::get().addToScene(body);
+	speed = 30.0f;
 }
 
 void Player::Anime(float tempEcoule)
@@ -22,6 +24,9 @@ void Player::Anime(float tempEcoule)
 	PM3D::CMoteurWindows& rMoteur = PM3D::CMoteurWindows::GetInstance();
 	const PM3D::CDIManipulateur& rGestionnaireDeSaisie =
 		rMoteur.GetGestionnaireDeSaisie();
+
+	/*PxQuat quat(0.02f, mUp);
+	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));*/
 	// Vérifier l’état de la touche gauche
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A))
 	{
@@ -68,20 +73,17 @@ void Player::Anime(float tempEcoule)
 	XMStoreFloat3(&up, camera->up);
 	mDir = PxVec3(dir.x, dir.y, dir.z);
 	mUp = PxVec3(up.x, up.y, up.z);
+	
+	
 	/*PxVec3 dirc(1.0, 0.0, 0.0);
 	PxVec3 turnc = PxVec3(0.0f, 1.0f, 0.0f);
-	
 	PxQuat anglerotc(angleRotation, turnc);
 	dirc = anglerotc.rotate(dirc);
 	PxVec3 pov(-13.0f, 0.0f, 0.0f);
 	pov = anglerotc.rotate(pov);
-
 	const XMFLOAT3 dirc3(dirc.x, dirc.y, dirc.z);
 	PxVec3 position = body->getGlobalPose().p;
-
-	
 	const XMFLOAT3 pov3(pov.x + position.x, pov.y + position.y, pov.z + position.z);
-
 	camera->updateCam(pov3, dirc3);*/
 
 
@@ -93,21 +95,21 @@ void Player::moveFoward() {
 
 	mDir.normalize();
 	body->addForce(mDir * speed, PxForceMode::eACCELERATION);
-	const float tilt = body->getGlobalPose().q.x;
-	if (tilt >= -0.1)
+	//const float tilt = body->getGlobalPose().q.x;
+	/*if (tilt >= -0.1)
 	{
 		body->setAngularVelocity(PxVec3(-0.2f, 0.0f, 0.0f));
 	}
 	else
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
-	}
+	}*/
 }
 void Player::moveBackwards() {
 
 	mDir.normalize();
 	body->addForce(mDir * -speed, PxForceMode::eACCELERATION);
-	const float tilt = body->getGlobalPose().q.x;
+	/*const float tilt = body->getGlobalPose().q.x;
 	if (tilt <= 0.1)
 	{
 		body->setAngularVelocity(PxVec3(0.2f, 0.0f, 0.0f));
@@ -115,7 +117,7 @@ void Player::moveBackwards() {
 	else
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
-	}
+	}*/
 }
 
 void Player::roateRight() {
@@ -132,14 +134,13 @@ void Player::roateRight() {
 	{
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
-	
-	PxQuat quat(0.01f, PxVec3(0, 1, 0));
-	// Aussi faire tourner le corps
+	PxQuat quat(0.05f, mDir);
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 	
-	mDir = quat.rotate(mDir);
-	mDir.normalize();
 	
+	/*mDir = quat.rotate(mDir);
+	mDir.normalize();
+	*/
 
 	/*PxQuat rotation(-PxHalfPi / 16.0f, { 0, 1, 0 });
 
@@ -182,11 +183,10 @@ void Player::roateLeft() {
 		body->setAngularVelocity(PxVec3(0.0f));
 	}*/
 
-	PxQuat quat(-0.01f, PxVec3(0, 1, 0));
-	// Aussi faire tourner le corps
+	PxQuat quat(-0.05f, mDir);
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
-	mDir = quat.rotate(mDir);
-	mDir.normalize();
+	/*mDir = quat.rotate(mDir);
+	mDir.normalize();*/
 
 	/*PxQuat rotation(PxHalfPi / 16.0f, { 0, 1, 0 });
 
@@ -207,13 +207,13 @@ void Player::moveUp()
 {
 	//PxVec3 viewZ = mDir.cross(PxVec3(1, 0, 0)).getNormalized();
 	mUp.normalize();
-	body->addForce(mUp * (speed/3), PxForceMode::eIMPULSE);
+	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);
 }
 
 void Player::moveDown()
 {
 	mUp.normalize();
-	body->addForce(mUp * -(speed / 3), PxForceMode::eIMPULSE);
+	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);
 }
 
 
