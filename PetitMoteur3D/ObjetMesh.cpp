@@ -100,12 +100,12 @@ CObjetMesh::~CObjetMesh()
 	DXRelacher(pIndexBuffer);
 	DXRelacher(pVertexBuffer);
 
-	DXRelacher(pShadowMapView);
-	DXRelacher(pRenderTargetView);
-	DXRelacher(pTextureShadowMap);
-	DXRelacher(pDepthStencilView);
-	DXRelacher(pDepthTexture);
-	DXRelacher(pVertexLayoutShadow);
+	//DXRelacher(pShadowMapView);
+	//DXRelacher(pRenderTargetView);
+	//DXRelacher(pTextureShadowMap);
+	//DXRelacher(pDepthStencilView);
+	//DXRelacher(pDepthTexture);
+	//DXRelacher(pVertexLayoutShadow);
 }
 
 void CObjetMesh::InitEffet()
