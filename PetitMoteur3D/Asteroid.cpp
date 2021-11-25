@@ -11,7 +11,7 @@ Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisp
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	float rSpeed = static_cast<float>(RandomGenerator::get().next(150, 500));
-	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxCapsuleGeometry(scale,scale*1.3f), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 	body->addTorque(RandomGenerator::get().randomVec3(150, 300) * 1000.0f, PxForceMode::eIMPULSE);
 	body->addForce(PxVec3(-pos) * rSpeed, PxForceMode::eIMPULSE);
 	body->setMass(scale * 10);

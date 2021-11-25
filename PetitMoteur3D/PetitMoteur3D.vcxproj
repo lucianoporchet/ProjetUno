@@ -217,7 +217,6 @@
     <ClCompile Include="MyContactModification.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="ObjetMesh.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="PanneauPE.cpp" />
     <ClCompile Include="PetitMoteur3D.cpp" />
     <ClCompile Include="PhysXManager.cpp" />
@@ -260,7 +259,6 @@
     <ClInclude Include="NPC.h" />
     <ClInclude Include="objet3d.h" />
     <ClInclude Include="ObjetMesh.h" />
-    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="PanneauPE.h" />
     <ClInclude Include="PetitMoteur3D.h" />
     <ClInclude Include="PhysXManager.h" />
