@@ -17,6 +17,8 @@ public:
 	void Aquire(HWND hWnd);
 	void Unaquire();
 	void setSourisPosition(int x, int y);
+	void setPauseMenu(bool);
+	bool getState();
 
 	const DIMOUSESTATE& EtatSouris() const { return mouseState; }
 
@@ -27,6 +29,7 @@ private:
 	IDirectInputDevice8* pJoystick;
 
 	static bool bDejaInit;
+	bool isPause = false;
 
 	char tamponClavier[256];
 	DIMOUSESTATE mouseState;

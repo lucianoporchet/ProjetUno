@@ -180,7 +180,6 @@ void CObjetMesh::InitEffet()
 
 void CObjetMesh::Anime(float tempsEcoule)
 {
-
 	
 }
 

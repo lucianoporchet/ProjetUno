@@ -142,4 +142,14 @@ void CDIManipulateur::setSourisPosition(int x, int y)
 	SetCursorPos(x, y);
 }
 
+void CDIManipulateur::setPauseMenu(bool toShow) {
+	ShowCursor(toShow);
+	isPause = toShow;
+}
+
+bool CDIManipulateur::getState()
+{
+	return isPause;
+}
+
 } // namespace PM3D

@@ -330,6 +330,17 @@ protected:
 		// Prendre en note l'état de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
 
+		if (GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE))
+		{
+			if (GestionnaireDeSaisie.getState())
+			{
+				GestionnaireDeSaisie.setPauseMenu(false);
+			}
+			else {
+				GestionnaireDeSaisie.setPauseMenu(true);
+			}
+		}
+
 		//freeCam.UpdateFree(tempsEcoule);
 
 		for (auto& object3D : ListeScene)
