@@ -323,7 +323,7 @@ protected:
 	bool AnimeScene(float tempsEcoule)
 	{
 
-		physXManager.stepPhysics();
+		
 		// Prendre en note le statut du clavier
 		GestionnaireDeSaisie.StatutClavier();
 
@@ -342,7 +342,11 @@ protected:
 		}
 
 		//freeCam.UpdateFree(tempsEcoule);
+
+		//si on est sur le menu pause
 		if (!GestionnaireDeSaisie.getIsPauseStatus()) {
+
+			physXManager.stepPhysics();
 			for (auto& object3D : ListeScene)
 			{
 				object3D->Anime(tempsEcoule);
