@@ -1,10 +1,10 @@
 #pragma once
-#include "Ship.h"
+#include "MovingObject.h"
 
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
-class NPC : public Ship
+class NPC : public MovingObject
 {
 public:
 	NPC(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);

@@ -8,7 +8,7 @@
 
 
 Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float boxSize, float scale)
-	: Ship(nomfichier, _pDispositif, scale)
+	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	float rSpeed = static_cast<float>(RandomGenerator::get().next(150, 500));
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
@@ -40,5 +40,5 @@ void Asteroid::Anime(float tempEcoule)
 
 	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));*/
 	
-	Ship::Anime(tempEcoule);
+	MovingObject::Anime(tempEcoule);
 }

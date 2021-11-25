@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Ship.h"
+#include "MovingObject.h"
 #include "chargeur.h"
 #include "dispositifD3D11.h"
 #include "moteurWindows.h"
@@ -7,14 +7,14 @@
 #include "resource.h"
 
 
-Ship::Ship(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale)
+MovingObject::MovingObject(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale)
 	: CObjetMesh(nomfichier, _pDispositif, scale), scale{ scale }
 {
 	mDir = PxVec3(0, 0, -1);
 	mUp = PxVec3(0, 1, 0);
 }
 
-void Ship::Anime(float tempEcoule)
+void MovingObject::Anime(float tempEcoule)
 {
 	const PxVec3 pos = body->getGlobalPose().p;
 	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);

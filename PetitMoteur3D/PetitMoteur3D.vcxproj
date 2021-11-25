@@ -225,7 +225,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="sommetbloc.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -269,7 +269,7 @@
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Ship.h" />
+    <ClInclude Include="MovingObject.h" />
     <ClInclude Include="sommetbloc.h" />
     <ClInclude Include="sommetTerrain.h" />
     <ClInclude Include="stdafx.h" />

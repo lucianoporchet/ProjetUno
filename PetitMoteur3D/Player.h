@@ -1,6 +1,6 @@
 #pragma once
 #include "objet3d.h"
-#include "Ship.h"
+#include "MovingObject.h"
 #include "PhysXManager.h"
 #include "Camera.h"
 
@@ -8,7 +8,7 @@
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
-class Player : public Ship {
+class Player : public MovingObject {
 
 public:
 	Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);

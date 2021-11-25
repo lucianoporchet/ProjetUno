@@ -8,7 +8,7 @@
 
 
 Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float scale)
-	: Ship(nomfichier, _pDispositif, scale)
+	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	body = PhysXManager::get().createDynamic(PxTransform(pos), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 	body->addTorque(PxVec3(scale * 10000, scale * 10000, 0), PxForceMode::eIMPULSE);
@@ -20,5 +20,5 @@ Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 
 void Planet::Anime(float tempEcoule)
 {
-	Ship::Anime(tempEcoule);
+	MovingObject::Anime(tempEcoule);
 }
