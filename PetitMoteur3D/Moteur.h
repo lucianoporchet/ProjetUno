@@ -9,7 +9,6 @@
 #include "ChargeurOBJ.h"
 #include "Terrain.h"
 #include "Camera.h"
-#include "Obstacle.h"
 #include "Player.h"
 #include "Asteroid.h"
 #include "Planet.h"
