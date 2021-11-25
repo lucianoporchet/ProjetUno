@@ -198,6 +198,7 @@
   <ItemGroup>
     <ClCompile Include="AfficheurSprite.cpp" />
     <ClCompile Include="AfficheurTexte.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Bloc.cpp" />
     <ClCompile Include="BlocEffet1.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="PanneauPE.cpp" />
     <ClCompile Include="PetitMoteur3D.cpp" />
     <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -237,6 +239,7 @@
   <ItemGroup>
     <ClInclude Include="AfficheurSprite.h" />
     <ClInclude Include="AfficheurTexte.h" />
+    <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Bloc.h" />
     <ClInclude Include="BlocEffet1.h" />
     <ClInclude Include="Camera.h" />
@@ -261,6 +264,7 @@
     <ClInclude Include="PanneauPE.h" />
     <ClInclude Include="PetitMoteur3D.h" />
     <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Resource.h" />

@@ -3,8 +3,8 @@
 #include "Objet3D.h"
 #include "Bloc.h"   // Pour l'index du bloc
 #include "Texture.h"
-#include "PhysXManager.h"
-#include "RandomGenerator.h"
+//#include "PhysXManager.h"
+//#include "RandomGenerator.h"
 
 namespace PM3D
 {
@@ -28,7 +28,7 @@ public:
 
 	void SetTexture(CTexture* pTexture);
 
-	PxRigidDynamic* bloc;
+	//PxRigidDynamic* body;
 
 private:
 	bool multi;

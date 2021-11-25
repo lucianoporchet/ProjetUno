@@ -17,13 +17,15 @@ Obstacle::Obstacle(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisp
 		body = PhysXManager::get().createDynamic(PxTransform(pos), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
 		body->addTorque(PxVec3(scale * 1000, scale * 1000, 0), PxForceMode::eIMPULSE);
 		body->setLinearDamping(0.5f);
+		body->setMass(scale * 10000);
 	}
 	else {
-		body = PhysXManager::get().createDynamic(PxTransform(PxVec3(0.0f, 0.0f, 0.0f)), PxCapsuleGeometry(scale, scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
-		body->addTorque(PxVec3(scale, scale, 0), PxForceMode::eIMPULSE);
-		body->addForce(RandomGenerator::get().randomVec3(static_cast<int>(-scale) * 10, static_cast<int>(scale) * 10), PxForceMode::eIMPULSE);
+		body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+		body->addTorque(PxVec3(scale, scale, scale) * 1000, PxForceMode::eIMPULSE);
+		body->addForce(PxVec3(-pos) * 1000, PxForceMode::eIMPULSE);
+		body->setMass(scale * 10);
 	}	
-	body->setMass(scale*10000);
+	
 	PhysXManager::get().addToScene(body);
 }
 

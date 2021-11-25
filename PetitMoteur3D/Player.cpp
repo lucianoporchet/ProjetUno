@@ -12,7 +12,7 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 {
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(0.0f, 0.0f, 0.0f)), PxBoxGeometry(0.8f *scale, 0.2f * scale, 0.8f *scale),
 											PxVec3(0, 0, 0), PhysXManager::FilterGroup::ePlayer);
-	body->setLinearDamping(0.5f);
+	body->setLinearDamping(0.4f);
 	body->setAngularDamping(0.5f);
 	PhysXManager::get().addToScene(body);
 	speed = 30.0f;

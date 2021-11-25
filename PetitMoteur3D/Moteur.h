@@ -11,6 +11,8 @@
 #include "Camera.h"
 #include "Obstacle.h"
 #include "Player.h"
+#include "Asteroid.h"
+#include "Planet.h"
 
 #include "GestionnaireDeTextures.h"
 #include "AfficheurSprite.h"
@@ -20,6 +22,7 @@
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
+#include "RandomGenerator.h"
 
 #include <vector>
 #include <string>
@@ -201,7 +204,7 @@ protected:
 		const float champDeVision = XM_PI / 4; 	// 45 degrés
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
-		const float planEloigne = 3000.0;
+		const float planEloigne = 4000.0;
 
 		m_MatProj = XMMatrixPerspectiveFovRH(
 			champDeVision,
@@ -239,8 +242,8 @@ protected:
 		params.NomFichier = "asteroide1.obj";
 		chargeur.Chargement(params);
 		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
-
-		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(3000.0f, 3000.0f, 3000.0f, pDispositif);
+		float boxSize = 3000.0f;
+		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
 		ListeScene.push_back(std::move(skybox));
 
@@ -253,8 +256,8 @@ protected:
 		ListeScene.push_back(std::move(player));
 
 		for (int i = 0; i < 15; i++) {
-			float size = static_cast<float>(RandomGenerator::get().next(75, 150));
-			std::unique_ptr<Obstacle> planet = std::make_unique<Obstacle>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], size , true);
+			float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
+			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], scale);
 
 
 			 //Lui assigner une texture
@@ -262,6 +265,13 @@ protected:
 
 
 			ListeScene.push_back(std::move(planet));
+		}
+
+		for (int i = 0; i < 4; i++) {
+			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
+			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
+			std::unique_ptr<Asteroid> asteroid = std::make_unique<Asteroid>(".\\modeles\\Asteroide\\1\\asteroide.obm", pDispositif, pos, boxSize, scale);
+			ListeScene.push_back(std::move(asteroid));
 		}
 
 		//return true;
