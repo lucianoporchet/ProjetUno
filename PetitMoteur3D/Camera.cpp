@@ -69,7 +69,7 @@ namespace PM3D {
 				
 			}
 		}
-		if (!rGestionnaireDeSaisie.getState())
+		if (!rGestionnaireDeSaisie.getIsPauseStatus())
 		{
 			rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		}

@@ -18,7 +18,7 @@ public:
 	void Unaquire();
 	void setSourisPosition(int x, int y);
 	void setPauseMenu(bool);
-	bool getState();
+	bool getIsPauseStatus();
 
 	const DIMOUSESTATE& EtatSouris() const { return mouseState; }
 

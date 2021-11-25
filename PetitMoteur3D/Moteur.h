@@ -332,7 +332,7 @@ protected:
 
 		if (GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE))
 		{
-			if (GestionnaireDeSaisie.getState())
+			if (GestionnaireDeSaisie.getIsPauseStatus())
 			{
 				GestionnaireDeSaisie.setPauseMenu(false);
 			}
@@ -342,11 +342,13 @@ protected:
 		}
 
 		//freeCam.UpdateFree(tempsEcoule);
-
-		for (auto& object3D : ListeScene)
-		{
-			object3D->Anime(tempsEcoule);
+		if (!GestionnaireDeSaisie.getIsPauseStatus()) {
+			for (auto& object3D : ListeScene)
+			{
+				object3D->Anime(tempsEcoule);
+			}
 		}
+		
 
 		return true;
 	}

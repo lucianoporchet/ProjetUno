@@ -147,7 +147,7 @@ void CDIManipulateur::setPauseMenu(bool toShow) {
 	isPause = toShow;
 }
 
-bool CDIManipulateur::getState()
+bool CDIManipulateur::getIsPauseStatus()
 {
 	return isPause;
 }
