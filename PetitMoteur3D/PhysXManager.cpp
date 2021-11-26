@@ -109,6 +109,7 @@ PxFilterFlags FilterShader(
 {
 	//TO DO: code pour gerer les cas particuliers lors des collisions et le triggers
 	
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;
 }
 
