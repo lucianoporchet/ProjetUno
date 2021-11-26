@@ -303,6 +303,11 @@ void CObjetMesh::setMatWorld(XMMATRIX& matworld)
 	matWorld = matworld;
 }
 
+void CObjetMesh::setTesselation(bool boolean)
+{
+	isTessellated = boolean;
+}
+
 void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 {
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();

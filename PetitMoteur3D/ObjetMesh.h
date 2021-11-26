@@ -95,6 +95,7 @@ public:
 	virtual void Draw() override;
 
 	void setMatWorld(XMMATRIX& matworld);
+	void setTesselation(bool);
 
 private:
 	void TransfertObjet(const IChargeur& chargeur);
