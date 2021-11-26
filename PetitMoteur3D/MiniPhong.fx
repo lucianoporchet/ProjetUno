@@ -15,8 +15,6 @@ cbuffer param
 	float2 remplissage;
 }
 
-static float distance;
-
 struct VS_Sortie
 {
 	float4 Pos : SV_Position;
@@ -25,27 +23,14 @@ struct VS_Sortie
 	float3 vDirCam : TEXCOORD2;
 	float2 coordTex : TEXCOORD3;
 };
+
 static VS_Sortie sortie = (VS_Sortie)0;
+
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
-
-	float3 objPos;
-	objPos.x = matWorld[0][3];
-	objPos.y = matWorld[1][3];
-	objPos.z = matWorld[2][3];
-	distance = abs(sqrt((objPos.x - vCamera.x) * (objPos.x - vCamera.x) +
-		(objPos.y - vCamera.y) * (objPos.y - vCamera.y) +
-		(objPos.z - vCamera.z) * (objPos.z - vCamera.z)));
-	
-
-		sortie.Pos = Pos;
-		//sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
-		// Coordonnées d'application de texture
-
-
+	sortie.Pos = Pos;
 	sortie.coordTex = coordTex;
 	
-
 	return sortie;
 }
 
@@ -56,57 +41,57 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
 
-	//float3 PosWorld = mul(vs.Pos, matWorld).xyz;
-	vs.vDirLum = vLumiere.xyz - vs.Pos;
-	vs.vDirCam = vCamera.xyz - vs.Pos;
+	float3 PosWorld = mul(vs.Pos, matWorld).xyz;
+	vs.vDirLum = vLumiere.xyz - PosWorld;
+	vs.vDirCam = vCamera.xyz - PosWorld;
 
 
 
-// Normaliser les paramètres
-float3 N = normalize(vs.Norm);
-float3 L = normalize(vs.vDirLum);
-float3 V = normalize(vs.vDirCam);
+	// Normaliser les paramètres
+	float3 N = normalize(vs.Norm);
+	float3 L = normalize(vs.vDirLum);
+	float3 V = normalize(vs.vDirCam);
 
-// Valeur de la composante diffuse
-float3 diff = saturate(dot(N, L));
+	// Valeur de la composante diffuse
+	float3 diff = saturate(dot(N, L));
 
-// R = 2 * (N.L) * N – L
-float3 R = normalize(2 * diff * N - L);
+	// R = 2 * (N.L) * N – L
+	float3 R = normalize(2 * diff * N - L);
 
-// Puissance de 4 - pour l'exemple
-float S = pow(saturate(dot(R, V)), puissance);
+	// Puissance de 4 - pour l'exemple
+	float S = pow(saturate(dot(R, V)), puissance);
+	float3 couleurTexture;
 
-float3 couleurTexture;
-if (bTex > 0)
-{
-	// Échantillonner la couleur du pixel à partir de la texture
-	couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
-	// I = A + D * N.L + (R.V)n
-	//vAEcl.rgb = float3(1.f, 1.f, 1.f);
-	couleur = couleurTexture * vAEcl.rgb +
-		couleurTexture * vDEcl.rgb * diff +
-		vSEcl.rgb * vSMat.rgb * S;
-}
-else
-{
-	couleur = vAEcl.rgb * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
-		vSEcl.rgb * vSMat.rgb * S;
-}
+	if (bTex > 0)
+	{
+		// Échantillonner la couleur du pixel à partir de la texture
+		couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
+		// I = A + D * N.L + (R.V)n
+		//vAEcl.rgb = float3(1.f, 1.f, 1.f);
+		couleur = couleurTexture * vAEcl.rgb +
+			      couleurTexture * vDEcl.rgb * diff +
+		          vSEcl.rgb * vSMat.rgb * S;
+	}
+	else
+	{
+		couleur = vAEcl.rgb * vAMat.rgb +
+			      vDEcl.rgb * vDMat.rgb * diff +
+		          vSEcl.rgb * vSMat.rgb * S;
+	}
 
 
-return float4(couleur, 1.0f);
+	return float4(couleur, 1.0f);
 }
 
 [maxvertexcount(4)]
 void MiniPhongGS(triangle VS_Sortie input[3],
 	inout TriangleStream<VS_Sortie> TriStream)
 {
-	//VS_Sortie sortie= (VS_Sortie)0;
 	
 		// Calculer la normale
 		float3 CoteA = input[1].Pos - input[0].Pos;
 		float3 CoteB = input[2].Pos - input[0].Pos;
-		float3 Normale = mul(normalize(cross(CoteA, CoteB)), matWorld);
+		float3 Normale = mul(float4(cross(CoteA, CoteB), 0.0f), matWorld).xyz;
 		float4 PointSupp = input[0].Pos + (input[2].Pos - input[0].Pos) / 2;
 		// Points 0 et 1
 		for (int i = 0; i < 2; i++)
