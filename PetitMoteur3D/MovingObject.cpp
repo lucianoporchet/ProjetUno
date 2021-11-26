@@ -37,6 +37,7 @@ void MovingObject::Anime(float tempEcoule)
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
 	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
+	PM3D::CObjetMesh::Anime(tempEcoule);
 }
 
 

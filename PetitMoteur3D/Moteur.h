@@ -233,11 +233,7 @@ protected:
 
 
 
-		//Creation du player, constructeur avec format binaire
-		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
-		player->setCam(&freeCam);						//lie la camera au player
-		ListeScene.push_back(std::move(player));		//ajoute le player a la scene
-
+		
 
 
 		//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
@@ -246,6 +242,12 @@ protected:
 			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], scale);
 			ListeScene.push_back(std::move(planet));
 		}
+
+		//Creation du player, constructeur avec format binaire
+		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
+		player->setCam(&freeCam);						//lie la camera au player
+		ListeScene.push_back(std::move(player));		//ajoute le player a la scene
+
 
 		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
 		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)

@@ -49,7 +49,7 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif
 	TransfertObjet(chargeur);
 
 	// Initialisation de l'effet
-	InitEffet();
+	InitEffet(false);
 }
 
 // Constructeur de conversion
@@ -67,7 +67,7 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier,
 	LireFichierBinaire(nomfichier);
 
 	// Initialisation de l'effet
-	InitEffet();
+	InitEffet(false);
 }
 
 // Constructeur pour lecture d'un objet de format OMB
@@ -80,7 +80,7 @@ CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispos
 	LireFichierBinaire(nomfichier);
 
 	// Initialisation de l'effet
-	InitEffet();
+	InitEffet(false);
 
 	
 	matWorld = XMMatrixScaling(scale, scale, scale);
@@ -108,7 +108,7 @@ CObjetMesh::~CObjetMesh()
 	//DXRelacher(pVertexLayoutShadow);
 }
 
-void CObjetMesh::InitEffet()
+void CObjetMesh::InitEffet(bool booleanDistance)
 {
 	// Compilation et chargement du vertex shader
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
@@ -126,9 +126,20 @@ void CObjetMesh::InitEffet()
 	// Pour l'effet
 	ID3DBlob* pFXBlob = nullptr;
 
-	DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0,
-		"fx_5_0", 0, 0, &pFXBlob, 0),
-		DXE_ERREURCREATION_FX);
+	if (booleanDistance)
+	{
+		DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0,
+			"fx_5_0", 0, 0, &pFXBlob, 0),
+			DXE_ERREURCREATION_FX);
+	}
+	else
+	{
+		DXEssayer(D3DCompileFromFile(L"MiniPhongClassic.fx", 0, 0, 0,
+			"fx_5_0", 0, 0, &pFXBlob, 0),
+			DXE_ERREURCREATION_FX);
+	}
+	
+
 
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
 
@@ -180,6 +191,32 @@ void CObjetMesh::InitEffet()
 
 void CObjetMesh::Anime(float tempsEcoule)
 {
+
+	XMVECTOR camPos;
+
+	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
+	camPos = moteur.GetFreeCamera().getPosition();
+
+	XMFLOAT3 cpos;
+	XMStoreFloat3(&cpos, camPos);
+	
+	XMVECTOR objPos = XMVectorSet(matWorld._41, matWorld._42, matWorld._43, 1.0f);
+	XMFLOAT3 objpos;
+
+	XMStoreFloat3(&objpos, objPos);
+	float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
+
+
+	if (distance <= 600.0f && !isTessellated)
+	{
+		InitEffet(true);
+		isTessellated = true;
+	} 
+	else if (distance > 600.0f && isTessellated)
+	{
+		InitEffet(false);
+		isTessellated = false;
+	}
 	
 }
 
@@ -208,8 +245,13 @@ void CObjetMesh::Draw()
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 
+	XMVECTOR camPos;
+
+	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
+	camPos = moteur.GetFreeCamera().getPosition();
+
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
-	sp.vCamera = XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f);
+	sp.vCamera = camPos;
 	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);

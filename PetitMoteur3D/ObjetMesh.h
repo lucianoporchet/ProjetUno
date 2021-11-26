@@ -98,7 +98,7 @@ public:
 
 private:
 	void TransfertObjet(const IChargeur& chargeur);
-	void InitEffet();
+	void InitEffet(bool);
 	void EcrireFichierBinaire(const IChargeur& chargeur, const std::string& nomFichier);
 	void LireFichierBinaire(const std::string& nomFichier);
 	void InitDepthBuffer();
@@ -141,6 +141,8 @@ private:
 	XMMATRIX mVLight;
 	XMMATRIX mPLight;
 	XMMATRIX mVPLight;
+
+	bool isTessellated = false;
 };
 
 } // // namespace PM3D
