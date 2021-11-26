@@ -50,6 +50,7 @@ namespace PM3D {
 
 		XMStoreFloat3(&pos, position);
 		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
+		// TODO a ameliorer, on clippe dans le modele du joueur. Potentiellement ne pas le rendre?
 		pos.x = pos.x + dir.x;
 		pos.y = pos.y + dir.y;
 		pos.z = pos.z + dir.z;
