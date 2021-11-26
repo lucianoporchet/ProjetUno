@@ -3,13 +3,17 @@
 #include "MyContactModification.h"
 
 using namespace physx;
+
+//singleton de la classe du physX manager
 class PhysXManager
 {
 private:
-	PhysXManager();
-
+	PhysXManager() noexcept;
 public:
+	PhysXManager(const PhysXManager&) = delete;
+	PhysXManager& operator=(const PhysXManager&) = delete;
 
+	//filter group pour gerer les collission dans physX
 	struct FilterGroup
 	{
 		enum Enum
@@ -22,20 +26,22 @@ public:
 		};
 	};
 
+	//ajouter une gestion de collision entre deux objets a l'aide de leur FilterGroup
 	void setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask);
+
+
 	
-	PhysXManager(const PhysXManager&) = delete;
-	PhysXManager& operator=(const PhysXManager&) = delete;
-	//PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0));
-	void initPhysics();
-	void stepPhysics();
-	void cleanupPhysics();
+	void initPhysics();		//lancer la physique
+	void stepPhysics();		//update la physique
+	void cleanupPhysics();	//clean la physique
 
+	//ajouter ou enlever des acteurs de la scene de physX
 	void addToScene(PxActor* actor);
-
-	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group);
-
 	void removeActor(PxActor& actor);
+
+	//creer un rigid body
+	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group);
+	
 
 public:
 	static PhysXManager& get();
@@ -53,6 +59,7 @@ private:
 
 };
 
+//Gestionnaire de collisions
 PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,

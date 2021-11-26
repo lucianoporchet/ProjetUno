@@ -154,10 +154,7 @@ protected:
 	// Fonctions de rendu et de présentation de la scène
 	virtual bool RenderScene()
 	{
-		//BeginRenderSceneSpecific();
-
-		//pPanneauPE->DebutPostEffect();
-
+		
 		BeginRenderSceneSpecific();
 
 		// Appeler les fonctions de dessin de chaque objet de la scène
@@ -167,12 +164,6 @@ protected:
 		}
 
 		EndRenderSceneSpecific();
-
-		//pPanneauPE->FinPostEffect();
-
-		//pPanneauPE->Draw();
-
-		//EndRenderSceneSpecific();
 
 		return true;
 	}
@@ -195,7 +186,6 @@ protected:
 	virtual int InitScene()
 	{
 		// Initialisation des matrices View et Proj
-		// Dans notre cas, ces matrices sont fixes
 		m_MatView = XMMatrixLookAtRH(
 			XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
@@ -215,6 +205,7 @@ protected:
 		// Calcul de VP à l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 
+		// Initialisation de la camera du joeur
 		freeCam.Init(XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj);
@@ -232,91 +223,38 @@ protected:
 
 	bool InitObjets()
 	{
+		float boxSize = 3000.0f; //taille de la fausse skybox
 
-		/*char* filename = new char[50]("Planet.obj");
-		std::unique_ptr<Obstacle> obs = std::make_unique<Obstacle>(filename, XMFLOAT3(10.0f, 10.0f, 10.0f), pDispositif);
-		obs->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-		ListeScene.emplace_back(std::move(obs));*/
-			
-	/*	params.NomChemin = ".\\modeles\\Asteroides\\";
-		params.NomFichier = "asteroide1.obj";
-		chargeur.Chargement(params);
-		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
-		float boxSize = 3000.0f;
+		//Creation de la fausse skyBox (cube avec le culling inversé)
 		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
+		//ajoute une texture a la skybox
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
-		ListeScene.push_back(std::move(skybox));
+		ListeScene.push_back(std::move(skybox));		//ajoute la skybox a la scene
 
-		// //Constructeur avec format binaire
-		
+
+
+		//Creation du player, constructeur avec format binaire
 		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
-		player->setCam(&freeCam);
-		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-		 //Puis, il est ajouté à la scène
-		ListeScene.push_back(std::move(player));
+		player->setCam(&freeCam);						//lie la camera au player
+		ListeScene.push_back(std::move(player));		//ajoute le player a la scene
 
+
+
+		//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
 		for (int i = 0; i < 15; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
 			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], scale);
-
-
-			 //Lui assigner une texture
-			//pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-
-
 			ListeScene.push_back(std::move(planet));
 		}
 
+		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
+		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
 		for (int i = 0; i < 4; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
 			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
 			std::unique_ptr<Asteroid> asteroid = std::make_unique<Asteroid>(".\\modeles\\Asteroide\\1\\asteroide.obm", pDispositif, pos, boxSize, scale);
 			ListeScene.push_back(std::move(asteroid));
 		}
-
-		//return true;
-		 //Constructeur avec format binaire
-
-		//std::unique_ptr<CObjetMesh> pMesh =
-		//	std::make_unique<CObjetMesh>("Planet.OMB", pDispositif);
-		//// Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pMesh));
-		//std::unique_ptr<CObjetMesh> pMesh2 = std::make_unique<CObjetMesh>(".\\modeles\\jin\\jin.OMB", pDispositif);
-		// //Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pMesh2));
-
-		// //Création de l'afficheur de sprites et ajout des sprites
-		//std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-
-		//// ajout de panneaux 
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(1.0f, 0.0f, 1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(0.0f, 0.0f, -1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-1.0f, 0.0f, 0.5f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-0.5f, 0.0f, 1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-2.0f, 0.0f, 2.0f));
-
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 200,400);
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 500,500, 100, 100);
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 800,200, 100, 100);
-
-		//CAfficheurTexte::Init();
-		//const Gdiplus::FontFamily oFamily(L"Arial", nullptr);
-		//pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
-		//pTexte1 = std::make_unique<CAfficheurTexte>(pDispositif, 256, 256, pPolice.get());
-
-		//pAfficheurSprite->AjouterSpriteTexte(pTexte1->GetTextureView(), 0, 257);
-
-		//pTexte1->Ecrire(L"Test du texte");
-
-		// //Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pAfficheurSprite));
-
-		//pPanneauPE = std::make_unique<CPanneauPE>(pDispositif);
 
 		return true;
 	}
@@ -340,7 +278,6 @@ protected:
 			}
 		}
 
-		//freeCam.UpdateFree(tempsEcoule);
 
 		//si on est sur le menu pause
 		if (!manager.getIsPauseStatus()) {
@@ -355,13 +292,18 @@ protected:
 
 		return true;
 	}
+
 public:
 	// Le dispositif de rendu
 	TClasseDispositif* pDispositif;
 
+
+protected:
+
+	
 	// La seule scène
 	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
-protected:
+
 	// Variables pour le temps de l'animation
 	int64_t TempsSuivant;
 	int64_t TempsCompteurPrecedent;
@@ -385,16 +327,23 @@ protected:
 	std::wstring str;
 
 	std::unique_ptr<Gdiplus::Font> pPolice;
-
-	CDIManipulateur GestionnaireDeSaisie;
-
-	GameManager& manager = GameManager::get();
-
 	std::unique_ptr<CPanneauPE> pPanneauPE;
 
+
+	//gestionnaire de saisie
+	CDIManipulateur GestionnaireDeSaisie;
+
+	//game manager
+	GameManager& manager = GameManager::get();
+
+	
+	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();
 
+	//camera joueur
 	CCamera freeCam;
+
+	//objet joueur
 	std::unique_ptr<Player> player;
 
 

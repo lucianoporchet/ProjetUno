@@ -4,6 +4,7 @@
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
+//class pour npc de vaisseaux
 class NPC : public MovingObject
 {
 public:

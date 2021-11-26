@@ -3,18 +3,7 @@
 
 using namespace physx;
 
-struct FilterGroup
-{
-	enum Enum
-	{
-		ePlayer = (1 << 0),
-		eObstacle = (1 << 1),
-		eMonster = (1 << 2),
-		ePortal = (1 << 3),
-		eDebris = (1 << 4)
-	};
-};
-
+//Gestionnaire de conflits
 class MyContactModification : public PxContactModifyCallback, public PxSimulationEventCallback
 {
 	void onContactModify(PxContactModifyPair* const pairs, PxU32 count);
@@ -32,8 +21,5 @@ class MyContactModification : public PxContactModifyCallback, public PxSimulatio
 
 	virtual void onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count) override;
 
-	bool once = true;
-
-	
 };
 

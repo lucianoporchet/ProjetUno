@@ -6,7 +6,9 @@
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
+//class Monstre
 class Monster : public PM3D::CObjetMesh
 {
+	//TO DO
 };
 

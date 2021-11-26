@@ -17,5 +17,6 @@ void NPC::Anime(float tempEcoule)
 
 void NPC::move() {
 
+	//TO DO
 
 }

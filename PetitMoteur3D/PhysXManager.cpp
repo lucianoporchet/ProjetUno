@@ -5,7 +5,7 @@
 #define PX_RELEASE(x) if(x) { x->release(); x = NULL; }
 
 
-PhysXManager::PhysXManager() {
+PhysXManager::PhysXManager() noexcept {
 	initPhysics();
 }
 
@@ -38,8 +38,6 @@ void PhysXManager::initPhysics()
 	}
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
-	/*PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene->addActor(*groundPlane);*/
 }
 
 void PhysXManager::stepPhysics()
@@ -86,8 +84,8 @@ void PhysXManager::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 
 {
 	PxFilterData filterData;
 	filterData.word0 = filterGroup; // word0 = own ID
-	filterData.word1 = filterMask;  // word1 = ID mask to filter pairs that trigger a
-									// contact callback;
+	filterData.word1 = filterMask;  // word1 = ID mask to filter pairs that trigger a contact callback
+
 	const PxU32 numShapes = actor->getNbShapes();
 	PxShape** shapes = (PxShape**)malloc(sizeof(PxShape*) * numShapes);
 	actor->getShapes(shapes, numShapes);
@@ -108,30 +106,9 @@ PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
-{/*
-	if (filterData0.word0 == FilterGroup::eBALL && filterData1.word0 == FilterGroup::eBALL)
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}*/
-
-	/*if (filterData0.word0 == PhysXManager::FilterGroup::eObstacle && filterData1.word0 == PhysXManager::FilterGroup::eObstacle)
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}*/
-
-
-	//if (filterData0.word0 == PhysXManager::FilterGroup::ePlayer && filterData1.word0 != 0) {
-	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-	//	return PxFilterFlag::eDEFAULT;
-	//}
-	//if (filterData1.word0 == PhysXManager::FilterGroup::ePlayer && filterData0.word0 != 0) {
-	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-	//	return PxFilterFlag::eDEFAULT;
-	//}
-
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+{
+	//TO DO: code pour gerer les cas particuliers lors des collisions et le triggers
+	
 	return PxFilterFlag::eDEFAULT;
 }
 
