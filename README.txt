@@ -30,7 +30,16 @@ direction vers laquelle on avance/recule)
  fermer le jeu normalement.
  
  La structure du code n'est pas encore finalisée et
- sera améliorée pour le volet 3.
+ sera améliorée pour le volet 3, mais tente de
+ s'approcher au maximum de ce qui a été proposé au
+ volet 1. Cependant, il y a eu quelques changements.
+ 
+ - Afin d'éviter la redondance des classes CCamera,
+ les trois caméras prévues (FreeCam, 3e personne et
+ 1ere personne) ont été fusionnées en une camera
+ avec des pointeurs vers différentes fonctions
+ update(), qui font différentes mises à jour de la
+ position de la caméra.
 ====================================================
 	Description du format des données et 
 	      des outils de lecture
