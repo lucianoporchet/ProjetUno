@@ -330,7 +330,7 @@ protected:
 		// Prendre en note l'état de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
 
-		if (GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE))
+		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) )
 		{
 			if (GestionnaireDeSaisie.getIsPauseStatus())
 			{

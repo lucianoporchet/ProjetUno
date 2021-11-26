@@ -20,12 +20,16 @@ Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 	{
 	case 1:
 		body->addTorque(PxVec3(static_cast<float>(pow(scale * 2, 4)),0, 0), PxForceMode::eIMPULSE);
+		break;
 	case 2:
 		body->addTorque(PxVec3(0, static_cast<float>(pow(scale * 2, 4)), 0), PxForceMode::eIMPULSE);
+		break;
 	case 3 :
 		body->addTorque(PxVec3(0, 0, static_cast<float>(pow(scale * 2, 4))), PxForceMode::eIMPULSE);
+		break;
 	case 4:
 		body->addTorque(PxVec3(static_cast<float>(pow(scale * 2, 4)), static_cast<float>(pow(scale * 2, 4)), 0), PxForceMode::eIMPULSE);
+		break;
 	default:
 		break;
 	}
