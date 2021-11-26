@@ -56,3 +56,17 @@ direction vers laquelle on avance/recule)
  de l'objet. L'on prend alors comme entrée des .obj 
  que l'on transforme en fichiers intermédiaires,
  afin de les lire plus rapidement et charger vite.
+ 
+ 
+====================================================
+			LOD
+====================================================
+
+Pour ce qui est du LOD nous avons mis en place la
+tesselation dans le shader Miniphong.fx. Nous avons
+également un shader nommé MiniphongClassic.fx qui
+est le shader de base.
+Lors de l'animation de chaque objet on teste la
+distance par rapport a la caméra et si l'on est
+assez proche on active alors la tesselation pour
+ajouter du détail.
