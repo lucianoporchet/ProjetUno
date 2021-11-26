@@ -102,9 +102,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="3rdCamera.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Asteroid.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -214,9 +211,6 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdCamera.h">
-      <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>

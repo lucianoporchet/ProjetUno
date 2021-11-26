@@ -196,7 +196,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="3rdCamera.cpp" />
     <ClCompile Include="AfficheurSprite.cpp" />
     <ClCompile Include="AfficheurTexte.cpp" />
     <ClCompile Include="Asteroid.cpp" />
@@ -237,7 +236,6 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3rdCamera.h" />
     <ClInclude Include="AfficheurSprite.h" />
     <ClInclude Include="AfficheurTexte.h" />
     <ClInclude Include="Asteroid.h" />

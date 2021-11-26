@@ -8,19 +8,17 @@
 namespace PM3D {
 
 
-	struct Update3RD {
-		void update(XMFLOAT3 camPos, CCamera cam);
-	};
-	struct Update1ST {
-		void update(XMFLOAT3 camPos, CCamera cam);
-	};
-	struct UpdateFREE {
-		void update(XMFLOAT3 camPos, CCamera cam);
-	};
 
 	class CCamera
 	{
+		// Definition du pointeur de fonction
+		using UpdatePF = void(PM3D::CCamera::*)(XMFLOAT3 camPos);
 	private:
+		// Definition des trois methodes d'update
+		void update3RD(XMFLOAT3 camPos);
+		void update1ST(XMFLOAT3 camPos);
+		void updateFREE(XMFLOAT3 camPos);
+
 		XMVECTOR position;
 		XMVECTOR direction;
 		int cursorPosx;
@@ -41,6 +39,8 @@ namespace PM3D {
 		
 		float cameraSpeed = 100.0f;
 		float levelCamHeight = 15.0f;
+
+		UpdatePF updateFctPtr = update3RD;
 		
 	public:
 		CCamera() = default;
