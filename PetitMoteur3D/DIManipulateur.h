@@ -1,4 +1,5 @@
 #pragma once
+#include "Horloge.h"
 
 namespace PM3D
 {
@@ -19,6 +20,7 @@ public:
 	void setSourisPosition(int x, int y);
 	void setPauseMenu(bool);
 	bool getIsPauseStatus();
+	bool hasBeenEnoughTimeSinceLastPause();
 
 	const DIMOUSESTATE& EtatSouris() const { return mouseState; }
 
@@ -33,6 +35,8 @@ private:
 
 	char tamponClavier[256];
 	DIMOUSESTATE mouseState;
+	Horloge horloge;
+	int64_t lastPaused;
 };
 
 } // namespace PM3D

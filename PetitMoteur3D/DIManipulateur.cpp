@@ -13,6 +13,7 @@ CDIManipulateur::CDIManipulateur()
 	, pClavier(nullptr)
 	, pSouris(nullptr)
 	, pJoystick(nullptr)
+	, lastPaused(0)
 {
 }
 
@@ -140,8 +141,18 @@ void CDIManipulateur::setSourisPosition(int x, int y)
 }
 
 void CDIManipulateur::setPauseMenu(bool toShow) {
+	
 	ShowCursor(toShow);
 	isPause = toShow;
+}
+
+bool CDIManipulateur::hasBeenEnoughTimeSinceLastPause() {
+	if (horloge.GetTimeBetweenCounts(lastPaused, horloge.GetTimeCount()) >= 1)
+	{
+		lastPaused = horloge.GetTimeCount();
+		return true;
+	}
+	return false;
 }
 
 bool CDIManipulateur::getIsPauseStatus()
