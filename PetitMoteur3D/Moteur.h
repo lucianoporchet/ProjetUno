@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Asteroid.h"
 #include "Planet.h"
+#include "GameManager.h"
 
 #include "GestionnaireDeTextures.h"
 #include "AfficheurSprite.h"
@@ -322,29 +323,27 @@ protected:
 
 	bool AnimeScene(float tempsEcoule)
 	{
-
-		
 		// Prendre en note le statut du clavier
 		GestionnaireDeSaisie.StatutClavier();
-
 		// Prendre en note l'état de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
+		
 
-		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) && GestionnaireDeSaisie.hasBeenEnoughTimeSinceLastPause())
+		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) && manager.hasBeenEnoughTimeSinceLastPause())
 		{
-			if (GestionnaireDeSaisie.getIsPauseStatus())
+			if (manager.getIsPauseStatus())
 			{
-				GestionnaireDeSaisie.setPauseMenu(false);
+				manager.setPauseMenu(false);
 			}
 			else {
-				GestionnaireDeSaisie.setPauseMenu(true);
+				manager.setPauseMenu(true);
 			}
 		}
 
 		//freeCam.UpdateFree(tempsEcoule);
 
 		//si on est sur le menu pause
-		if (!GestionnaireDeSaisie.getIsPauseStatus()) {
+		if (!manager.getIsPauseStatus()) {
 
 			physXManager.stepPhysics();
 			for (auto& object3D : ListeScene)
@@ -388,6 +387,8 @@ protected:
 	std::unique_ptr<Gdiplus::Font> pPolice;
 
 	CDIManipulateur GestionnaireDeSaisie;
+
+	GameManager& manager = GameManager::get();
 
 	std::unique_ptr<CPanneauPE> pPanneauPE;
 

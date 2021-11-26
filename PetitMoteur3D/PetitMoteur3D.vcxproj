@@ -207,6 +207,7 @@
     <ClCompile Include="DIManipulateur.cpp" />
     <ClCompile Include="dispositif.cpp" />
     <ClCompile Include="dispositifD3D11.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GestionnaireDeTextures.cpp" />
     <ClCompile Include="Horloge.cpp" />
     <ClCompile Include="InfoDispositif.cpp" />
@@ -248,7 +249,9 @@
     <ClInclude Include="DIManipulateur.h" />
     <ClInclude Include="dispositif.h" />
     <ClInclude Include="dispositifD3D11.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GestionnaireDeTextures.h" />
+    <ClInclude Include="GSingleton.h" />
     <ClInclude Include="Horloge.h" />
     <ClInclude Include="InfoDispositif.h" />
     <ClInclude Include="LectureFichier.h" />

@@ -69,7 +69,7 @@ namespace PM3D {
 				
 			}
 		}
-		if (!rGestionnaireDeSaisie.getIsPauseStatus())
+		if (!GameManager::get().getIsPauseStatus())
 		{
 			rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		}
