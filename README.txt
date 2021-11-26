@@ -35,4 +35,10 @@ direction vers laquelle on avance/recule)
 	Description du format des données et 
 	      des outils de lecture
 ====================================================
-	
+ Nous avons utilisé le chargeur d'objet fourni dans
+ le cours. Il y a donc, et ce pour chaque fichier
+ chargé, le chargement du fichier d'origine, puis 
+ la création du binaire, et enfin le réel chargement 
+ de l'objet. L'on prend alors comme entrée des .obj 
+ que l'on transforme en fichiers intermédiaires,
+ afin de les lire plus rapidement et charger vite.
