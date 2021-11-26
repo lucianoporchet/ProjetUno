@@ -14,6 +14,18 @@ MovingObject::MovingObject(const std::string& nomfichier, PM3D::CDispositifD3D11
 	mUp = PxVec3(0, 1, 0);
 }
 
+//recuperer la vitesse
+float MovingObject::getSpeed()
+{
+	return speed;
+}
+
+//set nouvelle vitesse
+void MovingObject::setSpeed(float newSpeed)
+{
+	speed = newSpeed;
+}
+
 void MovingObject::Anime(float tempEcoule)
 {
 	const PxVec3 pos = body->getGlobalPose().p;

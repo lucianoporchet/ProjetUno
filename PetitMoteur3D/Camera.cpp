@@ -33,10 +33,11 @@ namespace PM3D {
 
 			}
 		}
-		if (!rGestionnaireDeSaisie.getIsPauseStatus())
+		if (!GameManager::get().getIsPauseStatus())
 		{
 			rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		}
+		
 	}
 
 	void CCamera::update1ST(XMFLOAT3 camPos)
@@ -87,7 +88,6 @@ namespace PM3D {
 	void CCamera::updateCam(XMFLOAT3 camPos)
 	{
 		(this->*updateFctPtr)(camPos);
-
 		updateView();
 	}
 

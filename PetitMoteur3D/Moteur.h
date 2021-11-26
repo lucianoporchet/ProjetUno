@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Asteroid.h"
 #include "Planet.h"
+#include "GameManager.h"
 
 #include "GestionnaireDeTextures.h"
 #include "AfficheurSprite.h"
@@ -34,15 +35,15 @@ const int IMAGESPARSECONDE = 60;
 const double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
 
 //
-//   TEMPLATE : CMoteur
+//   TEMPLATEÂ : CMoteur
 //
-//   BUT : Template servant à construire un objet Moteur qui implantera les
-//         aspects "génériques" du moteur de jeu
+//   BUTÂ : Template servant Ã  construire un objet Moteur qui implantera les
+//         aspects "gÃ©nÃ©riques" du moteur de jeu
 //
-//   COMMENTAIRES :
+//   COMMENTAIRESÂ :
 //
-//        Comme plusieurs de nos objets représenteront des éléments uniques 
-//		  du système (ex: le moteur lui-même, le lien vers 
+//        Comme plusieurs de nos objets reprÃ©senteront des Ã©lÃ©ments uniques 
+//		  du systÃ¨me (ex: le moteur lui-mÃªme, le lien vers 
 //        le dispositif Direct3D), l'utilisation d'un singleton 
 //        nous simplifiera plusieurs aspects.
 //
@@ -56,7 +57,7 @@ public:
 
 		while (bBoucle)
 		{
-			// Propre à la plateforme - (Conditions d'arrêt, interface, messages)
+			// Propre Ã  la plateforme - (Conditions d'arrÃªt, interface, messages)
 			bBoucle = RunSpecific();
 
 			// appeler la fonction d'animation
@@ -69,17 +70,17 @@ public:
 
 	virtual int Initialisations()
 	{
-		// Propre à la plateforme
+		// Propre Ã  la plateforme
 		InitialisationsSpecific();
 
 		// * Initialisation du dispositif de rendu
 		pDispositif = CreationDispositifSpecific(CDS_FENETRE);
 
-		// * Initialisation de la scène
+		// * Initialisation de la scÃ¨ne
 		InitScene();
 
-		// * Initialisation des paramètres de l'animation et 
-		//   préparation de la première image
+		// * Initialisation des paramÃ¨tres de l'animation et 
+		//   prÃ©paration de la premiÃ¨re image
 		InitAnimation();
 
 		return 0;
@@ -87,22 +88,22 @@ public:
 
 	virtual bool Animation()
 	{
-		// méthode pour lire l'heure et calculer le 
-		// temps écoulé
+		// mÃ©thode pour lire l'heure et calculer le 
+		// temps Ã©coulÃ©
 		const int64_t TempsCompteurCourant = GetTimeSpecific();
 		const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 		// Est-il temps de rendre l'image?
 		if (TempsEcoule > EcartTemps)
 		{
-			// Affichage optimisé
-			pDispositif->Present(); // On enlevera «//» plus tard
+			// Affichage optimisÃ©
+			pDispositif->Present(); // On enlevera Â«//Â» plus tard
 
-			// On prépare la prochaine image
+			// On prÃ©pare la prochaine image
 			AnimeScene(static_cast<float>(TempsEcoule));
 
 			// On rend l'image sur la surface de travail
-			// (tampon d'arrière plan)
+			// (tampon d'arriÃ¨re plan)
 			RenderScene();
 
 			// Calcul du temps du prochain affichage
@@ -127,7 +128,7 @@ protected:
 		Cleanup();
 	}
 
-	// Spécifiques - Doivent être implantés
+	// SpÃ©cifiques - Doivent Ãªtre implantÃ©s
 	virtual bool RunSpecific() = 0;
 	virtual int InitialisationsSpecific() = 0;
 
@@ -144,22 +145,19 @@ protected:
 		TempsSuivant = GetTimeSpecific();
 		TempsCompteurPrecedent = TempsSuivant;
 
-		// première Image
+		// premiÃ¨re Image
 		RenderScene();
 
 		return true;
 	}
 
-	// Fonctions de rendu et de présentation de la scène
+	// Fonctions de rendu et de prÃ©sentation de la scÃ¨ne
 	virtual bool RenderScene()
 	{
-		//BeginRenderSceneSpecific();
-
-		//pPanneauPE->DebutPostEffect();
-
+		
 		BeginRenderSceneSpecific();
 
-		// Appeler les fonctions de dessin de chaque objet de la scène
+		// Appeler les fonctions de dessin de chaque objet de la scÃ¨ne
 		for (auto& object3D : ListeScene)
 		{
 			object3D->Draw();
@@ -167,21 +165,15 @@ protected:
 
 		EndRenderSceneSpecific();
 
-		//pPanneauPE->FinPostEffect();
-
-		//pPanneauPE->Draw();
-
-		//EndRenderSceneSpecific();
-
 		return true;
 	}
 
 	virtual void Cleanup()
 	{
-		// détruire les objets
+		// dÃ©truire les objets
 		ListeScene.clear();
 
-		// Détruire le dispositif
+		// DÃ©truire le dispositif
 		if (pDispositif)
 		{
 			delete pDispositif;
@@ -194,13 +186,12 @@ protected:
 	virtual int InitScene()
 	{
 		// Initialisation des matrices View et Proj
-		// Dans notre cas, ces matrices sont fixes
 		m_MatView = XMMatrixLookAtRH(
 			XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
-		const float champDeVision = XM_PI / 4; 	// 45 degrés
+		const float champDeVision = XM_PI / 4; 	// 45 degrÃ©s
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
 		const float planEloigne = 4000.0;
@@ -211,16 +202,17 @@ protected:
 			planRapproche,
 			planEloigne);
 
-		// Calcul de VP à l'avance
+		// Calcul de VP Ã  l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 
+		// Initialisation de la camera du joeur
 		freeCam.Init(XMVectorSet(0.0f, 0.0f, 100.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj);
 		freeCam.angleDirectionCamera = XM_PI / 2.0f;
 
 
-		// Initialisation des objets 3D - création et/ou chargement
+		// Initialisation des objets 3D - crÃ©ation et/ou chargement
 		if (!InitObjets())
 		{
 			return 1;
@@ -231,41 +223,32 @@ protected:
 
 	bool InitObjets()
 	{
+		float boxSize = 3000.0f; //taille de la fausse skybox
 
-		/*char* filename = new char[50]("Planet.obj");
-		std::unique_ptr<Obstacle> obs = std::make_unique<Obstacle>(filename, XMFLOAT3(10.0f, 10.0f, 10.0f), pDispositif);
-		obs->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-		ListeScene.emplace_back(std::move(obs));*/
-			
-	/*	params.NomChemin = ".\\modeles\\Asteroides\\";
-		params.NomFichier = "asteroide1.obj";
-		chargeur.Chargement(params);
-		std::unique_ptr<CObjetMesh> mesh = std::make_unique<CObjetMesh>(chargeur,".\\modeles\\Asteroides\\asteroide1.obm", pDispositif);*/
-		float boxSize = 3000.0f;
+		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
 		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
+		//ajoute une texture a la skybox
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
-		ListeScene.push_back(std::move(skybox));
+		ListeScene.push_back(std::move(skybox));		//ajoute la skybox a la scene
 
-		// //Constructeur avec format binaire
-		
+
+
+		//Creation du player, constructeur avec format binaire
 		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
-		player->setCam(&freeCam);
-		//pMesh->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-		 //Puis, il est ajouté à la scène
-		ListeScene.push_back(std::move(player));
+		player->setCam(&freeCam);						//lie la camera au player
+		ListeScene.push_back(std::move(player));		//ajoute le player a la scene
 
+
+
+		//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
 		for (int i = 0; i < 15; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
 			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], scale);
-
-
-			 //Lui assigner une texture
-			//pBloc->SetTexture(TexturesManager.GetNewTexture(L"roche2.dds", pDispositif));
-
-
 			ListeScene.push_back(std::move(planet));
 		}
 
+		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
+		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilitÃ© de collision entre les asteroides a la creation)
 		for (int i = 0; i < 4; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
 			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
@@ -273,78 +256,31 @@ protected:
 			ListeScene.push_back(std::move(asteroid));
 		}
 
-		//return true;
-		 //Constructeur avec format binaire
-
-		//std::unique_ptr<CObjetMesh> pMesh =
-		//	std::make_unique<CObjetMesh>("Planet.OMB", pDispositif);
-		//// Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pMesh));
-		//std::unique_ptr<CObjetMesh> pMesh2 = std::make_unique<CObjetMesh>(".\\modeles\\jin\\jin.OMB", pDispositif);
-		// //Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pMesh2));
-
-		// //Création de l'afficheur de sprites et ajout des sprites
-		//std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-
-		//// ajout de panneaux 
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(1.0f, 0.0f, 1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(0.0f, 0.0f, -1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-1.0f, 0.0f, 0.5f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-0.5f, 0.0f, 1.0f));
-		//pAfficheurSprite->AjouterPanneau("grass_v1_basic_tex.dds",
-		//	XMFLOAT3(-2.0f, 0.0f, 2.0f));
-
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 200,400);
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 500,500, 100, 100);
-		//pAfficheurSprite->AjouterSprite("tree02s.dds", 800,200, 100, 100);
-
-		//CAfficheurTexte::Init();
-		//const Gdiplus::FontFamily oFamily(L"Arial", nullptr);
-		//pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
-		//pTexte1 = std::make_unique<CAfficheurTexte>(pDispositif, 256, 256, pPolice.get());
-
-		//pAfficheurSprite->AjouterSpriteTexte(pTexte1->GetTextureView(), 0, 257);
-
-		//pTexte1->Ecrire(L"Test du texte");
-
-		// //Puis, il est ajouté à la scène
-		//ListeScene.push_back(std::move(pAfficheurSprite));
-
-		//pPanneauPE = std::make_unique<CPanneauPE>(pDispositif);
-
 		return true;
 	}
 
 	bool AnimeScene(float tempsEcoule)
 	{
-
-		
 		// Prendre en note le statut du clavier
 		GestionnaireDeSaisie.StatutClavier();
-
-		// Prendre en note l'état de la souris
+		// Prendre en note l'Ã©tat de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
+		
 
-		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) && GestionnaireDeSaisie.hasBeenEnoughTimeSinceLastPause())
+		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) && manager.hasBeenEnoughTimeSinceLastPause())
 		{
-			if (GestionnaireDeSaisie.getIsPauseStatus())
+			if (manager.getIsPauseStatus())
 			{
-				GestionnaireDeSaisie.setPauseMenu(false);
+				manager.setPauseMenu(false);
 			}
 			else {
-				GestionnaireDeSaisie.setPauseMenu(true);
+				manager.setPauseMenu(true);
 			}
 		}
 
-		//freeCam.UpdateFree(tempsEcoule);
 
 		//si on est sur le menu pause
-		if (!GestionnaireDeSaisie.getIsPauseStatus()) {
+		if (!manager.getIsPauseStatus()) {
 
 			physXManager.stepPhysics();
 			for (auto& object3D : ListeScene)
@@ -356,13 +292,18 @@ protected:
 
 		return true;
 	}
+
 public:
 	// Le dispositif de rendu
 	TClasseDispositif* pDispositif;
 
-	// La seule scène
-	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
+
 protected:
+
+	
+	// La seule scÃ¨ne
+	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
+
 	// Variables pour le temps de l'animation
 	int64_t TempsSuivant;
 	int64_t TempsCompteurPrecedent;
@@ -386,15 +327,24 @@ protected:
 	std::wstring str;
 
 	std::unique_ptr<Gdiplus::Font> pPolice;
-
-	CDIManipulateur GestionnaireDeSaisie;
-
 	std::unique_ptr<CPanneauPE> pPanneauPE;
 
+
+	//gestionnaire de saisie
+	CDIManipulateur GestionnaireDeSaisie;
+
+	//game manager
+	GameManager& manager = GameManager::get();
+
+	
+	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();
 
+	//camera joueur
 	CCamera freeCam;
 
+
+	//objet joueur
 	std::unique_ptr<Player> player;
 
 

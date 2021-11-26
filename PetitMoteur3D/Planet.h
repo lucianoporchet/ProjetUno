@@ -12,6 +12,8 @@ class Planet : public MovingObject {
 
 public:
 	Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float scale = 1);
+
+	//update la position et rotation de l'objet en fonction des calculs de physX
 	virtual void Anime(float tempEcoule) override;
 };
 

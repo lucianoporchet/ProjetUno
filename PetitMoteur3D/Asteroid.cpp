@@ -10,35 +10,26 @@
 Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float boxSize, float scale)
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
+	//on donne une vitesse aleatoire aux asteroides entre 150 et 500
 	float rSpeed = static_cast<float>(RandomGenerator::get().next(150, 500));
+
+	//cree le rigid body de l'objet dans physX avec, pour le moment un capsule collider (donc collisions pas parfaites)
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxCapsuleGeometry(scale,scale*1.3f), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+
+	//ajoute une rotation aleatoire, une force en direction du centre de la carte (la direction sera changée plus tard), et une masse proportionnelle a la taille
 	body->addTorque(RandomGenerator::get().randomVec3(150, 300) * 1000.0f, PxForceMode::eIMPULSE);
 	body->addForce(PxVec3(-pos) * rSpeed, PxForceMode::eIMPULSE);
 	body->setMass(scale * 10);
 
+	//ajoute l'asteroide a la scene de physX pour faire les calculs
 	PhysXManager::get().addToScene(body);
 }
 
 void Asteroid::Anime(float tempEcoule)
 {
 	
+	//TO DO: code pour gerer les asteroides qui arrivent en bord de map
 	
-	/*const PxVec3 pos = body->getGlobalPose().p;
-	PxVec3 velocity = body->getLinearVelocity();
-	int limit = std::abs(static_cast<int>(boxSize / 2));
-
-	if (static_cast<int>(pos.x) > limit || static_cast<int>(pos.y) > limit || static_cast<int>(pos.z) > limit){
-		body->setLinearVelocity(-velocity);
-	}
-	
-	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
-	const XMVECTOR posVec = XMLoadFloat3(&posF3);
-
-	const PxQuat quat = body->getGlobalPose().q;
-	const XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
-	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
-
-	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));*/
-	
+	//fait appel a l'Anime du parent
 	MovingObject::Anime(tempEcoule);
 }
