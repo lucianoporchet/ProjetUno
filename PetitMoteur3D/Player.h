@@ -8,12 +8,16 @@
 class PM3D::IChargeur;
 class PM3D::CDispositifD3D11;
 
+//classe représentant le joueur
 class Player : public MovingObject {
 
 public:
 	Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);
 	virtual void Anime(float tempEcoule) override;
 
+	/*
+	Mouvements disponibles pour le joueur
+	*/
 	void moveFoward();
 	void moveBackwards();
 	void rotateLeft();
@@ -21,11 +25,13 @@ public:
 	void moveDown();
 	void rotateRight();
 
+	/*
+	Ajouter la cam liée au joueur actuellement et update sa position et direction
+	*/
 	void setCam(PM3D::CCamera* cam);
 	void updateCam();
 
 private:
-
 	
 	float			angleRotation = PxPi/2;
 	PM3D::CCamera*	camera;

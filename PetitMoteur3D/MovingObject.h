@@ -14,6 +14,10 @@ class MovingObject : public PM3D::CObjetMesh {
 public:
 	MovingObject(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);
 
+	//getters et setters de la vitesse
+	float getSpeed();
+	void setSpeed(float newSpeed);
+
 	//update la position et rotation de l'objet en fonction des calculs de physX
 	virtual void Anime(float tempEcoule) override;
 
