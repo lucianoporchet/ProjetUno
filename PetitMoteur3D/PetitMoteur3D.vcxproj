@@ -211,7 +211,6 @@
     <ClCompile Include="GestionnaireDeTextures.cpp" />
     <ClCompile Include="Horloge.cpp" />
     <ClCompile Include="InfoDispositif.cpp" />
-    <ClCompile Include="LectureFichier.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="MoteurWindows.cpp" />
@@ -254,7 +253,6 @@
     <ClInclude Include="GSingleton.h" />
     <ClInclude Include="Horloge.h" />
     <ClInclude Include="InfoDispositif.h" />
-    <ClInclude Include="LectureFichier.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="MoteurWindows.h" />

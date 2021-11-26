@@ -30,4 +30,29 @@ direction vers laquelle on avance/recule)
  fermer le jeu normalement.
  
  La structure du code n'est pas encore finalisée et
- sera améliorée pour le volet 3.
+ sera améliorée pour le volet 3, mais tente de
+ s'approcher au maximum de ce qui a été proposé au
+ volet 1. L'on reprend les concepts de Texture et
+ GameManager. L'on a aussi une partie de la suite
+ d'héritage partant de la classe entité, qui est ici
+ CObjetMesh, qui devient MovingObject, qui devient
+ Player, Planet, Asteroid et NPC.
+ Cependant, il y a eu quelques changements.
+ 
+ - Afin d'éviter la redondance des classes CCamera,
+ les trois caméras prévues (FreeCam, 3e personne et
+ 1ere personne) ont été fusionnées en une camera
+ avec des pointeurs vers différentes fonctions
+ update(), qui font différentes mises à jour de la
+ position de la caméra.
+====================================================
+	Description du format des données et 
+	      des outils de lecture
+====================================================
+ Nous avons utilisé le chargeur d'objet fourni dans
+ le cours. Il y a donc, et ce pour chaque fichier
+ chargé, le chargement du fichier d'origine, puis 
+ la création du binaire, et enfin le réel chargement 
+ de l'objet. L'on prend alors comme entrée des .obj 
+ que l'on transforme en fichiers intermédiaires,
+ afin de les lire plus rapidement et charger vite.
