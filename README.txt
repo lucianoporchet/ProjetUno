@@ -32,7 +32,12 @@ direction vers laquelle on avance/recule)
  La structure du code n'est pas encore finalisée et
  sera améliorée pour le volet 3, mais tente de
  s'approcher au maximum de ce qui a été proposé au
- volet 1. Cependant, il y a eu quelques changements.
+ volet 1. L'on reprend les concepts de Texture et
+ GameManager. L'on a aussi une partie de la suite
+ d'héritage partant de la classe entité, qui est ici
+ CObjetMesh, qui devient MovingObject, qui devient
+ Player, Planet, Asteroid et NPC.
+ Cependant, il y a eu quelques changements.
  
  - Afin d'éviter la redondance des classes CCamera,
  les trois caméras prévues (FreeCam, 3e personne et
