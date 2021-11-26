@@ -394,6 +394,9 @@ protected:
 	PhysXManager& physXManager = PhysXManager::get();
 
 	CCamera freeCam;
+	//C3rdCamera trdCamera;
+	//C1stCamera fstCamera;
+
 	std::unique_ptr<Player> player;
 
 

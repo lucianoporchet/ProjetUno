@@ -7,6 +7,17 @@
 
 namespace PM3D {
 
+
+	struct Update3RD {
+		void update(XMFLOAT3 camPos, CCamera cam);
+	};
+	struct Update1ST {
+		void update(XMFLOAT3 camPos, CCamera cam);
+	};
+	struct UpdateFREE {
+		void update(XMFLOAT3 camPos, CCamera cam);
+	};
+
 	class CCamera
 	{
 	private:
@@ -65,6 +76,13 @@ namespace PM3D {
 
 		XMVECTOR forward;
 		XMVECTOR up;
+
+		// TODO On demolit l'encapsulation avec un boulet la, mais j'ai pas trouve mieux
+		friend void Update3RD::update(XMFLOAT3 camPos, CCamera cam);
+		friend void Update1ST::update(XMFLOAT3 camPos, CCamera cam);
+		friend void UpdateFREE::update(XMFLOAT3 camPos, CCamera cam);
 	};
+
+
 }
 

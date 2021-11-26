@@ -10,6 +10,42 @@ using namespace DirectX;
 
 namespace PM3D {
 	
+	// TODO On demolit l'encapsulation avec un boulet la, mais j'ai pas trouve mieux
+	void Update3RD::update (XMFLOAT3 camPos, CCamera cam) {
+		XMStoreFloat3(&cam.pos, cam.position);
+		XMFLOAT3 dir(camPos.x - cam.pos.x, camPos.y - cam.pos.y, camPos.z - cam.pos.z);
+		cam.pos.x = cam.pos.x + dir.x * 0.15f;
+		cam.pos.y = cam.pos.y + dir.y * 0.15f;
+		cam.pos.z = cam.pos.z + dir.z * 0.15f;
+		cam.position = XMLoadFloat3(&cam.pos);
+
+
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
+
+		if ((0x80)) {
+			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
+			{
+				cam.yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
+				cam.pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
+				cam.rot = XMFLOAT3(cam.pitch * 0.0009f, cam.yaw * 0.0009f, 0.0f);
+				cam.rotation = XMLoadFloat3(&cam.rot);
+
+			}
+		}
+		if (!rGestionnaireDeSaisie.getIsPauseStatus())
+		{
+			rGestionnaireDeSaisie.setSourisPosition(cam.cursorPosx, cam.cursorPosy);
+		}
+	}
+
+	void Update1ST::update(XMFLOAT3 camPos, CCamera cam)
+	{
+	}
+
+	void UpdateFREE::update(XMFLOAT3 camPos, CCamera cam)
+	{
+	}
 
 	CCamera::CCamera(const XMVECTOR& position_in,
 		const XMVECTOR& direction_in,
@@ -48,32 +84,34 @@ namespace PM3D {
 
 	void CCamera::updateCam(XMFLOAT3 camPos)
 	{
-		XMStoreFloat3(&pos, position);
-		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
-		pos.x = pos.x + dir.x * 0.15f;
-		pos.y = pos.y + dir.y * 0.15f;
-		pos.z = pos.z + dir.z * 0.15f;
-		position = XMLoadFloat3(&pos);
-		
+		//XMStoreFloat3(&pos, position);
+		//XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
+		//pos.x = pos.x + dir.x * 0.15f;
+		//pos.y = pos.y + dir.y * 0.15f;
+		//pos.z = pos.z + dir.z * 0.15f;
+		//position = XMLoadFloat3(&pos);
+		//
 
-		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
-		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
+		//CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+		//CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		if ((0x80)) {
-			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
-			{
-				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
-				pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
-				rot = XMFLOAT3(pitch * 0.0009f, yaw * 0.0009f, 0.0f);
-				rotation = XMLoadFloat3(&rot);
-				
-			}
-		}
-		if (!rGestionnaireDeSaisie.getIsPauseStatus())
-		{
-			rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
-		}
+		//if ((0x80)) {
+		//	if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
+		//	{
+		//		yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
+		//		pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
+		//		rot = XMFLOAT3(pitch * 0.0009f, yaw * 0.0009f, 0.0f);
+		//		rotation = XMLoadFloat3(&rot);
+		//		
+		//	}
+		//}
+		//if (!rGestionnaireDeSaisie.getIsPauseStatus())
+		//{
+		//	rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
+		//}
 		
+		Update3RD(camPos, this);
+
 		updateView();
 	}
 
@@ -91,7 +129,4 @@ namespace PM3D {
 		forward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		right = XMVector3TransformCoord(DEFAULT_RIGHT, camRotationM);
 	}
-
-
-
 }
