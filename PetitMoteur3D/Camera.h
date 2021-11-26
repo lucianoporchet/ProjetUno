@@ -40,7 +40,7 @@ namespace PM3D {
 		float cameraSpeed = 100.0f;
 		float levelCamHeight = 15.0f;
 
-		UpdatePF updateFctPtr = update3RD;
+		UpdatePF updateFctPtr = &CCamera::update3RD;
 		
 	public:
 		CCamera() = default;
@@ -77,10 +77,6 @@ namespace PM3D {
 		XMVECTOR forward;
 		XMVECTOR up;
 
-		// TODO On demolit l'encapsulation avec un boulet la, mais j'ai pas trouve mieux
-		friend void Update3RD::update(XMFLOAT3 camPos, CCamera cam);
-		friend void Update1ST::update(XMFLOAT3 camPos, CCamera cam);
-		friend void UpdateFREE::update(XMFLOAT3 camPos, CCamera cam);
 	};
 
 

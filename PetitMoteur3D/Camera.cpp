@@ -112,7 +112,7 @@ namespace PM3D {
 		//	rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
 		//}
 		
-		Update3RD(camPos, this);
+		(this->*updateFctPtr)(camPos);
 
 		updateView();
 	}
