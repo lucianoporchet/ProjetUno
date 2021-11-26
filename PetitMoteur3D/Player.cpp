@@ -127,10 +127,15 @@ void Player::setCam(PM3D::CCamera* cam)
 //update de la cam en fonction du player et inversement
 void Player::updateCam() 
 {
+	//mDir.normalize();
+	//const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10);
+	//const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
+	//camera->updateCam(camPos, body->GetGlo);
 	mDir.normalize();
-	const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10);
-	const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
-	camera->updateCam(camPos);
+	const PxVec3 bodyPos = body->getGlobalPose().p;
+	const XMFLOAT3 camPos(bodyPos.x, bodyPos.y, bodyPos.z);
+	const XMFLOAT3 direction(mDir.x, mDir.y, mDir.z);
+	camera->updateCam(camPos, direction);
 
 	XMFLOAT3 dir, up;
 	XMStoreFloat3(&dir, camera->forward);

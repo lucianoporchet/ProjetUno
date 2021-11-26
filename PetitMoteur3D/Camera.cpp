@@ -10,7 +10,12 @@ using namespace DirectX;
 
 namespace PM3D {
 	
-	void CCamera::update3RD (XMFLOAT3 camPos) {
+	void CCamera::update3RD(XMFLOAT3 camPos, XMFLOAT3 direction) {
+		// decalage 3e personne
+		camPos.x = camPos.x - direction.x * 10;
+		camPos.y = camPos.y - direction.y * 10;
+		camPos.z = camPos.z - direction.z * 10;
+
 		XMStoreFloat3(&pos, position);
 		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
 		pos.x = pos.x + dir.x * 0.15f;
@@ -39,9 +44,35 @@ namespace PM3D {
 		
 	}
 
-	void CCamera::update1ST(XMFLOAT3 camPos)
+	void CCamera::update1ST(XMFLOAT3 camPos, XMFLOAT3 direction)
 	{
-		// TODO
+		// Pas de decalage 3e personne ici 
+
+		XMStoreFloat3(&pos, position);
+		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
+		pos.x = pos.x + dir.x;
+		pos.y = pos.y + dir.y;
+		pos.z = pos.z + dir.z;
+		position = XMLoadFloat3(&pos);
+
+
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
+
+		if ((0x80)) {
+			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
+			{
+				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
+				pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
+				rot = XMFLOAT3(pitch * 0.0009f, yaw * 0.0009f, 0.0f);
+				rotation = XMLoadFloat3(&rot);
+
+			}
+		}
+		if (!GameManager::get().getIsPauseStatus())
+		{
+			rGestionnaireDeSaisie.setSourisPosition(cursorPosx, cursorPosy);
+		}
 	}
 
 	void CCamera::updateFREE(XMFLOAT3 camPos)
@@ -84,9 +115,9 @@ namespace PM3D {
 	}
 
 
-	void CCamera::updateCam(XMFLOAT3 camPos)
+	void CCamera::updateCam(XMFLOAT3 camPos, XMFLOAT3 direction)
 	{
-		(this->*updateFctPtr)(camPos);
+		(this->*updateFctPtr)(camPos, direction);
 		updateView();
 	}
 

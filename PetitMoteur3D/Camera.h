@@ -12,11 +12,11 @@ namespace PM3D {
 	class CCamera
 	{
 		// Definition du pointeur de fonction
-		using UpdatePF = void(PM3D::CCamera::*)(XMFLOAT3 camPos);
+		using UpdatePF = void(PM3D::CCamera::*)(XMFLOAT3 camPos, XMFLOAT3 direction);
 	private:
 		// Definition des trois methodes d'update
-		void update3RD(XMFLOAT3 camPos);
-		void update1ST(XMFLOAT3 camPos);
+		void update3RD(XMFLOAT3 camPos, XMFLOAT3 direction);
+		void update1ST(XMFLOAT3 camPos, XMFLOAT3 direction);
 		void updateFREE(XMFLOAT3 camPos);
 
 		XMVECTOR position;
@@ -56,7 +56,7 @@ namespace PM3D {
 			XMMATRIX* pMatView_in,
 			XMMATRIX* pMatProj_in,
 			XMMATRIX* pMatViewProj_in);
-		void updateCam(XMFLOAT3 camPos);
+		void updateCam(XMFLOAT3 camPos, XMFLOAT3 direction);
 		inline void SetPosition(const XMVECTOR& position_in) { position = position_in; };
 		inline void SetDirection(const XMVECTOR& direction_in) { direction = direction_in; }
 		inline void SetUp(const XMVECTOR& up_in) { up = up_in; }
