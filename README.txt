@@ -20,5 +20,6 @@ direction vers laquelle on avance/recule)
 ====================================================
 			Notes
 ====================================================
-Le seul moyen de fermer le jeu pour le moment est un
-ALT+F4.
+ Pour mettre pause il faut appuyer sur Echape on 
+ reprends alors le contrôle de la souris et on peut
+ fermer le jeu normalement
