@@ -26,3 +26,6 @@ direction vers laquelle on avance/recule)
  Pour mettre pause il faut appuyer sur Echap. On 
  reprend alors le contrôle de la souris et on peut
  fermer le jeu normalement.
+ 
+ La structure du code n'est pas encore finalisée et
+ sera améliorée pour le volet 3.
