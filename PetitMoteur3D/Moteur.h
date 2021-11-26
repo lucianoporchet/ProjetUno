@@ -35,15 +35,15 @@ const int IMAGESPARSECONDE = 60;
 const double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
 
 //
-//   TEMPLATE : CMoteur
+//   TEMPLATEÂ : CMoteur
 //
-//   BUT : Template servant à construire un objet Moteur qui implantera les
-//         aspects "génériques" du moteur de jeu
+//   BUTÂ : Template servant Ã  construire un objet Moteur qui implantera les
+//         aspects "gÃ©nÃ©riques" du moteur de jeu
 //
-//   COMMENTAIRES :
+//   COMMENTAIRESÂ :
 //
-//        Comme plusieurs de nos objets représenteront des éléments uniques 
-//		  du système (ex: le moteur lui-même, le lien vers 
+//        Comme plusieurs de nos objets reprÃ©senteront des Ã©lÃ©ments uniques 
+//		  du systÃ¨me (ex: le moteur lui-mÃªme, le lien vers 
 //        le dispositif Direct3D), l'utilisation d'un singleton 
 //        nous simplifiera plusieurs aspects.
 //
@@ -57,7 +57,7 @@ public:
 
 		while (bBoucle)
 		{
-			// Propre à la plateforme - (Conditions d'arrêt, interface, messages)
+			// Propre Ã  la plateforme - (Conditions d'arrÃªt, interface, messages)
 			bBoucle = RunSpecific();
 
 			// appeler la fonction d'animation
@@ -70,17 +70,17 @@ public:
 
 	virtual int Initialisations()
 	{
-		// Propre à la plateforme
+		// Propre Ã  la plateforme
 		InitialisationsSpecific();
 
 		// * Initialisation du dispositif de rendu
 		pDispositif = CreationDispositifSpecific(CDS_FENETRE);
 
-		// * Initialisation de la scène
+		// * Initialisation de la scÃ¨ne
 		InitScene();
 
-		// * Initialisation des paramètres de l'animation et 
-		//   préparation de la première image
+		// * Initialisation des paramÃ¨tres de l'animation et 
+		//   prÃ©paration de la premiÃ¨re image
 		InitAnimation();
 
 		return 0;
@@ -88,22 +88,22 @@ public:
 
 	virtual bool Animation()
 	{
-		// méthode pour lire l'heure et calculer le 
-		// temps écoulé
+		// mÃ©thode pour lire l'heure et calculer le 
+		// temps Ã©coulÃ©
 		const int64_t TempsCompteurCourant = GetTimeSpecific();
 		const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 		// Est-il temps de rendre l'image?
 		if (TempsEcoule > EcartTemps)
 		{
-			// Affichage optimisé
-			pDispositif->Present(); // On enlevera «//» plus tard
+			// Affichage optimisÃ©
+			pDispositif->Present(); // On enlevera Â«//Â» plus tard
 
-			// On prépare la prochaine image
+			// On prÃ©pare la prochaine image
 			AnimeScene(static_cast<float>(TempsEcoule));
 
 			// On rend l'image sur la surface de travail
-			// (tampon d'arrière plan)
+			// (tampon d'arriÃ¨re plan)
 			RenderScene();
 
 			// Calcul du temps du prochain affichage
@@ -128,7 +128,7 @@ protected:
 		Cleanup();
 	}
 
-	// Spécifiques - Doivent être implantés
+	// SpÃ©cifiques - Doivent Ãªtre implantÃ©s
 	virtual bool RunSpecific() = 0;
 	virtual int InitialisationsSpecific() = 0;
 
@@ -145,19 +145,19 @@ protected:
 		TempsSuivant = GetTimeSpecific();
 		TempsCompteurPrecedent = TempsSuivant;
 
-		// première Image
+		// premiÃ¨re Image
 		RenderScene();
 
 		return true;
 	}
 
-	// Fonctions de rendu et de présentation de la scène
+	// Fonctions de rendu et de prÃ©sentation de la scÃ¨ne
 	virtual bool RenderScene()
 	{
 		
 		BeginRenderSceneSpecific();
 
-		// Appeler les fonctions de dessin de chaque objet de la scène
+		// Appeler les fonctions de dessin de chaque objet de la scÃ¨ne
 		for (auto& object3D : ListeScene)
 		{
 			object3D->Draw();
@@ -170,10 +170,10 @@ protected:
 
 	virtual void Cleanup()
 	{
-		// détruire les objets
+		// dÃ©truire les objets
 		ListeScene.clear();
 
-		// Détruire le dispositif
+		// DÃ©truire le dispositif
 		if (pDispositif)
 		{
 			delete pDispositif;
@@ -191,7 +191,7 @@ protected:
 			XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
-		const float champDeVision = XM_PI / 4; 	// 45 degrés
+		const float champDeVision = XM_PI / 4; 	// 45 degrÃ©s
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
 		const float planEloigne = 4000.0;
@@ -202,7 +202,7 @@ protected:
 			planRapproche,
 			planEloigne);
 
-		// Calcul de VP à l'avance
+		// Calcul de VP Ã  l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 
 		// Initialisation de la camera du joeur
@@ -212,7 +212,7 @@ protected:
 		freeCam.angleDirectionCamera = XM_PI / 2.0f;
 
 
-		// Initialisation des objets 3D - création et/ou chargement
+		// Initialisation des objets 3D - crÃ©ation et/ou chargement
 		if (!InitObjets())
 		{
 			return 1;
@@ -225,7 +225,7 @@ protected:
 	{
 		float boxSize = 3000.0f; //taille de la fausse skybox
 
-		//Creation de la fausse skyBox (cube avec le culling inversé)
+		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
 		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
 		//ajoute une texture a la skybox
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
@@ -248,7 +248,7 @@ protected:
 		}
 
 		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
-		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
+		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilitÃ© de collision entre les asteroides a la creation)
 		for (int i = 0; i < 4; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
 			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
@@ -263,7 +263,7 @@ protected:
 	{
 		// Prendre en note le statut du clavier
 		GestionnaireDeSaisie.StatutClavier();
-		// Prendre en note l'état de la souris
+		// Prendre en note l'Ã©tat de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
 		
 
@@ -301,7 +301,7 @@ public:
 protected:
 
 	
-	// La seule scène
+	// La seule scÃ¨ne
 	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 
 	// Variables pour le temps de l'animation
@@ -342,6 +342,7 @@ protected:
 
 	//camera joueur
 	CCamera freeCam;
+
 
 	//objet joueur
 	std::unique_ptr<Player> player;

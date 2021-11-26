@@ -60,6 +60,11 @@ void Player::Anime(float tempEcoule)
 	{
 		moveUp();
 	}
+	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2))
+	{
+		// breakpoint
+		// change camera mode
+	}
 
 	//update la vue et la position de la cam en fonction des mouvements effectués plus tot
 	updateCam();

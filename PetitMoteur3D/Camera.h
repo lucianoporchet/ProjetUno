@@ -7,9 +7,18 @@
 
 namespace PM3D {
 
+
+
 	class CCamera
 	{
+		// Definition du pointeur de fonction
+		using UpdatePF = void(PM3D::CCamera::*)(XMFLOAT3 camPos);
 	private:
+		// Definition des trois methodes d'update
+		void update3RD(XMFLOAT3 camPos);
+		void update1ST(XMFLOAT3 camPos);
+		void updateFREE(XMFLOAT3 camPos);
+
 		XMVECTOR position;
 		XMVECTOR direction;
 		int cursorPosx;
@@ -30,6 +39,8 @@ namespace PM3D {
 		
 		float cameraSpeed = 100.0f;
 		float levelCamHeight = 15.0f;
+
+		UpdatePF updateFctPtr = &CCamera::update3RD;
 		
 	public:
 		CCamera() = default;
@@ -65,6 +76,9 @@ namespace PM3D {
 
 		XMVECTOR forward;
 		XMVECTOR up;
+
 	};
+
+
 }
 
