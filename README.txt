@@ -16,6 +16,8 @@ S : Reculer
 A/D : Roulis
 Shift/Espace : Roulis
 Echap : Pause
+F2 : Toggle 1ere/3e personne. 3e personne par
+défaut.
 
 Souris : Orientation de la caméra (détermine la
 direction vers laquelle on avance/recule)

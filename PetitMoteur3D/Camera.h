@@ -67,6 +67,9 @@ namespace PM3D {
 		}
 		void updateView();
 
+		void toggleFirstPerson();
+
+
 	public:
 		XMMATRIX* pMatView;
 		XMMATRIX* pMatProj;

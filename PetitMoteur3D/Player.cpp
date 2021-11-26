@@ -63,7 +63,8 @@ void Player::Anime(float tempEcoule)
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2))
 	{
 		// breakpoint
-		// change camera mode
+		// Toggle la cam 1ere personne
+		camera->toggleFirstPerson();
 	}
 
 	//update la vue et la position de la cam en fonction des mouvements effectués plus tot

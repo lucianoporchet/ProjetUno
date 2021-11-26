@@ -10,7 +10,6 @@ using namespace DirectX;
 
 namespace PM3D {
 	
-	// TODO On demolit l'encapsulation avec un boulet la, mais j'ai pas trouve mieux
 	void CCamera::update3RD (XMFLOAT3 camPos) {
 		XMStoreFloat3(&pos, position);
 		XMFLOAT3 dir(camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z);
@@ -104,5 +103,17 @@ namespace PM3D {
 
 		forward = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		right = XMVector3TransformCoord(DEFAULT_RIGHT, camRotationM);
+	}
+
+	void CCamera::toggleFirstPerson()
+	{
+		if (updateFctPtr == &CCamera::update3RD)
+		{
+			updateFctPtr = &CCamera::update1ST;
+		}
+		else
+		{
+			updateFctPtr = &CCamera::update3RD;
+		}
 	}
 }
