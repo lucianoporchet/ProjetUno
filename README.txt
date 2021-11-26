@@ -31,3 +31,8 @@ direction vers laquelle on avance/recule)
  
  La structure du code n'est pas encore finalisée et
  sera améliorée pour le volet 3.
+====================================================
+	Description du format des données et 
+	      des outils de lecture
+====================================================
+	
