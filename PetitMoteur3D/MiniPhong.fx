@@ -25,11 +25,11 @@ struct VS_Sortie
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
-static float4 Pos2;
+
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
-	Pos2 = Pos;
+	
 	sortie.Pos = Pos;
 	sortie.coordTex = coordTex;
 
@@ -47,6 +47,8 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float3 PosWorld = mul(vs.Pos, matWorld).xyz;
 	vs.vDirLum = vLumiere.xyz - PosWorld;
 	vs.vDirCam = vCamera.xyz - PosWorld;
+
+	//vs.vDirLum.z = -vs.vDirLum.z;
 
 
 
