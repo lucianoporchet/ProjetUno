@@ -25,11 +25,14 @@ struct VS_Sortie
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
+static float4 Pos2;
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
+	Pos2 = Pos;
 	sortie.Pos = Pos;
 	sortie.coordTex = coordTex;
+
 	
 	return sortie;
 }
@@ -91,25 +94,25 @@ void MiniPhongGS(triangle VS_Sortie input[3],
 		// Calculer la normale
 		float3 CoteA = input[1].Pos - input[0].Pos;
 		float3 CoteB = input[2].Pos - input[0].Pos;
-		float3 Normale = mul(float4(cross(CoteA, CoteB), 0.0f), matWorld).xyz;
+		float3 Normale = normalize(cross(CoteA, CoteB));
 		float4 PointSupp = input[0].Pos + (input[2].Pos - input[0].Pos) / 2;
 		// Points 0 et 1
 		for (int i = 0; i < 2; i++)
 		{
 			sortie.Pos = mul(input[i].Pos, matWorldViewProj);
-			sortie.Norm = Normale;
+			sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 			sortie.coordTex = input[i].coordTex;
 			TriStream.Append(sortie);
 		}
 		// Point supplémentaire
 		sortie.Pos = mul(PointSupp, matWorldViewProj);
-		sortie.Norm = Normale;
+		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[0].coordTex +
 			(input[2].coordTex - input[0].coordTex) / 2;
 		TriStream.Append(sortie);
 		// Point 2
 		sortie.Pos = mul(input[2].Pos, matWorldViewProj);
-		sortie.Norm = Normale;
+		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[2].coordTex;
 	
 		TriStream.Append(sortie);
