@@ -72,4 +72,8 @@ est le shader de base.
 Lors de l'animation de chaque objet on teste la
 distance par rapport a la caméra et si l'on est
 assez proche on active alors la tesselation pour
-ajouter du détail.
+ajouter du détail. Nous pouvons voir un leger 
+flickering lors du changement. Pour regler ceci,
+nous allons augmenter la distance d'activation de
+la tessellation. Pour le volet 2 cette distance 
+est assez courte pour le voir facilement. 
