@@ -2,6 +2,8 @@
 #include <vector>
 #include "PxPhysicsAPI.h"
 #include "ObjetMesh.h"
+#include "Objet3D.h"
+
 class SceneManager
 {
 public:
@@ -25,5 +27,11 @@ public:
 	};
 	std::vector<PM3D::CObjetMesh> objectList;
 
+	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene();
+
+private :
+
+	// La seule scène
+	std::vector<std::unique_ptr<PM3D::CObjet3D>> ListeScene;
 };
 

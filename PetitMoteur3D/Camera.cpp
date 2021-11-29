@@ -4,6 +4,7 @@
 #include "util.h"
 #include "DispositifD3D11.h"
 
+
 #include "resource.h"
 #include "MoteurWindows.h"
 using namespace DirectX;

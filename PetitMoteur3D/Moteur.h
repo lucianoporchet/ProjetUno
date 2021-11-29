@@ -158,7 +158,7 @@ protected:
 		BeginRenderSceneSpecific();
 
 		// Appeler les fonctions de dessin de chaque objet de la scène
-		for (auto& object3D : ListeScene)
+		for (auto& object3D : manager.getSceneManager().getListScene())
 		{
 			object3D->Draw();
 		}
@@ -171,7 +171,7 @@ protected:
 	virtual void Cleanup()
 	{
 		// détruire les objets
-		ListeScene.clear();
+		manager.getSceneManager().getListScene().clear();
 
 		// Détruire le dispositif
 		if (pDispositif)
@@ -211,6 +211,8 @@ protected:
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj);
 		freeCam.angleDirectionCamera = XM_PI / 2.0f;
 
+		//association du gestionnaire de saisie au game manager
+		manager.setGestionnaireDeSaisie(GetGestionnaireDeSaisie());
 
 		// Initialisation des objets 3D - création et/ou chargement
 		if (!InitObjets())
@@ -229,24 +231,19 @@ protected:
 		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
 		//ajoute une texture a la skybox
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
-		ListeScene.push_back(std::move(skybox));		//ajoute la skybox a la scene
-
-
-
-		
-
+		manager.getSceneManager().getListScene().push_back(std::move(skybox));		//ajoute la skybox a la scene
 
 		//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
 		for (int i = 0; i < 15; i++) {
 			float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
-			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, sceneManager.planetePos[i], scale);
-			ListeScene.push_back(std::move(planet));
+			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, manager.getSceneManager().planetePos[i], scale);
+			manager.getSceneManager().getListScene().push_back(std::move(planet));
 		}
 
 		//Creation du player, constructeur avec format binaire
 		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
 		player->setCam(&freeCam);						//lie la camera au player
-		ListeScene.push_back(std::move(player));		//ajoute le player a la scene
+		manager.getSceneManager().getListScene().push_back(std::move(player));		//ajoute le player a la scene
 
 
 		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
@@ -255,7 +252,7 @@ protected:
 			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
 			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
 			std::unique_ptr<Asteroid> asteroid = std::make_unique<Asteroid>(".\\modeles\\Asteroide\\1\\asteroide.obm", pDispositif, pos, boxSize, scale);
-			ListeScene.push_back(std::move(asteroid));
+			manager.getSceneManager().getListScene().push_back(std::move(asteroid));
 		}
 
 		return true;
@@ -263,34 +260,7 @@ protected:
 
 	bool AnimeScene(float tempsEcoule)
 	{
-		// Prendre en note le statut du clavier
-		GestionnaireDeSaisie.StatutClavier();
-		// Prendre en note l'état de la souris
-		GestionnaireDeSaisie.SaisirEtatSouris();
-		
-
-		if ((GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE)) && manager.hasBeenEnoughTimeSinceLastPause())
-		{
-			if (manager.getIsPauseStatus())
-			{
-				manager.setPauseMenu(false);
-			}
-			else {
-				manager.setPauseMenu(true);
-			}
-		}
-
-
-		//si on est sur le menu pause
-		if (!manager.getIsPauseStatus()) {
-
-			physXManager.stepPhysics();
-			for (auto& object3D : ListeScene)
-			{
-				object3D->Anime(tempsEcoule);
-			}
-		}
-		
+		manager.AnimeScene(tempsEcoule);
 
 		return true;
 	}
@@ -304,7 +274,7 @@ protected:
 
 	
 	// La seule scène
-	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
+	//std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 
 	// Variables pour le temps de l'animation
 	int64_t TempsSuivant;
@@ -313,8 +283,6 @@ protected:
 
 	CChargeurOBJ chargeur;
 	CParametresChargement params;
-
-	SceneManager sceneManager;
 
 	// Les matrices
 	XMMATRIX m_MatView;

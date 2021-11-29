@@ -28,3 +28,44 @@ bool GameManager::hasBeenEnoughTimeSinceLastPause()
 	}
 	return false;
 }
+
+bool GameManager::AnimeScene(float tempsEcoule) {
+	
+	// Prendre en note le statut du clavier
+	GestionnaireDeSaisie->StatutClavier();
+	// Prendre en note l'état de la souris
+	GestionnaireDeSaisie->SaisirEtatSouris();
+
+	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
+	{
+		if (getIsPauseStatus())
+		{
+			setPauseMenu(false);
+		}
+		else {
+			setPauseMenu(true);
+		}
+	}
+
+	//si on est sur le menu pause
+	if (!getIsPauseStatus()) {
+
+		physXManager.stepPhysics();
+		for (auto& object3D : sceneManager.getListScene())
+		{
+			object3D->Anime(tempsEcoule);
+		}
+	}
+
+	return true;
+}
+
+void GameManager::setGestionnaireDeSaisie(PM3D::CDIManipulateur& g)
+{
+	GestionnaireDeSaisie = &g;
+}
+
+SceneManager& GameManager::getSceneManager()
+{
+	return sceneManager;
+}
