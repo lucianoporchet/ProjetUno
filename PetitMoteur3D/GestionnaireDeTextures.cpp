@@ -2,12 +2,15 @@
 #include "StdAfx.h"
 #include "dispositifD3D11.h"
 #include "GestionnaireDeTextures.h"
+#include <mutex>
 
 namespace PM3D
 {
 
+static std::mutex textureMutex;
 CTexture* const CGestionnaireDeTextures::GetNewTexture(const std::wstring& filename, CDispositifD3D11* pDispositif)
 {
+	std::lock_guard<std::mutex> lock(textureMutex);
 	// On vérifie si la texture est déjà dans notre liste
 	CTexture* pTexture = GetTexture(filename);
 

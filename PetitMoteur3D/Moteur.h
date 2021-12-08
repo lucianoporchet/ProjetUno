@@ -2,19 +2,9 @@
 #include "Singleton.h"
 #include "dispositif.h"
 
-#include "Objet3D.h"
-#include "Bloc.h"
-#include "BlocEffet1.h"
-#include "ObjetMesh.h"
-#include "ChargeurOBJ.h"
-#include "Terrain.h"
-#include "Camera.h"
-#include "Player.h"
-#include "Asteroid.h"
-#include "Planet.h"
+
 #include "GameManager.h"
 
-#include "GestionnaireDeTextures.h"
 #include "AfficheurSprite.h"
 #include "AfficheurTexte.h"
 #include "DIManipulateur.h"
@@ -22,11 +12,11 @@
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
-#include "RandomGenerator.h"
 
+#include <chrono>
 #include <vector>
 #include <string>
-
+#include <fstream>
 
 namespace PM3D
 {
@@ -158,10 +148,7 @@ protected:
 		BeginRenderSceneSpecific();
 
 		// Appeler les fonctions de dessin de chaque objet de la scène
-		for (auto& object3D : manager.getSceneManager().getListScene())
-		{
-			object3D->Draw();
-		}
+		manager.getSceneManager().Draw(0);
 
 		EndRenderSceneSpecific();
 
@@ -171,7 +158,7 @@ protected:
 	virtual void Cleanup()
 	{
 		// détruire les objets
-		manager.getSceneManager().getListScene().clear();
+		manager.getSceneManager().getScenes().clear();
 
 		// Détruire le dispositif
 		if (pDispositif)
@@ -225,35 +212,13 @@ protected:
 
 	bool InitObjets()
 	{
-		float boxSize = 3000.0f; //taille de la fausse skybox
-
-		//Creation de la fausse skyBox (cube avec le culling inversé)
-		std::unique_ptr<CBlocEffet1> skybox = std::make_unique<CBlocEffet1>(boxSize, boxSize, boxSize, pDispositif);
-		//ajoute une texture a la skybox
-		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
-		manager.getSceneManager().getListScene().push_back(std::move(skybox));		//ajoute la skybox a la scene
-
-		//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
-		for (int i = 0; i < 15; i++) {
-			float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
-			std::unique_ptr<Planet> planet = std::make_unique<Planet>(".\\modeles\\Planete\\3\\Planete.obm", pDispositif, manager.getSceneManager().planetePos[i], scale);
-			manager.getSceneManager().getListScene().push_back(std::move(planet));
-		}
-
-		//Creation du player, constructeur avec format binaire
-		player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm", pDispositif, 2.0f);
-		player->setCam(&freeCam);						//lie la camera au player
-		manager.getSceneManager().getListScene().push_back(std::move(player));		//ajoute le player a la scene
-
-
-		//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
-		//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
-		for (int i = 0; i < 4; i++) {
-			float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
-			PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
-			std::unique_ptr<Asteroid> asteroid = std::make_unique<Asteroid>(".\\modeles\\Asteroide\\1\\asteroide.obm", pDispositif, pos, boxSize, scale);
-			manager.getSceneManager().getListScene().push_back(std::move(asteroid));
-		}
+		std::chrono::nanoseconds result1;
+		auto t = std::chrono::high_resolution_clock::now();
+		manager.getSceneManager().InitObjects(pDispositif, TexturesManager, freeCam);
+		result1 = std::chrono::high_resolution_clock::now() - t;
+		
+		std::ofstream log{ "Log.txt" };
+		log << std::chrono::duration_cast<std::chrono::milliseconds>(result1).count();
 
 		return true;
 	}
@@ -314,8 +279,6 @@ protected:
 	CCamera freeCam;
 
 
-	//objet joueur
-	std::unique_ptr<Player> player;
 
 
 };

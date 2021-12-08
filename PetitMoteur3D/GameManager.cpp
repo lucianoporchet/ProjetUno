@@ -51,7 +51,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	if (!getIsPauseStatus()) {
 
 		physXManager.stepPhysics();
-		for (auto& object3D : sceneManager.getListScene())
+		for (auto& object3D : sceneManager.getListScene(0))
 		{
 			object3D->Anime(tempsEcoule);
 		}

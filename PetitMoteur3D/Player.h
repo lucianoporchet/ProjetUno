@@ -12,7 +12,7 @@ class PM3D::CDispositifD3D11;
 class Player : public MovingObject {
 
 public:
-	Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1);
+	Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1, physx::PxVec3 pos = physx::PxVec3(0.0f));
 	virtual void Anime(float tempEcoule) override;
 
 	/*

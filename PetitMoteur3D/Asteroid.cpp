@@ -7,7 +7,7 @@
 #include "resource.h"
 
 
-Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float boxSize, float scale)
+Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos)
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	//on donne une vitesse aleatoire aux asteroides entre 150 et 500
@@ -21,8 +21,6 @@ Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisp
 	body->addForce(PxVec3(-pos) * rSpeed, PxForceMode::eIMPULSE);
 	body->setMass(scale * 10);
 
-	//ajoute l'asteroide a la scene de physX pour faire les calculs
-	PhysXManager::get().addToScene(body);
 }
 
 void Asteroid::Anime(float tempEcoule)

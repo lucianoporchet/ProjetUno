@@ -7,12 +7,12 @@
 #include "resource.h"
 
 //constructeur du joueur appelant également le constructeur du parent pour dessiner le modele
-Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale)
+Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, physx::PxVec3 pos)
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	//setTesselation(true);
 	//création de la hitbox du joueur sous forme de boite et adaptée a la scale
-	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(0.0f, 0.0f, 0.0f)), PxBoxGeometry(0.8f *scale, 0.2f * scale, 0.8f *scale),
+	body = PhysXManager::get().createDynamic(PxTransform(pos), PxBoxGeometry(0.8f *scale, 0.2f * scale, 0.8f *scale),
 											PxVec3(0, 0, 0), PhysXManager::FilterGroup::ePlayer);
 
 	/*contraintes physiques sur le joueur pour avoir un peu de drift et ne pas avoir de mouvement infini
@@ -22,8 +22,7 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 	body->setLinearDamping(0.4f);
 	body->setAngularDamping(0.5f);
 
-	//ajout de l'acteur physique a la scene physique
-	PhysXManager::get().addToScene(body);
+
 	//vitesse influant sur les mouvements du joueur
 	speed = 30.0f;
 	

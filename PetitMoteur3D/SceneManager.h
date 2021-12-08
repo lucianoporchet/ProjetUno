@@ -3,9 +3,29 @@
 #include "PxPhysicsAPI.h"
 #include "ObjetMesh.h"
 #include "Objet3D.h"
+#include "Bloc.h"
+#include "BlocEffet1.h"
+#include "ChargeurOBJ.h"
+#include "Terrain.h"
+#include "Camera.h"
+#include "Player.h"
+#include "Asteroid.h"
+#include "Planet.h"
+#include "GestionnaireDeTextures.h"
+#include "RandomGenerator.h"
+#include <future>
+#include <mutex>
 
 class SceneManager
 {
+
+private:
+	// La seule scène
+	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes;
+	float boxSize = 3000.0f;
+
+private:
+	SceneManager();
 public:
 
 	const physx::PxVec3 planetePos[15] = {
@@ -27,11 +47,19 @@ public:
 	};
 	std::vector<PM3D::CObjetMesh> objectList;
 
-	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene();
+	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene(int scene);
+	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
+	
+	void InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
+	void Draw(int scene);
+	static SceneManager& get() noexcept;
 
-private :
 
-	// La seule scène
-	std::vector<std::unique_ptr<PM3D::CObjet3D>> ListeScene;
 };
+
+
+
+
+
+
 

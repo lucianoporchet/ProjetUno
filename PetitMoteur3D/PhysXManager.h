@@ -44,7 +44,7 @@ public:
 	
 
 public:
-	static PhysXManager& get();
+	static PhysXManager& get() noexcept;
 
 private:
 	PxDefaultAllocator		gAllocator;

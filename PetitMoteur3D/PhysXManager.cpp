@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PhysXManager.h"
+#include <mutex>
 
 
 #define PX_RELEASE(x) if(x) { x->release(); x = NULL; }
@@ -66,16 +67,18 @@ void PhysXManager::addToScene(PxActor* actor)
 	gScene->addActor(*actor);
 }
 
+static std::mutex physXMutex;
 PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 1.0f);
 	dynamic->setLinearVelocity(velocity);
 	setupFiltering(dynamic, FilterGroup::eObstacle, FilterGroup::eObstacle);
+	std::lock_guard<std::mutex> lock(physXMutex);
 	gScene->addActor(*dynamic);
 	return dynamic;
 }
 
-PhysXManager& PhysXManager::get() {
+PhysXManager& PhysXManager::get() noexcept {
 	static PhysXManager instance;
 	return instance;
 }

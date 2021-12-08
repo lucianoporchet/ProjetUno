@@ -8,7 +8,7 @@
 
 
 
-Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, PxVec3 pos, float scale)
+Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos)
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	//cree le rigid body de l'objet dans physX avec, pour le moment un sphere collider
@@ -40,9 +40,7 @@ Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 		break;
 	}
 
-	
-	//ajoute l'asteroide a la scene de physX pour faire les calculs
-	PhysXManager::get().addToScene(body);
+
 }
 
 void Planet::Anime(float tempEcoule)

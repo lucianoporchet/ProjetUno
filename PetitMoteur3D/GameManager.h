@@ -33,7 +33,7 @@ private:
 	PM3D::CDIManipulateur* GestionnaireDeSaisie;
 
 	//scene manager
-	SceneManager sceneManager;
+	SceneManager& sceneManager = SceneManager::get();
 
 protected :
 	
