@@ -71,8 +71,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// Creation du gestionnaire de billboards, sprites et texte
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
-	//PxVec3 pos = RandomGenerator::get().randomVec3(10, 100);
-	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, 0.0f, 0.0f);
+	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, 10.0f, 10.0f);
+	spriteManager->AjouterSprite(".\\modeles\\Billboards\\testing_tex.dds"s, 10, 10, 25, 25);
+	//spriteManager->AjouterSpriteTexte(".\\modeles\\Billboards\\testing_tex.dds"s, 10, 10, 50.0f, 50.0f);
 }
 
 SceneManager& SceneManager::get() noexcept {
