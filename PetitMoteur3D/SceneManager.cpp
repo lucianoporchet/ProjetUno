@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "AfficheurSprite.h"
+#include "AfficheurTexte.h"
 #include <functional>
 using namespace std::literals;
 static std::mutex objMutex;
@@ -70,10 +71,21 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 	// Creation du gestionnaire de billboards, sprites et texte
+	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
+	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
 	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, 10.0f, 10.0f);
-	spriteManager->AjouterSprite(".\\modeles\\Billboards\\testing_tex.dds"s, 10, 10, 25, 25);
-	//spriteManager->AjouterSpriteTexte(".\\modeles\\Billboards\\testing_tex.dds"s, 10, 10, 50.0f, 50.0f);
+
+	// exemple sprite. Params : chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
+	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
+	spriteManager->AjouterSprite(".\\modeles\\Billboards\\testing_tex.dds"s, 10, 110, 100, 100);
+
+	// exemple texte.
+	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).
+	//const Gdiplus::FontFamily oFamily(L"Comic Sans", nullptr);
+	//pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	//pTexte1 = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 256, 256, pPolice.get());
+	//spriteManager->AjouterSpriteTexte(pTexte1->GetTextureView(), 0, 257);
 }
 
 SceneManager& SceneManager::get() noexcept {
