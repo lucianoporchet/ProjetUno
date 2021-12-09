@@ -8,11 +8,11 @@
 
 
 
-Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos)
+Planet::Planet(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos, int scene)
 	: MovingObject(nomfichier, _pDispositif, scale)
 {
 	//cree le rigid body de l'objet dans physX avec, pour le moment un sphere collider
-	body = PhysXManager::get().createDynamic(PxTransform(pos), PxSphereGeometry(scale), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eObstacle);
+	body = PhysXManager::get().createDynamic(PxTransform(pos), PxSphereGeometry(scale), PxVec3(0, 0, 0), scene);
 
 
 	body->setAngularDamping(0.f); //enleve l'angular damping pour que les planetes tournent sans s'arreter

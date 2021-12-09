@@ -28,7 +28,7 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
 
-	sortie.vDirLum = vLumiere.xyz - PosWorld;
+	sortie.vDirLum = float3(0.0f, 0.0f, -1.0f);
 	sortie.vDirCam = vCamera.xyz - PosWorld;
 
 	// Coordonnées d'application de texture
@@ -67,9 +67,9 @@ float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
 
 // I = A + D * N.L + (R.V)n
 couleur =	couleurTexture * vAEcl.rgb * vAMat.rgb +
-			couleurTexture * vDEcl.rgb * vDMat.rgb * diff;
+			couleurTexture * vDEcl.rgb * vDMat.rgb;
 
-couleur += S;
+//couleur += S;
 
 return float4(couleur, 1.0f);
 }

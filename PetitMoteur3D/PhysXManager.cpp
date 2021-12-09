@@ -7,6 +7,10 @@
 
 
 PhysXManager::PhysXManager() noexcept {
+	for (int i = 0; i < NBSCENES; ++i) {
+		PxScene* s = NULL;
+		gScenes.push_back(s);
+	}
 	initPhysics();
 }
 
@@ -26,30 +30,50 @@ void PhysXManager::initPhysics()
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = FilterShader;
-	gScene = gPhysics->createScene(sceneDesc);
-	gScene->setContactModifyCallback(contact);
-	gScene->setSimulationEventCallback(contact);
 
-	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
+	for (auto& s : gScenes) {
+		s = gPhysics->createScene(sceneDesc);
+		s->setContactModifyCallback(contact);
+		s->setSimulationEventCallback(contact);
+
+		PxPvdSceneClient* pvdClient = s->getScenePvdClient(); 
+		if (pvdClient)
+		{
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		}
+	}
+	/*gScene = gPhysics->createScene(sceneDesc);
+	gScene->setContactModifyCallback(contact);
+	gScene->setSimulationEventCallback(contact);*/
+
+	/*PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-	}
+	}*/
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
 }
 
-void PhysXManager::stepPhysics()
+void PhysXManager::stepPhysics(int scene)
 {
-	gScene->simulate(1.0f / 60.0f);
-	gScene->fetchResults(true);
+	gScenes[scene]->simulate(1.0f / 60.0f);
+	gScenes[scene]->fetchResults(true);
+
+	/*gScene->simulate(1.0f / 60.0f);
+	gScene->fetchResults(true);*/
 }
 
 void PhysXManager::cleanupPhysics()
 {
-	PX_RELEASE(gScene);
+	for (auto& s : gScenes) {
+		PX_RELEASE(s);
+	}
+	//PX_RELEASE(gScene);
 	PX_RELEASE(gDispatcher);
 	PX_RELEASE(gPhysics);
 	if (gPvd)
@@ -62,19 +86,18 @@ void PhysXManager::cleanupPhysics()
 	
 }
 
-void PhysXManager::addToScene(PxActor* actor)
+void PhysXManager::addToScene(PxActor* actor, int scene)
 {
-	gScene->addActor(*actor);
+	gScenes[scene]->addActor(*actor);
 }
 
 static std::mutex physXMutex;
-PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group)
+PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 1.0f);
 	dynamic->setLinearVelocity(velocity);
-	setupFiltering(dynamic, FilterGroup::eObstacle, FilterGroup::eObstacle);
 	std::lock_guard<std::mutex> lock(physXMutex);
-	gScene->addActor(*dynamic);
+	addToScene(dynamic, scene);
 	return dynamic;
 }
 
@@ -101,9 +124,10 @@ void PhysXManager::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 
 }
 
 
-void PhysXManager::removeActor(PxActor& actor) {
-	gScene->removeActor(actor);
+void PhysXManager::removeActor(PxActor& actor, int scene) {
+	gScenes[scene]->removeActor(actor);
 }
+
 
 PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -111,7 +135,38 @@ PxFilterFlags FilterShader(
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
 	//TO DO: code pour gerer les cas particuliers lors des collisions et le triggers
-	
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal1) || 
+		(filterData0.word0 == FilterGroup::ePortal1 && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal2) ||
+		(filterData0.word0 == FilterGroup::ePortal2 && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal3) ||
+		(filterData0.word0 == FilterGroup::ePortal3 && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal4) ||
+		(filterData0.word0 == FilterGroup::ePortal4 && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortalEnd) ||
+		(filterData0.word0 == FilterGroup::ePortalEnd && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+
+
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;
 }

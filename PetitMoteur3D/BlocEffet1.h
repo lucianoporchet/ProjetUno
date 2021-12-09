@@ -19,7 +19,7 @@ class CBlocEffet1 : public CObjet3D
 {
 public:
 	CBlocEffet1(const float dx, const float dy, const float dz,
-		CDispositifD3D11* pDispositif, bool multiplicateur = 0);
+		CDispositifD3D11* pDispositif, int zone = 0);
 
 	virtual ~CBlocEffet1();
 

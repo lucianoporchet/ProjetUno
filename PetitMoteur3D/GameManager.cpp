@@ -29,6 +29,7 @@ bool GameManager::hasBeenEnoughTimeSinceLastPause()
 	return false;
 }
 
+
 bool GameManager::AnimeScene(float tempsEcoule) {
 	
 	// Prendre en note le statut du clavier
@@ -50,11 +51,21 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	//si on est sur le menu pause
 	if (!getIsPauseStatus()) {
 
-		physXManager.stepPhysics();
-		for (auto& object3D : sceneManager.getListScene(0))
-		{
-			object3D->Anime(tempsEcoule);
+		physXManager.stepPhysics(static_cast<int>(activeZone));
+
+		//////TEST////////
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_T) && hasBeenEnoughTimeSinceLastPause()) {
+			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
+			activeZone = static_cast<Zone>((static_cast<int>(activeZone) + 1) % 4);
+			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
+			
 		}
+		//////////////////
+
+		sceneManager.Anime(activeZone, tempsEcoule);
+
+		
+
 	}
 
 	return true;
@@ -68,4 +79,12 @@ void GameManager::setGestionnaireDeSaisie(PM3D::CDIManipulateur& g)
 SceneManager& GameManager::getSceneManager()
 {
 	return sceneManager;
+}
+
+const Zone& GameManager::getActiveZone() {
+	return activeZone;
+}
+
+void GameManager::setActiveZone(Zone zone) {
+	activeZone = zone;
 }

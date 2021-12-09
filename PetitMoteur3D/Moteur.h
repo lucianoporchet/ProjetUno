@@ -148,7 +148,7 @@ protected:
 		BeginRenderSceneSpecific();
 
 		// Appeler les fonctions de dessin de chaque objet de la scène
-		manager.getSceneManager().Draw(0);
+		manager.getSceneManager().Draw(manager.getActiveZone());
 
 		EndRenderSceneSpecific();
 

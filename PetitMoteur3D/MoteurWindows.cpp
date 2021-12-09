@@ -177,7 +177,7 @@ void CMoteurWindows::BeginRenderSceneSpecific()
 
 
 	// On efface la surface de rendu
-	float Couleur[4] = { 0.0f, 0.0f, 0.0f, 1.0f };  //  RGBA - Vert pour le moment
+	float Couleur[4] = { 0.0f, 0.5f, 0.0f, 1.0f };  //  RGBA - Vert pour le moment
 	pImmediateContext->ClearRenderTargetView(pRenderTargetView, Couleur);
 
 	// On ré-initialise le tampon de profondeur

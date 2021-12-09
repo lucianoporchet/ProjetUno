@@ -3,7 +3,21 @@
 #include "MyContactModification.h"
 
 using namespace physx;
-
+//filter group pour gerer les collission dans physX
+struct FilterGroup
+{
+	enum Enum
+	{
+		ePlayer = (1 << 0),
+		eObstacle = (1 << 1),
+		eMonster = (1 << 2),
+		ePortal1 = (1 << 3),
+		ePortal2 = (1 << 4),
+		ePortal3 = (1 << 5),
+		ePortal4 = (1 << 6),
+		ePortalEnd = (1 << 7),
+	};
+};
 //singleton de la classe du physX manager
 class PhysXManager
 {
@@ -13,34 +27,20 @@ public:
 	PhysXManager(const PhysXManager&) = delete;
 	PhysXManager& operator=(const PhysXManager&) = delete;
 
-	//filter group pour gerer les collission dans physX
-	struct FilterGroup
-	{
-		enum Enum
-		{
-			ePlayer = (1 << 0),
-			eObstacle = (1 << 1),
-			eMonster = (1 << 2),
-			ePortal = (1 << 3),
-			eDebris = (1 << 4),
-		};
-	};
-
 	//ajouter une gestion de collision entre deux objets a l'aide de leur FilterGroup
 	void setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask);
 
 
 	
-	void initPhysics();		//lancer la physique
-	void stepPhysics();		//update la physique
-	void cleanupPhysics();	//clean la physique
-
+	void initPhysics();					//lancer la physique
+	void stepPhysics(int scene);		//update la physique
+	void cleanupPhysics();				//clean la physique
 	//ajouter ou enlever des acteurs de la scene de physX
-	void addToScene(PxActor* actor);
-	void removeActor(PxActor& actor);
+	void addToScene(PxActor* actor, int scene);
+	void removeActor(PxActor& actor, int scene);
 
 	//creer un rigid body
-	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, PxU32 group);
+	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
 	
 
 public:
@@ -52,10 +52,13 @@ private:
 	PxFoundation* gFoundation = NULL;
 	PxPhysics* gPhysics = NULL;
 	PxDefaultCpuDispatcher* gDispatcher = NULL;
-	PxScene* gScene = NULL;
+	std::vector<PxScene*> gScenes;
 	PxMaterial* gMaterial = NULL;
 	PxPvd* gPvd = NULL;
 	
+	enum {
+		NBSCENES = 4
+	};
 
 };
 
