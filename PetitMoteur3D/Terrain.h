@@ -1,38 +1,48 @@
 #pragma once
-#include "objet3d.h"
+#include <vector>
+#include <future>
+#include <fstream>
 #include <string>
+
+#include "Objet3D.h"
 #include "d3dx11effect.h"
-#include "sommetTerrain.h"
+#include "sommetbloc.h"
+
 
 namespace PM3D
 {
+
 	class CDispositifD3D11;
 
-	class Terrain : public CObjet3D {
+
+	//  Classe : CBloc
+	//
+	//  BUT : 	Classe de bloc
+	//
+	class CTerrain : public CObjet3D
+	{
 	public:
-
-		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif);
-
+		CTerrain(std::string index,std::string sommets,
+			CDispositifD3D11* pDispositif);
+		
 		// Destructeur
-		virtual ~Terrain();
+		virtual ~CTerrain();
 
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
 
-
-		float getHeight(float x, float z);
-		int height;
-		int width;
-
-		XMFLOAT3 scale;
-
 	private:
-		CSommetTerrain* sommets;
+		static void readSommets(std::string sf, std::vector<CSommetBloc>* s, float* width);
+		static void readIndex(std::string ixf, std::vector<unsigned int>* ix);
+		
 
-		char* filename;
+		std::vector<CSommetBloc> v_sommets;
+		std::vector<unsigned int> v_index;
 		CDispositifD3D11* pDispositif;
-		void InitShaders();
-		void InitEffect();
+
+		float widthT;
+
+		void InitEffet();
 
 		ID3D11Buffer* pVertexBuffer;
 		ID3D11Buffer* pIndexBuffer;
@@ -41,18 +51,20 @@ namespace PM3D
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
 
-		unsigned int* pIndices;
-		int nbSommets;
-		int nbPolygones;
-
 		// Définitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		float rotation;
-
+		bool freeCam;
 		// Pour les effets
 		ID3DX11Effect* pEffet;
 		ID3DX11EffectTechnique* pTechnique;
 		ID3DX11EffectPass* pPasse;
+
+		/*static std::vector<CSommetTerrain> v_sommets;
+		static std::vector<unsigned int> v_index;*/
+		
+
 	};
-}
+
+} // namespace PM3D

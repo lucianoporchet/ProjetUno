@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneManager.h"
+#include "Terrain.h"
 #include <functional>
 
 using namespace std::literals;
@@ -83,7 +84,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
-	
+	terrain = std::make_unique<PM3D::CTerrain>(".\\modeles\\Terrain\\index2.txt", ".\\modeles\\Terrain\\sommets2.txt", pDispositif);
 	
 }
 
@@ -100,6 +101,7 @@ SceneManager::SceneManager() {
 
 void SceneManager::Draw(Zone scene) {
 	player->Draw();
+	terrain->Draw();
 	for (auto& obj : Scenes[static_cast<int>(scene)])
 	{
 		obj->Draw();
@@ -108,6 +110,7 @@ void SceneManager::Draw(Zone scene) {
 
 void SceneManager::Anime(Zone scene, float tmps) {
 	player->Anime(tmps);
+	terrain->Anime(tmps);
 	for (auto& obj : Scenes[static_cast<int>(scene)])
 	{
 		obj->Anime(tmps);
