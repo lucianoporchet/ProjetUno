@@ -74,7 +74,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
 	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
-	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, 10.0f, 10.0f);
+	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10.0f, 10.0f);
 
 	// exemple sprite. Params : chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.

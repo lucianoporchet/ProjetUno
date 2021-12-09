@@ -57,6 +57,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		}
 	}
 
+
 	return true;
 }
 
