@@ -181,7 +181,7 @@ protected:
 		const float champDeVision = XM_PI / 4; 	// 45 degrés
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 		const float planRapproche = 1.0;
-		const float planEloigne = 4000.0;
+		const float planEloigne = 18000.0;
 
 		m_MatProj = XMMatrixPerspectiveFovRH(
 			champDeVision,

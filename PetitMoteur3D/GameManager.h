@@ -21,6 +21,7 @@ public:
 	SceneManager& getSceneManager();
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
+	void setNextZone(Zone zone);
 	
 private:
 
@@ -29,6 +30,7 @@ private:
 	int64_t lastPaused = 0;
 	bool isPause = false;
 	Zone activeZone = Zone::ZONE1;
+	Zone nextZone = Zone::ZONE1;
 
 	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();

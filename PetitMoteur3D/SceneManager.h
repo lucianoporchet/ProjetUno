@@ -39,6 +39,7 @@ public:
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
 	
 	void InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
+	physx::PxVec3 getPortalPos(Zone scene);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
 	static SceneManager& get() noexcept;
@@ -46,7 +47,7 @@ public:
 private:
 	
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes;
-	const float BOXSIZE{ 3000.0f };
+	const float BOXSIZE{ 6000.0f };
 	enum {
 
 		NBASTEROIDES = 4,
@@ -110,9 +111,9 @@ private:
 
 	const physx::PxVec3 portalPos[NBPORTAILS] = {
 	physx::PxVec3(-1153.0f, 617.0f, -493.0f),
-	physx::PxVec3(-375.0f, 1373, 5530.0f),
-	physx::PxVec3(6774.0f, 1672.0f, 6574.0f),
-	physx::PxVec3(6575.0f, 480.0f, -1732.0f),
+	physx::PxVec3(-375.0f, 5296.0f, -343.0f),
+	physx::PxVec3(5228.0f, 6825.0f, 602.0f),
+	physx::PxVec3(5506.0f, 715.0f, -1732.0f),
 	};
 
 public:

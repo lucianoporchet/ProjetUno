@@ -21,5 +21,7 @@ class MyContactModification : public PxContactModifyCallback, public PxSimulatio
 
 	virtual void onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count) override;
 
+	bool once = true;
+
 };
 

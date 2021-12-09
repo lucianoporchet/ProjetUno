@@ -114,3 +114,7 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	}
 }
 
+physx::PxVec3 SceneManager::getPortalPos(Zone scene) {
+	return portalPos[static_cast<int>(scene)] + physx::PxVec3(25.0f, 25.0f, 25.0f);
+}
+
