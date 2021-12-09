@@ -17,9 +17,10 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 
 	PhysXManager::get().setupFiltering(body, 
 									   FilterGroup::ePlayer, 
-									   FilterGroup::ePortal1 | FilterGroup::ePortal2 | 
-									   FilterGroup::ePortal3 | FilterGroup::ePortal2 | 
-									   FilterGroup::ePortalEnd);
+									   FilterGroup::ePortal1to2 | FilterGroup::ePortal2to1 | 
+									   FilterGroup::ePortal2to3 | FilterGroup::ePortal3to2 | 
+									   FilterGroup::ePortal3to4 | FilterGroup::ePortal4to3 | 
+									   FilterGroup::ePortal4to1 | FilterGroup::ePortalEnd);
 	/*contraintes physiques sur le joueur pour avoir un peu de drift et ne pas avoir de mouvement infini
 	l'angular damping n'est pas infini pour permettre de tourner dans tous les sens lors d'une collision
 	sans non plus tourner a l'infini

@@ -77,14 +77,23 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, 0, [](Asteroid*) noexcept {}));
 	}
 
-	for (int i = 0; i < NBPORTAILS; ++i) {
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\5\\Planete.obm"s, pDispositif, 20.0f, portalPos[i], i, [](Portal*) noexcept {}));
+	int counter = 0, scn = 0;;
+	for (const auto& pos : portalPos) {
+		
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, pos, scn, [](Portal*) noexcept {}));
+		
+		++counter;
+		if (counter < 3)
+			scn = 1;
+		else if (counter < 5)
+			scn = 2;
+		else
+			scn = 3;
 	}
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
-	
-	
+
 }
 
 SceneManager& SceneManager::get() noexcept {

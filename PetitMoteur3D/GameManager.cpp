@@ -61,7 +61,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		}
 		//////////////////
 
-		if (activeZone != nextZone && hasBeenEnoughTimeSinceLastPause()) {
+		if (activeZone != nextZone) {
 			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
 			activeZone = nextZone;
 			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));

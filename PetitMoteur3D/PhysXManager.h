@@ -11,11 +11,14 @@ struct FilterGroup
 		ePlayer = (1 << 0),
 		eObstacle = (1 << 1),
 		eMonster = (1 << 2),
-		ePortal1 = (1 << 3),
-		ePortal2 = (1 << 4),
-		ePortal3 = (1 << 5),
-		ePortal4 = (1 << 6),
-		ePortalEnd = (1 << 7),
+		ePortal1to2 = (1 << 3),
+		ePortal2to1 = (1 << 4),
+		ePortal2to3 = (1 << 5),
+		ePortal3to2 = (1 << 6),
+		ePortal3to4 = (1 << 7),
+		ePortal4to3 = (1 << 8),
+		ePortal4to1 = (1 << 9),
+		ePortalEnd = (1 << 10)
 	};
 };
 //singleton de la classe du physX manager

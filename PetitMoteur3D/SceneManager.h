@@ -53,7 +53,7 @@ private:
 		NBASTEROIDES = 4,
 		NBZONES = 4,
 		NBPLANETES = 15,
-		NBPORTAILS = 4
+		NBPORTAILS = 7
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
@@ -112,8 +112,11 @@ private:
 	const physx::PxVec3 portalPos[NBPORTAILS] = {
 	physx::PxVec3(-1153.0f, 617.0f, -493.0f),
 	physx::PxVec3(-375.0f, 5296.0f, -343.0f),
-	physx::PxVec3(5228.0f, 6825.0f, 602.0f),
-	physx::PxVec3(5506.0f, 715.0f, -1732.0f),
+	physx::PxVec3(693.0f, 7017.0f, -343.0f),
+	physx::PxVec3(4845.0f, 6825.0f, 602.0f),
+	physx::PxVec3(6331.0f, 4896.0f, 602.0f),
+	physx::PxVec3(5506.0f, 871.0f, -1732.0f),
+	physx::PxVec3(6393.0f, -1605.0f, -1732.0f)
 	};
 
 public:
