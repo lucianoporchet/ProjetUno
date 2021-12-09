@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneManager.h"
+#include "AfficheurSprite.h"
 #include <functional>
 using namespace std::literals;
 static std::mutex objMutex;
@@ -67,6 +68,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
 		futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, 0, [](Asteroid*) noexcept {}));
 	}
+
+	// Creation du gestionnaire de billboards, sprites et texte
+	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
+	//PxVec3 pos = RandomGenerator::get().randomVec3(10, 100);
+	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, 0.0f, 0.0f);
 }
 
 SceneManager& SceneManager::get() noexcept {
