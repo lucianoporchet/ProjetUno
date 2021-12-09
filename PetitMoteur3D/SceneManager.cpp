@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "AfficheurSprite.h"
+#include "AfficheurPanneau.h"
 #include "AfficheurTexte.h"
 #include <functional>
 using namespace std::literals;
@@ -73,8 +74,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// Creation du gestionnaire de billboards, sprites et texte
 	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
+	this->billboardManager = std::make_unique<PM3D::CAfficheurPanneau>(pDispositif);
 	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
-	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10.0f, 10.0f);
+	billboardManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10.0f, 10.0f);
 
 	// exemple sprite. Params : chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
