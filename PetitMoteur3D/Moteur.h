@@ -151,8 +151,8 @@ protected:
 		manager.getSceneManager().Draw(0);
 
 		// De meme pour les sprites, billboards, etc.
-		manager.getSceneManager().getSpriteManager()->Draw();
 		manager.getSceneManager().getBillboardManager()->Draw();
+		manager.getSceneManager().getSpriteManager()->Draw();
 
 		EndRenderSceneSpecific();
 
