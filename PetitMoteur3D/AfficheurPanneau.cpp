@@ -296,39 +296,36 @@ void CAfficheurPanneau::AjouterSpriteTexte(
 // Methode anime custom pour faire tourner les panneaux en accord avec la camera
 void CAfficheurPanneau::Anime(float) {
 
-	//// Animer tous les sprites
-	//for (auto& sprite : tabSprites)
-	//{
-	//	PxTransform transformPlayer = 
+	// Animer tous les sprites
+	for (auto& sprite : tabSprites)
+	{
+		PxTransform transformPlayer = SceneManager::get().player->body->getGlobalPose();
+		CPanneau* pBoard = reinterpret_cast<CPanneau*>(sprite.get());
+		XMFLOAT3 posBoard = pBoard->position;
 
-	//	PxTransform transformGrappin = Grappin->getGlobalPose();
+		PxVec3 vecDir = { posBoard.x - transformPlayer.p.x, posBoard.y - transformPlayer.p.y, posBoard.z - transformPlayer.p.z };
 
-	//	PxVec3 vecDir = { transformGrappin.p - transformPlayer.p };
-	//	vecDir = vecDir.getNormalized();
+		vecDir = vecDir.getNormalized();
 
+		float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
+		PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
 
-	//	float angleY = -atan2(vecDir.z, vecDir.x);
-	//	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+		float angleZ = -atan2(vecDir.y, 1.0f);
+		PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
 
-	//	float angleZ = -atan2(vecDir.y, 1.0f);
-	//	PxQuat quatZ = PxQuat(angleZ, { 0.0f, 0.0f, -1.0f });
+		PxQuat quat = quatY * quatZ;
 
-	//	PxQuat quat = quatY * quatZ;
+		//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
+		auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
 
-	//	/*PxTransform origin = PxTransform(pos, quat);
-	//	origin = PxTransform(origin.transform(PxVec3{ 10.0f, 0.0f, 0.0f }), quat);*/
+		auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
+		auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
+		//auto posTmp = pBoard->matPosDim;
 
+		auto testPos = rotTmp * posTmp;
 
-	//	//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
-	//	auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
-
-	//	auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
-	//	auto posTmp = XMMatrixTranslation(aled.x, aled.y, aled.z);
-
-	//	auto testPos = rotTmp * posTmp;
-
-	//	sprite.get()->matPosDim = testPos;
-	//}
+		sprite.get()->matPosDim = testPos;
+	}
 
 }
 
