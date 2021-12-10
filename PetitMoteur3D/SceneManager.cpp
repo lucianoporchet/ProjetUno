@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "Terrain.h"
+#include "LectureFichier.h"
 #include <functional>
 
 using namespace std::literals;
@@ -84,8 +85,12 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
-	terrain = std::make_unique<PM3D::CTerrain>(".\\modeles\\Terrain\\index2.txt", ".\\modeles\\Terrain\\sommets2.txt", pDispositif);
 	
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\grass.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\water.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 }
 
 SceneManager& SceneManager::get() noexcept {
