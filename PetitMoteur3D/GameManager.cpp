@@ -29,11 +29,12 @@ bool GameManager::hasBeenEnoughTimeSinceLastPause()
 	return false;
 }
 
+
 bool GameManager::AnimeScene(float tempsEcoule) {
 	
 	// Prendre en note le statut du clavier
 	GestionnaireDeSaisie->StatutClavier();
-	// Prendre en note l'état de la souris
+	// Prendre en note l'Ã©tat de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
 	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
@@ -50,11 +51,18 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	//si on est sur le menu pause
 	if (!getIsPauseStatus()) {
 
-		physXManager.stepPhysics();
-		for (auto& object3D : sceneManager.getListScene(0))
-		{
-			object3D->Anime(tempsEcoule);
+		physXManager.stepPhysics(static_cast<int>(activeZone));
+
+
+		if (activeZone != nextZone) {
+			Zone pastZone = activeZone;
+			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
+			activeZone = nextZone;
+			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
+			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
+			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
+		sceneManager.Anime(activeZone, tempsEcoule);
 
 		// Animation des billboards.
 		sceneManager.getBillboardManager()->Anime(tempsEcoule);
@@ -72,4 +80,16 @@ void GameManager::setGestionnaireDeSaisie(PM3D::CDIManipulateur& g)
 SceneManager& GameManager::getSceneManager()
 {
 	return sceneManager;
+}
+
+const Zone& GameManager::getActiveZone() {
+	return activeZone;
+}
+
+void GameManager::setActiveZone(Zone zone) {
+	activeZone = zone;
+}
+
+void GameManager::setNextZone(Zone zone) {
+	nextZone = zone;
 }

@@ -28,7 +28,7 @@ struct ShadersParams
 //		dx, dy, dz:	dimension en x, y, et z
 //		pDispositif: pointeur sur notre objet dispositif
 CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
-	CDispositifD3D11* pDispositif_, bool multiplicateur)
+	CDispositifD3D11* pDispositif_, int zone)
 	: pDispositif(pDispositif_) // Prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -155,21 +155,20 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 	DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 		DXE_CREATIONINDEXBUFFER);
 
+	if (zone == 1)
+		matWorld *= XMMatrixTranslation(0.0f, dx, 0.0f);
+	else if (zone == 2)
+		matWorld *= XMMatrixTranslation(dx, dx, 0.0f);
+	else if (zone == 3)
+		matWorld *= XMMatrixTranslation(dx, 0.0f, 0.0f);
+
 	// Initialisation de l'effet
 	InitEffet();
 }
 
 void CBlocEffet1::Anime(float tempsEcoule)
 {
-	/*PxVec3 pos = bloc->getGlobalPose().p;
-	XMFLOAT3 posF3(pos.x, pos.y, pos.z);
-	XMVECTOR posVec = XMLoadFloat3(&posF3);
 
-	PxQuat quat = bloc->getGlobalPose().q;
-	XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
-	XMVECTOR quatVec = XMLoadFloat4(&quatF3);
-
-	matWorld = XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec);*/
 }
 
 void CBlocEffet1::Draw()

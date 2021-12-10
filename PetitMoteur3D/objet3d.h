@@ -16,6 +16,7 @@ public:
 	virtual void Anime(float) {};
 	virtual void Draw() = 0;
 	std::string typeTag;
+
 };
 
 } // namespace PM3D

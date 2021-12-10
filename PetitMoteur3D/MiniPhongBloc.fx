@@ -27,10 +27,6 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 	sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
-
-	sortie.vDirLum = vLumiere.xyz - PosWorld;
-	sortie.vDirCam = vCamera.xyz - PosWorld;
-
 	// Coordonnées d'application de texture
 	sortie.coordTex = coordTex;
 
@@ -45,33 +41,12 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
 
-// Normaliser les paramètres
-float3 N = normalize(vs.Norm);
-float3 L = normalize(vs.vDirLum);
-float3 V = normalize(vs.vDirCam);
+	float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
 
-// Valeur de la composante diffuse
-float3 diff = saturate(dot(N, L));
+	couleur = couleurTexture * vAEcl.rgb * vAMat.rgb +
+			  couleurTexture * vDEcl.rgb * vDMat.rgb;
 
-// R = 2 * (N.L) * N – L
-float3 R = normalize(2 * diff * N - L);
-
-// Puissance de 4 - pour l'exemple
-float S = pow(saturate(dot(R, V)), 4.0f);
-
-// Échantillonner la couleur du pixel à partir de la texture
-float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
-
-//float3 couleurFinale;
-
-
-// I = A + D * N.L + (R.V)n
-couleur =	couleurTexture * vAEcl.rgb * vAMat.rgb +
-			couleurTexture * vDEcl.rgb * vDMat.rgb * diff;
-
-couleur += S;
-
-return float4(couleur, 1.0f);
+	return float4(couleur, 1.0f);
 }
 
 technique11 MiniPhong

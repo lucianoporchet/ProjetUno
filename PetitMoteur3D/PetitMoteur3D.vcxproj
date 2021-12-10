@@ -227,6 +227,7 @@
     <ClCompile Include="PhysXManager.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="MovingObject.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="PhysXManager.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneManager.h" />

@@ -13,8 +13,9 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 	//setTesselation(true);
 	//création de la hitbox du joueur sous forme de boite et adaptée a la scale
 	body = PhysXManager::get().createDynamic(PxTransform(pos), PxBoxGeometry(0.8f *scale, 0.2f * scale, 0.8f *scale),
-											PxVec3(0, 0, 0), PhysXManager::FilterGroup::ePlayer);
+											PxVec3(0, 0, 0), 0);
 
+	PhysXManager::get().setupFiltering(body, FilterGroup::ePlayer, FilterGroup::ePortal);
 	/*contraintes physiques sur le joueur pour avoir un peu de drift et ne pas avoir de mouvement infini
 	l'angular damping n'est pas infini pour permettre de tourner dans tous les sens lors d'une collision
 	sans non plus tourner a l'infini
@@ -142,4 +143,8 @@ void Player::updateCam()
 	XMStoreFloat3(&up, camera->up);
 	mDir = PxVec3(dir.x, dir.y, dir.z);
 	mUp = PxVec3(up.x, up.y, up.z);
+}
+
+PxVec3 Player::getDir() {
+	return mDir.getNormalized();
 }

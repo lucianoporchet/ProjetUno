@@ -1,6 +1,7 @@
 #pragma once
 #include "objet3d.h"
 
+
 namespace PM3D
 {
 class IChargeur;
