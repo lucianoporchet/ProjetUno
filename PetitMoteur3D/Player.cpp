@@ -144,3 +144,7 @@ void Player::updateCam()
 	mDir = PxVec3(dir.x, dir.y, dir.z);
 	mUp = PxVec3(up.x, up.y, up.z);
 }
+
+PxVec3 Player::getDir() {
+	return mDir.getNormalized();
+}

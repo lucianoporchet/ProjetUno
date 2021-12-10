@@ -55,13 +55,12 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 
 		if (activeZone != nextZone) {
-			Zone temp = activeZone;
+			Zone pastZone = activeZone;
 			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
 			activeZone = nextZone;
 			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
-
 			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
-			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getCenterPos(activeZone), qua));
+			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}

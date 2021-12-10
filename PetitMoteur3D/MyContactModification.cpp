@@ -3,7 +3,6 @@
 #include "BlocEffet1.h"
 #include "MoteurWindows.h"
 #include <PxRigidDynamic.h>
-#include <iostream>
 
 
 class GameManager;
@@ -38,10 +37,10 @@ void MyContactModification::onSleep(PxActor** actors, PxU32 count)
 
 void MyContactModification::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
 {
+   
     if (hasBeenEnoughTimeSinceLastTrigger()) {
         for (PxU32 i = 0; i < nbPairs; ++i)
         {
-
             PxShape* shape = pairs[i].shapes[0];
             PxShape* shape2 = pairs[i].shapes[1];
 
@@ -53,8 +52,6 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
                 PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape->getActor());
                 GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
             }
-            
-
         }
     }
 }
@@ -69,23 +66,25 @@ void MyContactModification::onAdvance(const PxRigidBody* const* bodyBuffer, cons
 
 Zone MyContactModification::getNextZoneFromPos(PxVec3 pos) {
     const float size = SceneManager::get().getBoxSize();
-    if (pos.y > size) {
-        if (pos.x < 0)
+    if (pos.y > size/2) {
+        if (pos.x < 0.0f)
             return Zone::ZONE1;
         else if (pos.x < size / 2)
             return Zone::ZONE3;
         else if (pos.x < size)
             return Zone::ZONE2;
         else
-            return Zone::PORTAIL;
+            return Zone::ZONE4;
     }
     else {
-        if (pos.x < size / 2)
+        if (pos.x < 0.0f)
             return Zone::ZONE2;
+        else if (pos.x < size / 2)
+            return Zone::ZONE4;
         else if (pos.x < size)
-            return Zone::ZONE3;
-        else
             return Zone::ZONE1;
+        else
+            return Zone::ZONE3;
     }
-  
 }
+
