@@ -16,6 +16,8 @@
 #include "RandomGenerator.h"
 #include <future>
 #include <mutex>
+#include "AfficheurSprite.h"
+#include "AfficheurPanneau.h"
 
 
 enum class Zone {
@@ -30,11 +32,16 @@ class SceneManager
 {
 	
 private:
+	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
+	std::unique_ptr<PM3D::CAfficheurPanneau> billboardManager;
+
 	SceneManager();
 public:
 	
 	std::vector<PM3D::CObjetMesh> objectList;
 
+	PM3D::CAfficheurSprite* getSpriteManager() { return spriteManager.get(); };
+	PM3D::CAfficheurPanneau* getBillboardManager() { return billboardManager.get(); };
 	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene(int scene);
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
 	

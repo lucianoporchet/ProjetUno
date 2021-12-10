@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "SceneManager.h"
+#include "AfficheurSprite.h"
+#include "AfficheurPanneau.h"
+#include "AfficheurTexte.h"
 #include <functional>
 
 using namespace std::literals;
@@ -38,7 +41,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	auto f = [&](Player* p) { p->setCam(&camera); };
 
 	for (int i = 0; i < NBZONES; ++i) {
-		//Creation de la fausse skyBox (cube avec le culling inversé)
+		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
 		std::unique_ptr<PM3D::CBlocEffet1> skybox = std::make_unique<PM3D::CBlocEffet1>(BOXSIZE, BOXSIZE, BOXSIZE, pDispositif, i);
 		//ajoute une texture a la skybox
 		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
@@ -63,7 +66,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 
 	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
-	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
+	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilitÃ© de collision entre les asteroides a la creation)
 	for (int i = 0; i < NBASTEROIDES; ++i) {
 		float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
 		PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
@@ -78,6 +81,29 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
 
+	// Creation du gestionnaire de billboards, sprites et texte
+	
+	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
+	this->billboardManager = std::make_unique<PM3D::CAfficheurPanneau>(pDispositif);
+
+	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
+	// celui-ci reste a sa position attribuee dans le monde
+	billboardManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10000.0f, 1000.0f);
+
+	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
+	// celui-ci reste colle a la camera comme un sprite.
+	//spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10.0f, 10.0f);
+
+	// exemple sprite. Params : chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
+	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
+	spriteManager->AjouterSprite(".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
+
+	// exemple texte.
+	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).
+	//const Gdiplus::FontFamily oFamily(L"Comic Sans", nullptr);
+	//pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	//pTexte1 = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 256, 256, pPolice.get());
+	//spriteManager->AjouterSpriteTexte(pTexte1->GetTextureView(), 0, 257);
 }
 
 SceneManager& SceneManager::get() noexcept {
