@@ -200,65 +200,6 @@ void CAfficheurPanneau::Draw()
 	pDispositif->DesactiverMelangeAlpha();
 }
 
-void CAfficheurPanneau::AjouterSprite(const std::string& NomTexture,
-	int _x, int _y,
-	int _dx, int _dy)
-{
-	float x, y, dx, dy;
-	float posX, posY;
-	float facteurX, facteurY;
-
-	// Initialisation de la texture
-	CGestionnaireDeTextures& TexturesManager =
-		CMoteurWindows::GetInstance().GetTextureManager();
-
-	std::wstring ws(NomTexture.begin(), NomTexture.end());
-
-	std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();;
-	pSprite->pTextureD3D =
-		TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
-
-	// Obtenir les dimensions de la texture si _dx et _dy sont à 0;
-	if (_dx == 0 && _dy == 0)
-	{
-		ID3D11Resource* pResource;
-		ID3D11Texture2D *pTextureInterface = 0;
-		pSprite->pTextureD3D->GetResource(&pResource);
-		pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-		D3D11_TEXTURE2D_DESC desc;
-		pTextureInterface->GetDesc(&desc);
-
-		DXRelacher(pResource);
-		DXRelacher(pTextureInterface);
-
-		dx = float(desc.Width);
-		dy = float(desc.Height);
-	}
-	else
-	{
-		dx = float(_dx);
-		dy = float(_dy);
-	}
-
-	// Dimension en facteur
-	facteurX = dx * 2.0f / pDispositif->GetLargeur();
-	facteurY = dy * 2.0f / pDispositif->GetHauteur();
-
-	// Position en coordonnées logiques
-	// 0,0 pixel = -1,1   
-	x = float(_x);
-	y = float(_y);
-
-	posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
-	posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
-
-	pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
-		XMMatrixTranslation(posX, posY, 0.0f);
-
-	// On l'ajoute à notre vecteur
-	tabSprites.push_back(std::move(pSprite));
-}
-
 void CAfficheurPanneau::AjouterPanneau(const std::string& NomTexture,
 	const XMFLOAT3& _position,
 	float _dx, float _dy)
@@ -350,6 +291,45 @@ void CAfficheurPanneau::AjouterSpriteTexte(
 
 	// On l'ajoute à notre vecteur
 	tabSprites.push_back(std::move(pSprite));
+}
+
+// Methode anime custom pour faire tourner les panneaux en accord avec la camera
+void CAfficheurPanneau::Anime(float) {
+
+	//// Animer tous les sprites
+	//for (auto& sprite : tabSprites)
+	//{
+	//	PxTransform transformPlayer = 
+
+	//	PxTransform transformGrappin = Grappin->getGlobalPose();
+
+	//	PxVec3 vecDir = { transformGrappin.p - transformPlayer.p };
+	//	vecDir = vecDir.getNormalized();
+
+
+	//	float angleY = -atan2(vecDir.z, vecDir.x);
+	//	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+
+	//	float angleZ = -atan2(vecDir.y, 1.0f);
+	//	PxQuat quatZ = PxQuat(angleZ, { 0.0f, 0.0f, -1.0f });
+
+	//	PxQuat quat = quatY * quatZ;
+
+	//	/*PxTransform origin = PxTransform(pos, quat);
+	//	origin = PxTransform(origin.transform(PxVec3{ 10.0f, 0.0f, 0.0f }), quat);*/
+
+
+	//	//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
+	//	auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+
+	//	auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
+	//	auto posTmp = XMMatrixTranslation(aled.x, aled.y, aled.z);
+
+	//	auto testPos = rotTmp * posTmp;
+
+	//	sprite.get()->matPosDim = testPos;
+	//}
+
 }
 
 } // namespace PM3D

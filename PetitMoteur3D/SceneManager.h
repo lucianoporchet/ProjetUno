@@ -27,6 +27,9 @@ private:
 	float boxSize = 3000.0f;
 
 private:
+	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
+	std::unique_ptr<PM3D::CAfficheurPanneau> billboardManager;
+
 	SceneManager();
 public:
 
@@ -48,9 +51,6 @@ public:
 		physx::PxVec3(834.0f, -1237.0f, -1163.0f)
 	};
 	std::vector<PM3D::CObjetMesh> objectList;
-
-	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
-	std::unique_ptr<PM3D::CAfficheurPanneau> billboardManager;
 
 	PM3D::CAfficheurSprite* getSpriteManager() { return spriteManager.get(); };
 	PM3D::CAfficheurPanneau* getBillboardManager() { return billboardManager.get(); };

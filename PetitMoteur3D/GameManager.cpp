@@ -55,6 +55,9 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		{
 			object3D->Anime(tempsEcoule);
 		}
+
+		// Animation des billboards.
+		sceneManager.getBillboardManager()->Anime(tempsEcoule);
 	}
 
 
