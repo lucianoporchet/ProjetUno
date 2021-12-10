@@ -181,13 +181,7 @@ void CAfficheurPanneau::Draw()
 	// Faire le rendu de tous nos sprites
 	for (auto& sprite : tabSprites)
 	{
-		// Initialiser et sélectionner les «constantes» de l'effet
-		//ShadersParams sp;
-		//sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
-		//pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-		//	&sp, 0, 0);
-
-		// Initialiser et sélectionner les «constantes» du VS
+		// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
 		const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		const XMMATRIX matWorldViewProj = XMMatrixTranspose(sprite->matPosDim * viewProj);
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &matWorldViewProj, 0, 0);
