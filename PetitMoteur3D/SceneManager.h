@@ -12,6 +12,7 @@
 #include "Asteroid.h"
 #include "Planet.h"
 #include "Portal.h"
+#include "Monster.h"
 #include "GestionnaireDeTextures.h"
 #include "RandomGenerator.h"
 #include <future>
@@ -54,6 +55,7 @@ private:
 		NBASTEROIDES = 4,
 		NBZONES = 4,
 		NBPLANETES = 15,
+		NBMONSTRES = 4
 		NBPORTAILS = 8
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
@@ -82,8 +84,17 @@ private:
 	};
 
 
+	const physx::PxVec3 monsterPos[NBMONSTRES] = {
+		physx::PxVec3(-1000.0f, -1000.0f, -1000.0f),
+		physx::PxVec3(0, BOXSIZE, 0),
+		physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f),
+		physx::PxVec3(BOXSIZE, 0.0f, 0.0f),
+	};
+
+
 public:
 	std::unique_ptr<Player> player;
+	
 };
 
 
