@@ -260,60 +260,6 @@ void CAfficheurSprite::AjouterSprite(const std::string& NomTexture,
 	tabSprites.push_back(std::move(pSprite));
 }
 
-void CAfficheurSprite::AjouterPanneau(const std::string& NomTexture,
-	const XMFLOAT3& _position,
-	float _dx, float _dy)
-{
-	// Initialisation de la texture
-	CGestionnaireDeTextures& TexturesManager =
-		CMoteurWindows::GetInstance().GetTextureManager();
-
-	std::wstring ws(NomTexture.begin(), NomTexture.end());
-
-	std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
-	pPanneau->pTextureD3D =
-		TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
-
-	// Obtenir la dimension de la texture si _dx et _dy sont à 0;
-	if (_dx == 0.0f && _dy == 0.0f)
-	{
-		ID3D11Resource* pResource;
-		ID3D11Texture2D *pTextureInterface = 0;
-		pPanneau->pTextureD3D->GetResource(&pResource);
-		pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-		D3D11_TEXTURE2D_DESC desc;
-		pTextureInterface->GetDesc(&desc);
-
-		DXRelacher(pResource);
-		DXRelacher(pTextureInterface);
-
-		pPanneau->dimension.x = float(desc.Width);
-		pPanneau->dimension.y = float(desc.Height);
-
-		// Dimension en facteur
-		pPanneau->dimension.x = pPanneau->dimension.x * 2.0f / pDispositif->GetLargeur();
-		pPanneau->dimension.y = pPanneau->dimension.y * 2.0f / pDispositif->GetHauteur();
-	}
-	else
-	{
-		pPanneau->dimension.x = float(_dx);
-		pPanneau->dimension.y = float(_dy);
-	}
-
-	// Position en coordonnées du monde
-	const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-	pPanneau->position = _position;
-
-	pPanneau->matPosDim = XMMatrixScaling(pPanneau->dimension.x,
-		pPanneau->dimension.y, 1.0f) *
-		XMMatrixTranslation(pPanneau->position.x,
-			pPanneau->position.y, pPanneau->position.z) *
-		viewProj;
-
-	// On l'ajoute à notre vecteur
-	tabSprites.push_back(std::move(pPanneau));
-}
-
 void CAfficheurSprite::AjouterSpriteTexte(
 	ID3D11ShaderResourceView* pTexture, int _x, int _y)
 {

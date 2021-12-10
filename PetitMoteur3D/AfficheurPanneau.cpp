@@ -254,45 +254,6 @@ void CAfficheurPanneau::AjouterPanneau(const std::string& NomTexture,
 	tabSprites.push_back(std::move(pPanneau));
 }
 
-void CAfficheurPanneau::AjouterSpriteTexte(
-	ID3D11ShaderResourceView* pTexture, int _x, int _y)
-{
-	std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
-	pSprite->pTextureD3D = pTexture;
-
-	// Obtenir la dimension de la texture;
-	ID3D11Resource* pResource;
-	ID3D11Texture2D *pTextureInterface = 0;
-	pSprite->pTextureD3D->GetResource(&pResource);
-	pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-	D3D11_TEXTURE2D_DESC desc;
-	pTextureInterface->GetDesc(&desc);
-
-	DXRelacher(pResource);
-	DXRelacher(pTextureInterface);
-
-	const float dx = float(desc.Width);
-	const float dy = float(desc.Height);
-
-	// Dimension en facteur
-	const float facteurX = dx * 2.0f / pDispositif->GetLargeur();
-	const float facteurY = dy * 2.0f / pDispositif->GetHauteur();
-
-	// Position en coordonnées logiques
-	// 0,0 pixel = -1,1   
-	const float x = float(_x);
-	const float y = float(_y);
-
-	const float posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
-	const float posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
-
-	pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
-		XMMatrixTranslation(posX, posY, 0.0f);
-
-	// On l'ajoute à notre vecteur
-	tabSprites.push_back(std::move(pSprite));
-}
-
 // Methode anime custom pour faire tourner les panneaux en accord avec la camera
 void CAfficheurPanneau::Anime(float) {
 
