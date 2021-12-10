@@ -18,5 +18,7 @@ public:
 	int next(int min, int max);
 
 	physx::PxVec3 randomVec3(int min, int max);
+	physx::PxVec3 randomPosInZone(int zone);
+
 };
 
