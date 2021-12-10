@@ -44,17 +44,7 @@ void PhysXManager::initPhysics()
 			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
 	}
-	/*gScene = gPhysics->createScene(sceneDesc);
-	gScene->setContactModifyCallback(contact);
-	gScene->setSimulationEventCallback(contact);*/
 
-	/*PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
-	if (pvdClient)
-	{
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-	}*/
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
 }
@@ -134,37 +124,14 @@ PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
-	//TO DO: code pour gerer les cas particuliers lors des collisions et le triggers
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal1) || 
-		(filterData0.word0 == FilterGroup::ePortal1 && filterData1.word0 == FilterGroup::ePlayer))
+
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal) ||
+		(filterData0.word0 == FilterGroup::ePortal && filterData1.word0 == FilterGroup::ePlayer))
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
 	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal2) ||
-		(filterData0.word0 == FilterGroup::ePortal2 && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal3) ||
-		(filterData0.word0 == FilterGroup::ePortal3 && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal4) ||
-		(filterData0.word0 == FilterGroup::ePortal4 && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortalEnd) ||
-		(filterData0.word0 == FilterGroup::ePortalEnd && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
+	
 
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;

@@ -18,8 +18,8 @@ public:
 	virtual void Anime(float tempEcoule) override;
 
 
+	
 	PxRigidDynamic* body;
-
 protected:
 
 	float	scale;
