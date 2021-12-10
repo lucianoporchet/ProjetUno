@@ -20,49 +20,8 @@ Portal::Portal(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 	setMatWorld(XMMatrixScaling(scale, scale, scale)* XMMatrixRotationQuaternion(quatVec)* XMMatrixTranslationFromVector(posVec));
 
-	switch (scene) {
-	case 0:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal1to2,
-			FilterGroup::ePlayer);
-		break;
-	case 1:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal2to1,
-			FilterGroup::ePlayer);
-		break;
-	case 2:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal2to3,
-			FilterGroup::ePlayer);
-		break;
-	case 3:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal3to2,
-			FilterGroup::ePlayer);
-	case 4:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal3to4,
-			FilterGroup::ePlayer);
-		break;
-	case 5:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal4to3,
-			FilterGroup::ePlayer);
-		break;
-	case 6:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortal4to1,
-			FilterGroup::ePlayer);
-		break;
-	case 7:
-		PhysXManager::get().setupFiltering(body,
-			FilterGroup::ePortalEnd,
-			FilterGroup::ePlayer);
-		break;
-	default:
-		break;
-	}
+	PhysXManager::get().setupFiltering(body, FilterGroup::ePortal, FilterGroup::ePlayer);
+
 	
 }
 

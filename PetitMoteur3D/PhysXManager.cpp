@@ -124,45 +124,14 @@ PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
-	//TO DO: code pour gerer les cas particuliers lors des collisions et le triggers
-	//if ((filterData0.word0 == FilterGroup::ePlayer && 
-	//	 filterData1.word0 == (FilterGroup::ePortal1to2 | FilterGroup::ePortal2to1 | 
-	//						   FilterGroup::ePortal2to3 | FilterGroup::ePortal3to2 | 
-	//						   FilterGroup::ePortal3to4 | FilterGroup::ePortal4to3 | 
-	//						   FilterGroup::ePortal4to1 | FilterGroup::ePortalEnd)) ||
-	//	(filterData0.word0 == (FilterGroup::ePortal1to2 | FilterGroup::ePortal2to1 |
-	//						   FilterGroup::ePortal2to3 | FilterGroup::ePortal3to2 |
-	//						   FilterGroup::ePortal3to4 | FilterGroup::ePortal4to3 |
-	//						   FilterGroup::ePortal4to1 | FilterGroup::ePortalEnd) && 
-	//	filterData1.word0 == FilterGroup::ePlayer))
-	//{
-	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-	//	return PxFilterFlag::eDEFAULT;
-	//}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal1to2) ||
-		(filterData0.word0 == FilterGroup::ePortal1to2 && filterData1.word0 == FilterGroup::ePlayer))
+
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal) ||
+		(filterData0.word0 == FilterGroup::ePortal && filterData1.word0 == FilterGroup::ePlayer))
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
 	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal2to1) ||
-		(filterData0.word0 == FilterGroup::ePortal2to1 && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	/*if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal4) ||
-		(filterData0.word0 == FilterGroup::ePortal4 && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortalEnd) ||
-		(filterData0.word0 == FilterGroup::ePortalEnd && filterData1.word0 == FilterGroup::ePlayer))
-	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
-	}*/
+	
 
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;

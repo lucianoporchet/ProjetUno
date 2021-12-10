@@ -45,14 +45,15 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
             PxShape* shape = pairs[i].shapes[0];
             PxShape* shape2 = pairs[i].shapes[1];
 
-            if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePortal1to2)
-                GameManager::get().setNextZone(Zone::ZONE2);
-            else if (shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::ePortal1to2)
-                GameManager::get().setNextZone(Zone::ZONE2);
-            else if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePortal2to1)
-                GameManager::get().setNextZone(Zone::ZONE1);
-            else if (shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::ePortal2to1)
-                GameManager::get().setNextZone(Zone::ZONE1);
+            if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePortal) {
+                PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape2->getActor());
+                GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
+            }
+            else if (shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::ePortal) {
+                PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape->getActor());
+                GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
+            }
+            
 
         }
     }
@@ -64,4 +65,27 @@ void MyContactModification::onTrigger(PxTriggerPair * pairs, PxU32 count)
 
 void MyContactModification::onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count)
 {
+}
+
+Zone MyContactModification::getNextZoneFromPos(PxVec3 pos) {
+    const float size = SceneManager::get().getBoxSize();
+    if (pos.y > size) {
+        if (pos.x < 0)
+            return Zone::ZONE1;
+        else if (pos.x < size / 2)
+            return Zone::ZONE3;
+        else if (pos.x < size)
+            return Zone::ZONE2;
+        else
+            return Zone::PORTAIL;
+    }
+    else {
+        if (pos.x < size / 2)
+            return Zone::ZONE2;
+        else if (pos.x < size)
+            return Zone::ZONE3;
+        else
+            return Zone::ZONE1;
+    }
+  
 }

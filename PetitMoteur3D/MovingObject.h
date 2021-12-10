@@ -21,7 +21,6 @@ public:
 	//update la position et rotation de l'objet en fonction des calculs de physX
 	virtual void Anime(float tempEcoule) override;
 
-
 	PxRigidDynamic* body;
 protected:
 

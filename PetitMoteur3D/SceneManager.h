@@ -39,10 +39,11 @@ public:
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
 	
 	void InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
-	physx::PxVec3 getPortalPos(Zone scene);
+	physx::PxVec3 getCenterPos(Zone scene);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
 	static SceneManager& get() noexcept;
+	const float getBoxSize();
 
 private:
 	

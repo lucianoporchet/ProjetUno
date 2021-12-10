@@ -53,21 +53,15 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 		physXManager.stepPhysics(static_cast<int>(activeZone));
 
-		//////TEST////////
-		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_T) && hasBeenEnoughTimeSinceLastPause()) {
-			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
-			activeZone = static_cast<Zone>((static_cast<int>(activeZone) + 1) % 4);
-			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));	
-		}
-		//////////////////
 
 		if (activeZone != nextZone) {
+			Zone temp = activeZone;
 			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
 			activeZone = nextZone;
 			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
 
 			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
-			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone), qua));
+			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getCenterPos(activeZone), qua));
 		}
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}

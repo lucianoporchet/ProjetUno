@@ -53,6 +53,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		Scenes[i].push_back(std::move(skybox));
 	}
 
+
+
+
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 	//ajoute la skybox a la scene
@@ -64,10 +67,17 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
 	}
 
-	for (const auto& pos : planetePos2) {
-		float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
-		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 1, [](Planet*) noexcept {}));
-	}
+	
+	float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
+	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, physx::PxVec3(0, 6000, 0), 1, [](Planet*) noexcept {}));
+	
+	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, physx::PxVec3(6000, 6000, 0), 2, [](Planet*) noexcept {}));
+	
+	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, physx::PxVec3(6000, 0, 0), 3, [](Planet*) noexcept {}));
+	//for (const auto& pos : planetePos2) {
+	//	float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
+	//	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 1, [](Planet*) noexcept {}));
+	//}
 
 	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
@@ -77,11 +87,10 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, 0, [](Asteroid*) noexcept {}));
 	}
 
-	int counter = 0, scn = 0;;
+	int counter = 0, scn = 0;
 	for (const auto& pos : portalPos) {
 		
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, pos, scn, [](Portal*) noexcept {}));
-		
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, pos, scn, [&](Portal*) noexcept {}));
 		++counter;
 		if (counter < 3)
 			scn = 1;
@@ -123,7 +132,14 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	}
 }
 
-physx::PxVec3 SceneManager::getPortalPos(Zone scene) {
-	return portalPos[static_cast<int>(scene)] + physx::PxVec3(25.0f, 25.0f, 25.0f);
+physx::PxVec3 SceneManager::getCenterPos(Zone scene) {
+	if (scene == Zone::ZONE2) return physx::PxVec3(0.0f, BOXSIZE, 0.0f);
+	if (scene == Zone::ZONE3) return physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f);
+	if (scene == Zone::PORTAIL) return physx::PxVec3(BOXSIZE, 0.0f, 0.0f);
+	return physx::PxVec3(0.0f, 0.0f, 0.0f);
+}
+
+const float SceneManager::getBoxSize() {
+	return BOXSIZE;
 }
 
