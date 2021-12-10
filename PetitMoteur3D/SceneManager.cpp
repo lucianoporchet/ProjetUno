@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "AfficheurSprite.h"
-#include "AfficheurPanneau.h"
+#include "AfficheurPanneauOriente.h"
 #include "AfficheurTexte.h"
 #include <functional>
 
@@ -84,11 +84,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// Creation du gestionnaire de billboards, sprites et texte
 	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
-	this->billboardManager = std::make_unique<PM3D::CAfficheurPanneau>(pDispositif);
+	this->billboardManager = std::make_unique<PM3D::CAfficheurPanneauOriente>(pDispositif);
 
-	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
-	// celui-ci reste a sa position attribuee dans le monde
-	billboardManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10000.0f, 1000.0f);
+	// exemple panneau oriente. Params : chemin vers texture, vecteur de position, scale en x, scale en y (non utilises actuellement).
+	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
+	billboardManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 0.0f, 0.0f);
 
 	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
 	// celui-ci reste colle a la camera comme un sprite.
