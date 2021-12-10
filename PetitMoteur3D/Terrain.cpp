@@ -185,7 +185,7 @@ void PM3D::CTerrain::InitEffet()
 	// Pour l'effet
 	ID3DBlob* pFXBlob = nullptr;
 
-	DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0,
+	DXEssayer(D3DCompileFromFile(L"MiniPhongTerrain.fx", 0, 0, 0,
 		"fx_5_0", 0, 0,
 		&pFXBlob, nullptr),
 		DXE_ERREURCREATION_FX);
