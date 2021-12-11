@@ -20,7 +20,7 @@ struct ShadersParams
 	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
 };
 
-PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur) 
+PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene)
 	: pDispositif(pDispositif) // Prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -41,12 +41,22 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur)
 	// Going through vertexes and normals to create each and every vertice on the buffer
 	vector<XMFLOAT3> vertexes = lecteur.getVertexes();
 
+	//list vertices to create terrain
+	PxVec3* vertices = new PxVec3[vertexes.size()];
+
+
 	float sideSize = (float)sqrt(vertexes.size());
 	vector<XMFLOAT3> normals = lecteur.getNormals();
 
 	int iterate_index = 0;
+	int cpt = 0;
 	for_each(vertexes.begin(), vertexes.end(), [&](XMFLOAT3 vertex) {
 		XMFLOAT3 vertexScaled = XMFLOAT3(vertex.x, vertex.y * scale, vertex.z);
+
+		//ajout des sommets pour le mesh cooking
+		PxVec3 Pxvertex(vertex.x, vertex.y * scale, vertex.z);
+		vertices[cpt++] = Pxvertex;
+
 		// Adding a new vertex with the following properties : x, y, z from our file, scaled down with the scale value
 		// With the corresponding normal from our file
 		// And a texCoord calculated from our side size. We do not tile here. We are going to do so in our effect.
@@ -57,8 +67,11 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur)
 
 	// Going through all the faces and pushing back only the indexes, converted
 	vector<long> faces = lecteur.getFaces();
+	PxU32* indices = new PxU32[faces.size() * 3];
+	int cpt2 = 0;
 	for_each(faces.begin(), faces.end(), [&](long index) {
 		indexes_terrain.push_back((uint32_t)index);
+		indices[cpt2++] = static_cast<PxU32>(index);
 	});
 
 	// Création du vertex buffer et copie des sommets
@@ -94,6 +107,42 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur)
 	DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 		DXE_CREATIONINDEXBUFFER);
 
+	//on ignore de manière intentionnelle les warnings car narrow cast throw une exception en cas 
+	//de troncation, meme si cela ne devrait pas arriver, on préfère ne pas essayer 
+	//Input mesh triangle's vertex index exceeds specified numVerts --> HUM HUM POURQUOI? DIEU POURQUOI
+	meshDesc.points.count = static_cast<PxU32>(vertexes.size());
+	meshDesc.points.data = vertices;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.triangles.count = static_cast<PxU32>(vertexes.size())/3;
+	meshDesc.triangles.data = indices;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+
+	PxTolerancesScale scale1;
+	PxCookingParams params(scale1);
+	// disable mesh cleaning - perform mesh validation on development configurations
+	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+	// disable edge precompute, edges are set for each triangle, slows contact generation
+	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+	// lower hierarchy for internal mesh
+	params.midphaseDesc.mBVH33Desc.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
+
+	PhysXManager::get().getPxCooking()->setParams(params);
+	PxTriangleMesh* triMesh = NULL;
+	PxU32 meshSize = 0;
+	triMesh = PhysXManager::get().getPxCooking()->createTriangleMesh(meshDesc, PhysXManager::get().getgPhysx()->getPhysicsInsertionCallback());
+	PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh);
+	
+	body = PhysXManager::get().createTerrain(PxTransform(pos), geom,scene);
+	
+	const PxVec3 pos2 = body->getGlobalPose().p;
+	const XMFLOAT3 posF3(pos2.x, pos2.y, pos2.z);
+	const XMVECTOR posVec = XMLoadFloat3(&posF3);
+
+	const PxQuat quat = body->getGlobalPose().q;
+	const XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
+	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
+
+	matWorld = XMMatrixScaling(scale, scale, scale)* XMMatrixRotationQuaternion(quatVec)* XMMatrixTranslationFromVector(posVec);
 	// Initialisation de l'effet
 	InitEffet();
 }

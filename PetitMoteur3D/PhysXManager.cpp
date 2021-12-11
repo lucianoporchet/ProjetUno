@@ -24,6 +24,9 @@ void PhysXManager::initPhysics()
 	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
+	if (!mCooking)
+		throw "quelquechose s'est mal passé lors de la création du meshCooking";
 
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, 0.0f, 0.0f);
@@ -56,9 +59,7 @@ void PhysXManager::initPhysics()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}*/
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale());
-	if (!mCooking)
-		throw "quelquechose s'est mal passé lors de la création du meshCooking";
+	
 }
 
 void PhysXManager::stepPhysics(int scene)
@@ -93,6 +94,15 @@ void PhysXManager::addToScene(PxActor* actor, int scene)
 	gScenes[scene]->addActor(*actor);
 }
 
+PxRigidStatic* PhysXManager::createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene) {
+	PxShape* shape = PhysXManager::get().getgPhysx()->createShape(geom, *gMaterial, true);
+	shape->setName("Terrain");
+	PxRigidStatic* body = gPhysics->createRigidStatic(t);
+	body->attachShape(*shape);
+	addToScene(body, scene);
+	return body;
+}
+
 static std::mutex physXMutex;
 PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene)
 {
@@ -101,6 +111,16 @@ PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeomet
 	std::lock_guard<std::mutex> lock(physXMutex);
 	addToScene(dynamic, scene);
 	return dynamic;
+}
+
+PxPhysics* PhysXManager::getgPhysx()
+{
+	return gPhysics;
+}
+
+PxCooking* PhysXManager::getPxCooking()
+{
+	return mCooking;
 }
 
 PhysXManager& PhysXManager::get() noexcept {
