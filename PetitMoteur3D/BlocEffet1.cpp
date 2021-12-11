@@ -46,27 +46,6 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 	, frontTex(nullptr)
 	, backTex(nullptr)
 {
-	/*const float x = static_cast<float>(RandomGenerator::get().next(-10, 10));
-	const float y = static_cast<float>(RandomGenerator::get().next(-10, 10));
-	const float z = static_cast<float>(RandomGenerator::get().next(-20, -10));
-	*/
-	//if (multiplicateur)
-	//{
-	//	//bloc = PhysXManager::get().createDynamic(PxTransform(PxVec3(x, y, z)), PxBoxGeometry(dx / 2, dy / 2, dz / 2), PxVec3(0, 0, 0), PhysXManager::FilterGroup::eDebris);
-	//}
-	//else
-	//{
-	//	
-	//}
-
-	//
-	///*bloc->addForce(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);
-	//bloc->addTorque(RandomGenerator::get().randomVec3(-10, 10), PxForceMode::eIMPULSE);*/
-	//bloc->setMass(100);
-
-
-
-	//PhysXManager::get().addToScene(body);
 
 	//Anime(0.0f);
 	// Les points
@@ -317,9 +296,9 @@ void CBlocEffet1::InitEffet()
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.MipLODBias = 0.0f;
 	samplerDesc.MaxAnisotropy = 4;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;

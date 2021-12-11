@@ -24,8 +24,8 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 	VS_Sortie sortie = (VS_Sortie)0;
 
 	sortie.Pos = mul(Pos, matWorldViewProj);
-	sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
-
+	//sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
+	sortie.Norm = Normale;
 	float3 PosWorld = mul(Pos, matWorld).xyz;
 	// Coordonnées d'application de texture
 	sortie.coordTex = coordTex;
@@ -49,27 +49,26 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float3 N = normalize(vs.Norm);
 	float4 couleurTexture;
 	
-	if (N.x > 0.0f) {
+	if (N.x > 0.5f) {
 		couleurTexture = left.Sample(SampleState, vs.coordTex).rgba;
 	}
-	else if(N.x < 0.0f){
+	else if(N.x < -0.5f){
 		couleurTexture = right.Sample(SampleState, vs.coordTex).rgba;
 	}
-	else if (N.y > 0.0f) {
+	else if (N.y > 0.5f) {
 		couleurTexture = up.Sample(SampleState, vs.coordTex).rgba;
 	}
-	else if (N.y < 0.0f) {
+	else if (N.y < -0.5f) {
 		couleurTexture = down.Sample(SampleState, vs.coordTex).rgba;
 	}
-	else if (N.z > 0.0f) {
+	else if (N.z > 0.5f) {
 		couleurTexture = back.Sample(SampleState, vs.coordTex).rgba;
 	}
 	else {
 		couleurTexture = front.Sample(SampleState, vs.coordTex).rgba;
 	}
 
-	couleur = couleurTexture * vAEcl.rgb * vAMat.rgb +
-			  couleurTexture * vDEcl.rgb * vDMat.rgb;
+	couleur = couleurTexture.rgb + couleurTexture.rgb;
 
 	return float4(couleur, 1.0f);
 }
