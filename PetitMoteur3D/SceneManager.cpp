@@ -41,7 +41,13 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		//Creation de la fausse skyBox (cube avec le culling inversé)
 		std::unique_ptr<PM3D::CBlocEffet1> skybox = std::make_unique<PM3D::CBlocEffet1>(BOXSIZE, BOXSIZE, BOXSIZE, pDispositif, i);
 		//ajoute une texture a la skybox
-		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
+		skybox->SetTextures(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\up2.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\down2.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\left.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\right2.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\back.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\front2.dds", pDispositif));
+
 		Scenes[i].push_back(std::move(skybox));
 	}
 
@@ -64,10 +70,15 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
-	for (int i = 0; i < NBASTEROIDES; ++i) {
-		float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
-		PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
-		futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, 0, [](Asteroid*) noexcept {}));
+	float scale;
+	PxVec3 pos;
+	for (int j = 0; j < NBZONES; ++j) {
+		for (int i = 0; i < NBASTEROIDES; ++i) {
+			
+			scale = static_cast<float>(RandomGenerator::get().next(5, 20));
+			pos = RandomGenerator::get().randomPosInZone(j);
+			futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, j, [](Asteroid*) noexcept {}));
+		}
 	}
 
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {

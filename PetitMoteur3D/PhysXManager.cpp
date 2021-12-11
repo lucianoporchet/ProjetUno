@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PhysXManager.h"
+#include "SceneManager.h"
 #include <mutex>
 
 
@@ -44,8 +45,24 @@ void PhysXManager::initPhysics()
 			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
 	}
+	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 1.0f);
 
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	const float boxsize = SceneManager::get().getBoxSize();
+	constexpr float w = 10.0f;
+
+	for (int i = 0; i < 4; ++i) {
+		createWall(PxTransform(PxVec3(-boxsize / 2, boxsize / 2, 0.0f)), PxBoxGeometry(w, boxsize * 2, boxsize), i);
+		createWall(PxTransform(PxVec3(boxsize / 2, boxsize / 2, 0.0f)), PxBoxGeometry(w, boxsize * 2, boxsize), i);
+		createWall(PxTransform(PxVec3(3 * boxsize / 2, boxsize / 2, 0.0f)), PxBoxGeometry(w, boxsize * 2, boxsize), i);
+		createWall(PxTransform(PxVec3(boxsize / 2, boxsize / 2, -boxsize / 2)), PxBoxGeometry(2 * boxsize, 2 * boxsize, w), i);
+		createWall(PxTransform(PxVec3(boxsize / 2, boxsize / 2, boxsize / 2)), PxBoxGeometry(2 * boxsize, 2 * boxsize, w), i);
+		createWall(PxTransform(PxVec3(0.0f, 3 * boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+		createWall(PxTransform(PxVec3(boxsize, 3 * boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+		createWall(PxTransform(PxVec3(0.0f, boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+		createWall(PxTransform(PxVec3(boxsize, boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+		createWall(PxTransform(PxVec3(0.0f, -boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+		createWall(PxTransform(PxVec3(boxsize, -boxsize / 2, 0.0f)), PxBoxGeometry(boxsize - w, w, boxsize - w), i);
+	}
 
 }
 
@@ -131,10 +148,13 @@ PxFilterFlags FilterShader(
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
 	}
-	
-
-
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;
+}
+
+void PhysXManager::createWall(const PxTransform& t, const PxGeometry& geometry, int scene)
+{
+	PxRigidStatic* wall = PxCreateStatic(*gPhysics, t, geometry, *gMaterial);
+	addToScene(wall, scene);
 }
 

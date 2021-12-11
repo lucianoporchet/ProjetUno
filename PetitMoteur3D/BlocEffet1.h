@@ -26,7 +26,7 @@ public:
 	virtual void Anime(float tempsEcoule) override;
 	virtual void Draw() override;
 
-	void SetTexture(CTexture* pTexture);
+	void SetTextures(CTexture* up, CTexture* down, CTexture* left, CTexture* right, CTexture* front, CTexture* back);
 
 	//PxRigidDynamic* body;
 
@@ -50,7 +50,13 @@ private:
 	ID3DX11EffectPass* pPasse;
 	ID3D11InputLayout* pVertexLayout;
 
-	ID3D11ShaderResourceView* pTextureD3D;
+	ID3D11ShaderResourceView* upTex;
+	ID3D11ShaderResourceView* downTex;
+	ID3D11ShaderResourceView* leftTex;
+	ID3D11ShaderResourceView* rightTex;
+	ID3D11ShaderResourceView* backTex;
+	ID3D11ShaderResourceView* frontTex;
+
 	ID3D11SamplerState* pSampleState;
 };
 

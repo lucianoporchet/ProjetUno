@@ -52,7 +52,7 @@ private:
 	const float BOXSIZE{ 6000.0f };
 	enum {
 
-		NBASTEROIDES = 4,
+		NBASTEROIDES = 100,
 		NBZONES = 4,
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
