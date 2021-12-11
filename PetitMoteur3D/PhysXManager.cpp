@@ -45,7 +45,7 @@ void PhysXManager::initPhysics()
 			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
 	}
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 1.0f);
 
 	const float boxsize = SceneManager::get().getBoxSize();
 	constexpr float w = 10.0f;
