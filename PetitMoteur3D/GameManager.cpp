@@ -65,7 +65,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		sceneManager.Anime(activeZone, tempsEcoule);
 
 		// Animation des billboards.
-		sceneManager.getBillboardManager()->Anime(tempsEcoule);
+		sceneManager.getSpriteManager()->Anime(tempsEcoule);
 	}
 
 

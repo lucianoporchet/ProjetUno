@@ -84,19 +84,18 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// Creation du gestionnaire de billboards, sprites et texte
 	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
-	this->billboardManager = std::make_unique<PM3D::CAfficheurPanneauOriente>(pDispositif);
 
 	// exemple panneau oriente. Params : chemin vers texture, vecteur de position, scale en x, scale en y (non utilises actuellement).
 	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
-	billboardManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 0.0f, 0.0f);
+	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 5, 5, 5 }, true, 1.0f, 1.0f);
 
 	// exemple panneau. Params : chemin vers texture, vecteur de position, scale en x, scale en y.
-	// celui-ci reste colle a la camera comme un sprite.
-	//spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, 10.0f, 10.0f);
+	// celui-ci a sa position attribuee dans le monde.
+	spriteManager->AjouterPanneau(".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, false, 10.0f, 10.0f);
 
 	// exemple sprite. Params : chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
-	spriteManager->AjouterSprite(".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
+	//spriteManager->AjouterSprite(".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
 
 	// exemple texte.
 	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).

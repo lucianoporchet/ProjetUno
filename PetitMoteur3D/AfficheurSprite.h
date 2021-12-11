@@ -30,9 +30,12 @@ namespace PM3D
 		CAfficheurSprite(CDispositifD3D11* _pDispositif);
 		virtual ~CAfficheurSprite();
 		virtual void Draw() override;
+		virtual void Anime(float) override;
 
 		void AjouterSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);
+		void AjouterPanneau(const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
+			float _dx = 0.0f, float _dy = 0.0f);
 
 	private:
 		class CSprite
@@ -49,6 +52,18 @@ namespace PM3D
 			}
 		};
 
+		class CPanneau : public CSprite
+		{
+		public:
+			XMFLOAT3 position;
+			XMFLOAT2 dimension;
+
+			CPanneau()
+			{
+				bPanneau = true;
+			}
+		};
+
 		static CSommetSprite sommets[6];
 		ID3D11Buffer* pVertexBuffer;
 		CDispositifD3D11* pDispositif;
@@ -61,8 +76,10 @@ namespace PM3D
 
 		ID3D11SamplerState* pSampleState;
 
-		// Tous nos sprites
+		// Tous nos sprites, panneaux et billboards. Separes pour pouvoir les differencier.
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
+		std::vector<std::unique_ptr<CSprite>> tabSigns;
+		std::vector<std::unique_ptr<CSprite>> tabBillboards;
 
 		void InitEffet();
 	};
