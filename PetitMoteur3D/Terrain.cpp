@@ -134,6 +134,8 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	
 	body = PhysXManager::get().createTerrain(PxTransform(pos), geom,scene);
 	
+
+	//placement du terrain
 	const PxVec3 pos2 = body->getGlobalPose().p;
 	const XMFLOAT3 posF3(pos2.x, pos2.y, pos2.z);
 	const XMVECTOR posVec = XMLoadFloat3(&posF3);
