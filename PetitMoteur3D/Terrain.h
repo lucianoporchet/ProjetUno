@@ -3,6 +3,7 @@
 #include "Objet3D.h"
 #include "dispositifD3D11.h"
 #include "LectureFichier.h"
+#include "PhysXManager.h"
 #include <map>
 #include "Texture.h"
 

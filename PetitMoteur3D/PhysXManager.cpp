@@ -56,7 +56,9 @@ void PhysXManager::initPhysics()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}*/
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-
+	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale());
+	if (!mCooking)
+		throw "quelquechose s'est mal passé lors de la création du meshCooking";
 }
 
 void PhysXManager::stepPhysics(int scene)

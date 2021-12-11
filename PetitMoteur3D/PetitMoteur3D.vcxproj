@@ -145,7 +145,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <AdditionalDependencies>dxguid.lib;winmm.lib;d3d11.lib;DXGI.lib;d3dcompiler.lib;dinput8.lib;$(SolutionDir)Libs\glut32.lib;$(SolutionDir)Libs\PhysX_64.lib;$(SolutionDir)Libs\PhysXCommon_64.lib;$(SolutionDir)Libs\PhysXExtensions_static_64.lib;$(SolutionDir)Libs\PhysXFoundation_64.lib;$(SolutionDir)Libs\PhysXPvdSDK_static_64.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;winmm.lib;d3d11.lib;DXGI.lib;d3dcompiler.lib;dinput8.lib;$(SolutionDir)Libs\glut32.lib;$(SolutionDir)Libs\PhysX_64.lib;$(SolutionDir)Libs\PhysXCommon_64.lib;$(SolutionDir)Libs\PhysXExtensions_static_64.lib;$(SolutionDir)Libs\PhysXFoundation_64.lib;$(SolutionDir)Libs\PhysXPvdSDK_static_64.lib;$(SolutionDir)Libs\PhysXCooking_64.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>

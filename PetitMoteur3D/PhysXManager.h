@@ -55,6 +55,7 @@ private:
 	std::vector<PxScene*> gScenes;
 	PxMaterial* gMaterial = NULL;
 	PxPvd* gPvd = NULL;
+	PxCooking* mCooking;
 	
 	enum {
 		NBSCENES = 4

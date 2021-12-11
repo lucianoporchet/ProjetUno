@@ -32,6 +32,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur)
 	, pVertexLayout(nullptr)
 	, pSampleState(nullptr)
 {
+	
 	pVectorTexturesD3D = {};
 
 	vector<CSommetTerrain> sommets;
