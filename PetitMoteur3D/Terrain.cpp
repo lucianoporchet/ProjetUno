@@ -20,7 +20,7 @@ struct ShadersParams
 	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
 };
 
-PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene)
+PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, float scale)
 	: pDispositif(pDispositif) // Prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -36,7 +36,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	pVectorTexturesD3D = {};
 
 	vector<CSommetTerrain> sommets;
-	float scale = 1 / 10.0f;
+	float scale2 = 1 / 10.0f;
 
 	// Going through vertexes and normals to create each and every vertice on the buffer
 	vector<XMFLOAT3> vertexes = lecteur.getVertexes();
@@ -51,10 +51,10 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	int iterate_index = 0;
 	int cpt = 0;
 	for_each(vertexes.begin(), vertexes.end(), [&](XMFLOAT3 vertex) {
-		XMFLOAT3 vertexScaled = XMFLOAT3(vertex.x, vertex.y * scale, vertex.z);
+		XMFLOAT3 vertexScaled = XMFLOAT3(vertex.x, vertex.y * scale2, vertex.z);
 
 		//ajout des sommets pour le mesh cooking
-		PxVec3 Pxvertex(vertex.x, vertex.y * scale, vertex.z);
+		PxVec3 Pxvertex(vertex.x, vertex.y * scale2, vertex.z);
 		vertices[cpt++] = Pxvertex;
 
 		// Adding a new vertex with the following properties : x, y, z from our file, scaled down with the scale value
@@ -128,9 +128,12 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 
 	PhysXManager::get().getPxCooking()->setParams(params);
 	PxTriangleMesh* triMesh = NULL;
-	PxU32 meshSize = 0;
 	triMesh = PhysXManager::get().getPxCooking()->createTriangleMesh(meshDesc, PhysXManager::get().getgPhysx()->getPhysicsInsertionCallback());
-	PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh);
+	
+	//NORMALEMENT CA DEVRAIT SCALE MAIS CA LE FAIT PAS ET JE SAIS PAS PK
+	//JE CASSE TETE SUR MUR OUGAOUGA
+	PxMeshScale geomScale = PxMeshScale((PxVec3(scale)));
+	PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh, geomScale);
 	
 	body = PhysXManager::get().createTerrain(PxTransform(pos), geom,scene);
 	

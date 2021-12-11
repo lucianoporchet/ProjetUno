@@ -30,7 +30,6 @@ protected:
 	PxVec3			mUp;
 	float			speed = 3;
 	float			scale;
-	float			angleRotation = PxPi / 2;
 };
 
 

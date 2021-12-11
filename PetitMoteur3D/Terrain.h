@@ -12,7 +12,7 @@ namespace PM3D {
 		public CObjet3D
 	{
 	public:
-		CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene);
+		CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, float scale);
 
 		virtual ~CTerrain();
 
@@ -46,6 +46,7 @@ namespace PM3D {
 		ID3D11SamplerState* pSampleState;
 		PxTriangleMeshDesc meshDesc;
 		PxRigidStatic* body;
+
 	};
 }
 
