@@ -39,7 +39,12 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 	, pTechnique(nullptr)
 	, pVertexLayout(nullptr)
 	, pSampleState(nullptr)
-	, pTextureD3D(nullptr)
+	, upTex(nullptr)
+	, downTex(nullptr)
+	, leftTex(nullptr)
+	, rightTex(nullptr)
+	, frontTex(nullptr)
+	, backTex(nullptr)
 {
 	/*const float x = static_cast<float>(RandomGenerator::get().next(-10, 10));
 	const float y = static_cast<float>(RandomGenerator::get().next(-10, 10));
@@ -216,9 +221,29 @@ void CBlocEffet1::Draw()
 	pCB->SetConstantBuffer(pConstantBuffer);
 
 	// Activation de la texture
-	ID3DX11EffectShaderResourceVariable* variableTexture;
-	variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
-	variableTexture->SetResource(pTextureD3D);
+	ID3DX11EffectShaderResourceVariable* variableTextureu;
+	variableTextureu = pEffet->GetVariableByName("up")->AsShaderResource();
+	variableTextureu->SetResource(upTex);
+
+	ID3DX11EffectShaderResourceVariable* variableTextured;
+	variableTextured = pEffet->GetVariableByName("down")->AsShaderResource();
+	variableTextured->SetResource(downTex);
+
+	ID3DX11EffectShaderResourceVariable* variableTexturel;
+	variableTexturel = pEffet->GetVariableByName("left")->AsShaderResource();
+	variableTexturel->SetResource(leftTex);
+
+	ID3DX11EffectShaderResourceVariable* variableTexturer;
+	variableTexturer = pEffet->GetVariableByName("right")->AsShaderResource();
+	variableTexturer->SetResource(rightTex);
+
+	ID3DX11EffectShaderResourceVariable* variableTexturef;
+	variableTexturef = pEffet->GetVariableByName("front")->AsShaderResource();
+	variableTexturef->SetResource(frontTex);
+
+	ID3DX11EffectShaderResourceVariable* variableTextureb;
+	variableTextureb = pEffet->GetVariableByName("back")->AsShaderResource();
+	variableTextureb->SetResource(backTex);
 
 	// Le sampler state
 	ID3DX11EffectSamplerVariable* variableSampler;
@@ -309,9 +334,14 @@ void CBlocEffet1::InitEffet()
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 }
 
-void CBlocEffet1::SetTexture(CTexture* pTexture)
+void CBlocEffet1::SetTextures(CTexture* up, CTexture* down, CTexture* left, CTexture* right, CTexture* front, CTexture* back)
 {
-	pTextureD3D = pTexture->GetD3DTexture();
+	upTex = up->GetD3DTexture();
+	downTex = down->GetD3DTexture();
+	leftTex = left->GetD3DTexture();
+	rightTex = right->GetD3DTexture();
+	frontTex = front->GetD3DTexture();
+	backTex = back->GetD3DTexture();
 }
 
 } // namespace PM3D

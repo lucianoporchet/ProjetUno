@@ -41,7 +41,13 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		//Creation de la fausse skyBox (cube avec le culling inversé)
 		std::unique_ptr<PM3D::CBlocEffet1> skybox = std::make_unique<PM3D::CBlocEffet1>(BOXSIZE, BOXSIZE, BOXSIZE, pDispositif, i);
 		//ajoute une texture a la skybox
-		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
+		skybox->SetTextures(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\up.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\down.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\left.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\right.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\back.dds", pDispositif),
+							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\front.dds", pDispositif));
+
 		Scenes[i].push_back(std::move(skybox));
 	}
 

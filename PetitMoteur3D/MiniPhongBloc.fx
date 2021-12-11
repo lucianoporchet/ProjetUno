@@ -33,15 +33,40 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 	return sortie;
 }
 
-Texture2D textureEntree;  // la texture
+
+Texture2D up;
+Texture2D down;
+Texture2D left;
+Texture2D right;
+Texture2D back;
+Texture2D front;
 
 SamplerState SampleState;  // l'état de sampling
 
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
-
-	float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
+	float3 N = normalize(vs.Norm);
+	float4 couleurTexture;
+	
+	if (N.x > 0.0f) {
+		couleurTexture = left.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if(N.x < 0.0f){
+		couleurTexture = right.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.y > 0.0f) {
+		couleurTexture = up.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.y < 0.0f) {
+		couleurTexture = down.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.z > 0.0f) {
+		couleurTexture = front.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else {
+		couleurTexture = back.Sample(SampleState, vs.coordTex).rgba;
+	}
 
 	couleur = couleurTexture * vAEcl.rgb * vAMat.rgb +
 			  couleurTexture * vDEcl.rgb * vDMat.rgb;
