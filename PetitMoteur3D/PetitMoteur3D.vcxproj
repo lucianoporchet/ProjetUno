@@ -200,8 +200,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AfficheurPanneau.cpp" />
-    <ClCompile Include="AfficheurPanneauOriente.cpp" />
     <ClCompile Include="AfficheurSprite.cpp" />
     <ClCompile Include="AfficheurTexte.cpp" />
     <ClCompile Include="Asteroid.cpp" />
@@ -243,8 +241,6 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AfficheurPanneau.h" />
-    <ClInclude Include="AfficheurPanneauOriente.h" />
     <ClInclude Include="AfficheurSprite.h" />
     <ClInclude Include="AfficheurTexte.h" />
     <ClInclude Include="Asteroid.h" />

@@ -1,5 +1,6 @@
 #pragma once
 #include "Objet3D.h"
+#include <map>
 
 namespace PM3D
 {
@@ -29,12 +30,14 @@ namespace PM3D
 	public:
 		CAfficheurSprite(CDispositifD3D11* _pDispositif);
 		virtual ~CAfficheurSprite();
-		virtual void Draw() override;
-		virtual void Anime(float) override;
+		void Draw() override;
+		void DrawZone(int _zone);
+		void Anime(float) override;
+		void AnimeZone(int _zone, float);
 
-		void AjouterSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
-		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);
-		void AjouterPanneau(const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
+		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
+		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);
+		void AjouterPanneau(int _zone, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
 			float _dx = 0.0f, float _dy = 0.0f);
 
 	private:
@@ -78,8 +81,8 @@ namespace PM3D
 
 		// Tous nos sprites, panneaux et billboards. Separes pour pouvoir les differencier.
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
-		std::vector<std::unique_ptr<CSprite>> tabSigns;
-		std::vector<std::unique_ptr<CSprite>> tabBillboards;
+		std::map<int, std::vector<std::unique_ptr<CSprite>>> tabSigns;
+		std::map<int, std::vector<std::unique_ptr<CSprite>>> tabBillboards;
 
 		void InitEffet();
 	};

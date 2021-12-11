@@ -63,9 +63,6 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
 		sceneManager.Anime(activeZone, tempsEcoule);
-
-		// Animation des billboards.
-		sceneManager.getSpriteManager()->Anime(tempsEcoule);
 	}
 
 

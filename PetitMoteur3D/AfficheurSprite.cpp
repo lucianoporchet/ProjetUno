@@ -72,7 +72,9 @@ namespace PM3D
 		DXRelacher(pVertexLayout);
 		DXRelacher(pVertexBuffer);
 
+		tabBillboards.clear();
 		tabSprites.clear();
+		tabSigns.clear();
 	}
 
 	void CAfficheurSprite::InitEffet()
@@ -179,7 +181,7 @@ namespace PM3D
 		pDispositif->ActiverMelangeAlpha();
 
 		// Faire le rendu de tous nos panneaux
-		for (auto& sign : tabSigns)
+		for (auto& sign : tabSigns[0])
 		{
 			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
 			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
@@ -198,7 +200,7 @@ namespace PM3D
 		}
 
 		// Faire le rendu de tous nos billboards
-		for (auto& billboard : tabBillboards)
+		for (auto& billboard : tabBillboards[0])
 		{
 			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
 			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
@@ -239,7 +241,100 @@ namespace PM3D
 		pDispositif->DesactiverMelangeAlpha();
 	}
 
-	void CAfficheurSprite::AjouterSprite(const std::string& NomTexture,
+	void CAfficheurSprite::DrawZone(int _zone)
+	{
+		// Obtenir le contexte
+		ID3D11DeviceContext* pImmediateContext =
+			pDispositif->GetImmediateContext();
+
+		// Choisir la topologie des primitives
+		pImmediateContext->IASetPrimitiveTopology(
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		// Source des sommets
+		const UINT stride = sizeof(CSommetSprite);
+		const UINT offset = 0;
+		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride,
+			&offset);
+
+		// input layout des sommets
+		pImmediateContext->IASetInputLayout(pVertexLayout);
+
+		// Le sampler state
+		ID3DX11EffectSamplerVariable* variableSampler;
+		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
+		variableSampler->SetSampler(0, pSampleState);
+
+		ID3DX11EffectConstantBuffer* pCB =
+			pEffet->GetConstantBufferByName("param");
+		ID3DX11EffectShaderResourceVariable* variableTexture;
+		variableTexture =
+			pEffet->GetVariableByName("textureEntree")->AsShaderResource();
+
+		pDispositif->ActiverMelangeAlpha();
+
+		// Faire le rendu de tous nos panneaux
+		for (auto& sign : tabSigns[_zone])
+		{
+			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
+			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+			const XMMATRIX matWorldViewProj = XMMatrixTranspose(sign->matPosDim * viewProj);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &matWorldViewProj, 0, 0);
+
+			pCB->SetConstantBuffer(pConstantBuffer);
+
+			// Activation de la texture
+			variableTexture->SetResource(sign->pTextureD3D);
+
+			pPasse->Apply(0, pImmediateContext);
+
+			// **** Rendu de l'objet
+			pImmediateContext->Draw(6, 0);
+		}
+
+		// Faire le rendu de tous nos billboards
+		for (auto& billboard : tabBillboards[_zone])
+		{
+			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
+			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+			const XMMATRIX matWorldViewProj = XMMatrixTranspose(billboard->matPosDim * viewProj);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &matWorldViewProj, 0, 0);
+
+			pCB->SetConstantBuffer(pConstantBuffer);
+
+			// Activation de la texture
+			variableTexture->SetResource(billboard->pTextureD3D);
+
+			pPasse->Apply(0, pImmediateContext);
+
+			// **** Rendu de l'objet
+			pImmediateContext->Draw(6, 0);
+		}
+
+		// Faire le rendu de tous nos sprites
+		for (auto& sprite : tabSprites)
+		{
+			// Initialiser et sélectionner les «constantes» de l'effet
+			ShadersParams sp;
+			sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+				&sp, 0, 0);
+
+			pCB->SetConstantBuffer(pConstantBuffer);
+
+			// Activation de la texture
+			variableTexture->SetResource(sprite->pTextureD3D);
+
+			pPasse->Apply(0, pImmediateContext);
+
+			// **** Rendu de l'objet
+			pImmediateContext->Draw(6, 0);
+		}
+
+		pDispositif->DesactiverMelangeAlpha();
+	}
+
+	void CAfficheurSprite::AjouterSprite(int _zone, const std::string& NomTexture,
 		int _x, int _y,
 		int _dx, int _dy)
 	{
@@ -298,7 +393,7 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
-	void CAfficheurSprite::AjouterSpriteTexte(
+	void CAfficheurSprite::AjouterSpriteTexte(int _zone,
 		ID3D11ShaderResourceView* pTexture, int _x, int _y)
 	{
 		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
@@ -334,9 +429,10 @@ namespace PM3D
 			XMMatrixTranslation(posX, posY, 0.0f);
 
 		// On l'ajoute à notre vecteur
-		tabSprites.push_back(std::move(pSprite));
+		tabSprites[_zone].push_back(std::move(pSprite));
 	}
-	void CAfficheurSprite::AjouterPanneau(const std::string& NomTexture,
+
+	void CAfficheurSprite::AjouterPanneau(int _zone, const std::string& NomTexture,
 		const XMFLOAT3& _position, bool _followsCam,
 		float _dx, float _dy)
 	{
@@ -390,22 +486,60 @@ namespace PM3D
 		// On l'ajoute à notre vecteur
 		if (_followsCam)
 		{
-			tabBillboards.push_back(std::move(pPanneau));
+			tabBillboards[_zone].push_back(std::move(pPanneau));
 		}
 		else
 		{
-			tabSigns.push_back(std::move(pPanneau));
+			tabSigns[_zone].push_back(std::move(pPanneau));
 		}
 	}
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
 	void CAfficheurSprite::Anime(float) {
 
-		if (tabBillboards.empty())
+		if (tabBillboards[0].empty())
 			return;
 
 		// Animer tous les billboards
-		for (auto& sprite : tabBillboards)
+		for (auto& sprite : tabBillboards[0])
+		{
+			PxTransform transformPlayer = SceneManager::get().player->body->getGlobalPose();
+			CPanneau* pBoard = reinterpret_cast<CPanneau*>(sprite.get());
+			XMFLOAT3 posBoard = pBoard->position;
+
+			PxVec3 vecDir = { posBoard.x - transformPlayer.p.x, posBoard.y - transformPlayer.p.y, posBoard.z - transformPlayer.p.z };
+
+			vecDir = vecDir.getNormalized();
+
+			float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
+			PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+
+			float angleZ = -atan2(vecDir.y, 1.0f);
+			PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
+
+			PxQuat quat = quatY * quatZ;
+
+			//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
+			auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+
+			auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
+			auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
+			//auto posTmp = pBoard->matPosDim;
+
+			auto testPos = rotTmp * posTmp;
+
+			sprite.get()->matPosDim = testPos;
+		}
+	}
+
+	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
+	void CAfficheurSprite::AnimeZone(int _zone, float) {
+
+		if (tabBillboards[_zone].empty())
+			return;
+
+		// Animer tous les billboards
+		for (auto& sprite : tabBillboards[_zone])
 		{
 			PxTransform transformPlayer = SceneManager::get().player->body->getGlobalPose();
 			CPanneau* pBoard = reinterpret_cast<CPanneau*>(sprite.get());
