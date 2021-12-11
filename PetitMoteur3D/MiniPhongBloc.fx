@@ -62,10 +62,10 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 		couleurTexture = down.Sample(SampleState, vs.coordTex).rgba;
 	}
 	else if (N.z > 0.0f) {
-		couleurTexture = front.Sample(SampleState, vs.coordTex).rgba;
+		couleurTexture = back.Sample(SampleState, vs.coordTex).rgba;
 	}
 	else {
-		couleurTexture = back.Sample(SampleState, vs.coordTex).rgba;
+		couleurTexture = front.Sample(SampleState, vs.coordTex).rgba;
 	}
 
 	couleur = couleurTexture * vAEcl.rgb * vAMat.rgb +
