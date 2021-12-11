@@ -429,7 +429,7 @@ namespace PM3D
 			XMMatrixTranslation(posX, posY, 0.0f);
 
 		// On l'ajoute à notre vecteur
-		tabSprites[_zone].push_back(std::move(pSprite));
+		tabSprites.push_back(std::move(pSprite));
 	}
 
 	void CAfficheurSprite::AjouterPanneau(int _zone, const std::string& NomTexture,
