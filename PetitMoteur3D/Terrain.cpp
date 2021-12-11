@@ -36,7 +36,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	pVectorTexturesD3D = {};
 
 	vector<CSommetTerrain> sommets;
-	float scale2 = 1 / 10.0f;
+	float scale2 = 10 / 10.0f;
 
 	// Going through vertexes and normals to create each and every vertice on the buffer
 	vector<XMFLOAT3> vertexes = lecteur.getVertexes();
@@ -113,7 +113,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	meshDesc.points.count = static_cast<PxU32>(vertexes.size());
 	meshDesc.points.data = vertices;
 	meshDesc.points.stride = sizeof(PxVec3);
-	meshDesc.triangles.count = static_cast<PxU32>(vertexes.size())/3;
+	meshDesc.triangles.count = static_cast<PxU32>(faces.size())/3;
 	meshDesc.triangles.data = indices;
 	meshDesc.triangles.stride = 3 * sizeof(PxU32);
 
