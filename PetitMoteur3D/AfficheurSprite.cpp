@@ -4,6 +4,7 @@
 #include "MoteurWindows.h"
 #include "util.h"
 #include "DispositifD3D11.h"
+#include "SceneManager.h"
 
 namespace PM3D
 {
@@ -187,37 +188,18 @@ namespace PM3D
 
 		pDispositif->ActiverMelangeAlpha();
 
-		// Faire le rendu de tous nos panneaux
-		for (auto& sign : tabSigns[0])
-		{
-			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
-			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-			const XMMATRIX matWorldViewProj = XMMatrixTranspose(sign->matPosDim * viewProj);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &matWorldViewProj, 0, 0);
-
-			pCB->SetConstantBuffer(pConstantBuffer);
-
-			// Activation de la texture
-			variableTexture->SetResource(sign->pTextureD3D);
-
-			pPasse->Apply(0, pImmediateContext);
-
-			// **** Rendu de l'objet
-			pImmediateContext->Draw(6, 0);
-		}
-
 		// Faire le rendu de tous nos billboards
-		for (auto& billboard : tabBillboards[0])
+		for (auto& etoile : tabEtoiles)
 		{
 			// Initialiser et sélectionner les «constantes» du VS - dans le monde cette fois.
 			const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-			const XMMATRIX matWorldViewProj = XMMatrixTranspose(billboard->matPosDim * viewProj);
+			const XMMATRIX matWorldViewProj = XMMatrixTranspose(etoile->matPosDim * viewProj);
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &matWorldViewProj, 0, 0);
 
 			pCB->SetConstantBuffer(pConstantBuffer);
 
 			// Activation de la texture
-			variableTexture->SetResource(billboard->pTextureD3D);
+			variableTexture->SetResource(etoile->pTextureD3D);
 
 			pPasse->Apply(0, pImmediateContext);
 
@@ -311,26 +293,6 @@ namespace PM3D
 
 			// Activation de la texture
 			variableTexture->SetResource(billboard->pTextureD3D);
-
-			pPasse->Apply(0, pImmediateContext);
-
-			// **** Rendu de l'objet
-			pImmediateContext->Draw(6, 0);
-		}
-
-		// Faire le rendu de tous nos sprites
-		for (auto& sprite : tabSprites)
-		{
-			// Initialiser et sélectionner les «constantes» de l'effet
-			ShadersParams sp;
-			sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-				&sp, 0, 0);
-
-			pCB->SetConstantBuffer(pConstantBuffer);
-
-			// Activation de la texture
-			variableTexture->SetResource(sprite->pTextureD3D);
 
 			pPasse->Apply(0, pImmediateContext);
 
@@ -502,20 +464,106 @@ namespace PM3D
 		}
 	}
 
+	void CAfficheurSprite::AjouterEtoile(const std::string& NomTexture, const XMFLOAT3& _offset, float _dx, float _dy)
+	{
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+
+		std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
+		pPanneau->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+
+		// Obtenir la dimension de la texture si _dx et _dy sont à 0;
+		if (_dx == 0.0f && _dy == 0.0f)
+		{
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pPanneau->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			pPanneau->dimension.x = float(desc.Width);
+			pPanneau->dimension.y = float(desc.Height);
+
+			// Dimension en facteur
+			pPanneau->dimension.x = pPanneau->dimension.x * 2.0f / pDispositif->GetLargeur();
+			pPanneau->dimension.y = pPanneau->dimension.y * 2.0f / pDispositif->GetHauteur();
+		}
+		else
+		{
+			pPanneau->dimension.x = float(_dx);
+			pPanneau->dimension.y = float(_dy);
+		}
+
+		// Position en coordonnées du monde
+		const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		auto playerPos = SceneManager::get().player->body->getGlobalPose().p;
+
+		pPanneau->position = { _offset.x + playerPos.x, _offset.y + playerPos.y, _offset.z + playerPos.z };
+
+		pPanneau->matPosDim = XMMatrixScaling(pPanneau->dimension.x,
+			pPanneau->dimension.y, 1.0f) *
+			XMMatrixTranslation(pPanneau->position.x,
+				pPanneau->position.y, pPanneau->position.z) *
+			viewProj;
+
+
+		// On l'ajoute à notre vecteur
+		tabEtoiles.push_back(std::move(pPanneau));
+	}
+
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
 	void CAfficheurSprite::Anime(float) {
 
-		if (tabBillboards[0].empty())
-			return;
-
-		// Animer tous les billboards
-		for (auto& sprite : tabBillboards[0])
+		for (auto& sprite : tabEtoiles)
 		{
-			PxTransform transformPlayer = SceneManager::get().player->body->getGlobalPose();
-			CPanneau* pBoard = reinterpret_cast<CPanneau*>(sprite.get());
-			XMFLOAT3 posBoard = pBoard->position;
+			XMFLOAT3 posBoard = sprite->position;
+			// keeping the stars well placed
+			//XMFLOAT3 starPos{ sprite->position.x, sprite->position.y, sprite->position.z };
+			PxVec3 plrPosPX = SceneManager::get().player->body->getGlobalPose().p;
+			XMFLOAT3 playerPos = { plrPosPX.x, plrPosPX.y, plrPosPX.z };
 
-			PxVec3 vecDir = { posBoard.x - transformPlayer.p.x, posBoard.y - transformPlayer.p.y, posBoard.z - transformPlayer.p.z };
+			// check for x position
+			if (posBoard.x < playerPos.x - starAreaOffsetFromCenter)
+			{
+				posBoard.x = posBoard.x + 2 * starAreaOffsetFromCenter;
+			}
+			else if (posBoard.x > playerPos.x + starAreaOffsetFromCenter)
+			{
+				posBoard.x = posBoard.x - 2 * starAreaOffsetFromCenter;
+			}
+			
+			// check for y position
+			if (posBoard.y < playerPos.y - starAreaOffsetFromCenter)
+			{
+				posBoard.y = posBoard.y + 2 * starAreaOffsetFromCenter;
+			}
+			else if (posBoard.y > playerPos.y + starAreaOffsetFromCenter)
+			{
+				posBoard.y = posBoard.y - 2 * starAreaOffsetFromCenter;
+			}
+
+			// check for z position
+			if (posBoard.z < playerPos.z - starAreaOffsetFromCenter)
+			{
+				posBoard.z = posBoard.z + 2 * starAreaOffsetFromCenter;
+			}
+			else if (posBoard.z > playerPos.z + starAreaOffsetFromCenter)
+			{
+				posBoard.z = posBoard.z - 2 * starAreaOffsetFromCenter;
+			}
+
+			auto cam = CMoteurWindows::GetInstance().GetFreeCamera();
+			XMVECTOR camPos = cam.getPosition();
+
+			PxVec3 vecDir = { posBoard.x - camPos.vector4_f32[0], posBoard.y - camPos.vector4_f32[1], posBoard.z - camPos.vector4_f32[2] };
 
 			vecDir = vecDir.getNormalized();
 
@@ -527,16 +575,18 @@ namespace PM3D
 
 			PxQuat quat = quatY * quatZ;
 
-			//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
-			auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+			XMMATRIX rotTmp;
 
-			auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
-			auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
-			//auto posTmp = pBoard->matPosDim;
+			//auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
+			rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
 
-			auto testPos = rotTmp * posTmp;
+			auto tmpPosMatrix = XMMatrixScaling(sprite->dimension.x,
+				sprite->dimension.y, 1.0f) * rotTmp *
+				XMMatrixTranslation(posBoard.x,
+					posBoard.y, posBoard.z);
 
-			sprite.get()->matPosDim = testPos;
+			sprite->position = posBoard;
+			sprite.get()->matPosDim = tmpPosMatrix;
 		}
 	}
 
