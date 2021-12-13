@@ -150,9 +150,6 @@ protected:
 		// Appeler les fonctions de dessin de chaque objet de la scène
 		manager.getSceneManager().Draw(manager.getActiveZone());
 
-		// De meme pour les sprites, billboards, etc.
-		manager.getSceneManager().getSpriteManager()->Draw();
-
 		EndRenderSceneSpecific();
 
 		return true;
