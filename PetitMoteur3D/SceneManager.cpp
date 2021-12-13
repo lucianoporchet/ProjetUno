@@ -84,14 +84,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
 
 	// Ajout des portails
-	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_red.dds"s, { 1153.0f, -617.0f, 493.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_green.dds"s, { -1153.0f, 617.0f, -493.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_blue.dds"s, { -375.0f, 5296.0f, -343.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_purple.dds"s, { 693.0f, 7017.0f, -343.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_green.dds"s, { 4845.0f, 6825.0f, 602.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_red.dds"s, { 6331.0f, 4896.0f, 602.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_purple.dds"s, { 7038.0f, 871.0f, -1732.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_blue.dds"s, { 4807.0f, -1605.0f, -1732.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_red_light.dds"s, { 1153.0f, -617.0f, 493.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_green_light.dds"s, { -1153.0f, 617.0f, -493.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { -375.0f, 5296.0f, -343.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { 693.0f, 7017.0f, -343.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_green_light.dds"s, { 4845.0f, 6825.0f, 602.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_red_light.dds"s, { 6331.0f, 4896.0f, 602.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { 7038.0f, 871.0f, -1732.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { 4807.0f, -1605.0f, -1732.0f }, true, 100.0f, 100.0f);
 
 	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
 	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
