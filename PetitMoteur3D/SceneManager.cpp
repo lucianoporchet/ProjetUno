@@ -84,15 +84,15 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
 
-	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position, scale en x, scale en y (non utilises actuellement).
+	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
 	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
-	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 5, 5, 5 }, true, 10.0f, 10.0f);
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, true, 50.0f, 10.0f);
 
-	// exemple panneau. Params : zone, chemin vers texture, vecteur de position, scale en x, scale en y.
+	// exemple panneau. Params : zone, chemin vers texture, vecteur de position (centre du billboard), scale en x, scale en y.
 	// celui-ci a sa position attribuee dans le monde.
-	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, false, 10.0f, 10.0f);
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, false, 10.0f, 100.0f);
 
-	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en haut a gauche, attention), taille en px de la texture sur l'ecran x, puis y.
+	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en centre du sprite, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
 	spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
 

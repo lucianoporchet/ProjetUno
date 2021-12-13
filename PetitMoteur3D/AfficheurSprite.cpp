@@ -23,12 +23,19 @@ namespace PM3D
 
 	CSommetSprite CAfficheurSprite::sommets[6] =
 	{
-		CSommetSprite(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-		CSommetSprite(XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-		CSommetSprite(XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-		CSommetSprite(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-		CSommetSprite(XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-		CSommetSprite(XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f))
+		//CSommetSprite(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		//CSommetSprite(XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		//CSommetSprite(XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		//CSommetSprite(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		//CSommetSprite(XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		//CSommetSprite(XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f))
+		 
+		CSommetSprite(XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		CSommetSprite(XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		CSommetSprite(XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		CSommetSprite(XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		CSommetSprite(XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		CSommetSprite(XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT2(1.0f, 1.0f))
 	};
 
 	CAfficheurSprite::CAfficheurSprite(CDispositifD3D11* _pDispositif)
@@ -562,11 +569,18 @@ namespace PM3D
 
 			auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
 			auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
-			//auto posTmp = pBoard->matPosDim;
 
-			auto testPos = rotTmp * posTmp;
+			auto tmpPosMatrix = XMMatrixScaling(pBoard->dimension.x,
+				pBoard->dimension.y, 1.0f) * rotTmp *
+				XMMatrixTranslation(pBoard->position.x,
+					pBoard->position.y, pBoard->position.z);
 
-			sprite.get()->matPosDim = testPos;
+
+			sprite.get()->matPosDim = tmpPosMatrix;
+
+
+			//auto testPos = rotTmp * posTmp;
+			//sprite.get()->matPosDim = testPos;
 		}
 	}
 
