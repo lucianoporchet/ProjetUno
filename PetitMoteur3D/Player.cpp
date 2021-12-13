@@ -71,6 +71,34 @@ void Player::Anime(float tempEcoule)
 	//update la vue et la position de la cam en fonction des mouvements effectués plus tot
 	updateCam();
 	MovingObject::Anime(tempEcoule);
+
+	// TODO Tourner le joueur en fonction du vecteur up de la camera
+
+	PxTransform transformPlayer = body->getGlobalPose();
+	auto camUp = camera->up;
+
+	PxVec3 vecDir = getDir();
+
+	vecDir = vecDir.getNormalized();
+
+	float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
+	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+
+	float angleZ = -atan2(vecDir.y, 1.0f);
+	PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
+
+	PxQuat quat = (quatY * quatZ);
+
+	//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
+	auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+
+	auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
+	auto posTmp = XMMatrixTranslation(transformPlayer.p.x, transformPlayer.p.y, transformPlayer.p.z);
+	//auto posTmp = pBoard->matPosDim;
+
+	auto testPos = rotTmp * posTmp;
+
+	setMatWorld(testPos);
 }
 
 //avancer
