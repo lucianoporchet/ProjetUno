@@ -34,7 +34,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	
 	// Prendre en note le statut du clavier
 	GestionnaireDeSaisie->StatutClavier();
-	// Prendre en note l'état de la souris
+	// Prendre en note l'Ã©tat de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
 	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
@@ -64,6 +64,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		}
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
+
 
 	return true;
 }
