@@ -27,7 +27,7 @@ void PhysXManager::initPhysics()
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 	if (!mCooking)
-		throw "quelquechose s'est mal pass� lors de la cr�ation du meshCooking";
+		throw "quelquechose s'est mal passé lors de la création du meshCooking";
 
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, 0.0f, 0.0f);
