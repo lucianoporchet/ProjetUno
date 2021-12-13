@@ -34,7 +34,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	
 	// Prendre en note le statut du clavier
 	GestionnaireDeSaisie->StatutClavier();
-	// Prendre en note l'état de la souris
+	// Prendre en note l'Ã©tat de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
 	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
@@ -53,20 +53,18 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 		physXManager.stepPhysics(static_cast<int>(activeZone));
 
-		//////TEST////////
-		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_T) && hasBeenEnoughTimeSinceLastPause()) {
+
+		if (activeZone != nextZone) {
+			Zone pastZone = activeZone;
 			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
-			activeZone = static_cast<Zone>((static_cast<int>(activeZone) + 1) % 4);
+			activeZone = nextZone;
 			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
-			
+			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
+			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
-		//////////////////
-
 		sceneManager.Anime(activeZone, tempsEcoule);
-
-		
-
 	}
+
 
 	return true;
 }
@@ -87,4 +85,8 @@ const Zone& GameManager::getActiveZone() {
 
 void GameManager::setActiveZone(Zone zone) {
 	activeZone = zone;
+}
+
+void GameManager::setNextZone(Zone zone) {
+	nextZone = zone;
 }

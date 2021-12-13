@@ -24,54 +24,53 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 	VS_Sortie sortie = (VS_Sortie)0;
 
 	sortie.Pos = mul(Pos, matWorldViewProj);
-	sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
-
+	//sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
+	sortie.Norm = Normale;
 	float3 PosWorld = mul(Pos, matWorld).xyz;
-
-	sortie.vDirLum = float3(0.0f, 0.0f, -1.0f);
-	sortie.vDirCam = vCamera.xyz - PosWorld;
-
 	// Coordonnées d'application de texture
 	sortie.coordTex = coordTex;
 
 	return sortie;
 }
 
-Texture2D textureEntree;  // la texture
+
+Texture2D up;
+Texture2D down;
+Texture2D left;
+Texture2D right;
+Texture2D back;
+Texture2D front;
 
 SamplerState SampleState;  // l'état de sampling
 
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
+	float3 N = normalize(vs.Norm);
+	float4 couleurTexture;
+	
+	if (N.x > 0.5f) {
+		couleurTexture = left.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if(N.x < -0.5f){
+		couleurTexture = right.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.y > 0.5f) {
+		couleurTexture = up.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.y < -0.5f) {
+		couleurTexture = down.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else if (N.z > 0.5f) {
+		couleurTexture = back.Sample(SampleState, vs.coordTex).rgba;
+	}
+	else {
+		couleurTexture = front.Sample(SampleState, vs.coordTex).rgba;
+	}
 
-// Normaliser les paramètres
-float3 N = normalize(vs.Norm);
-float3 L = normalize(vs.vDirLum);
-float3 V = normalize(vs.vDirCam);
+	couleur = couleurTexture.rgb + couleurTexture.rgb;
 
-// Valeur de la composante diffuse
-float3 diff = saturate(dot(N, L));
-
-// R = 2 * (N.L) * N – L
-float3 R = normalize(2 * diff * N - L);
-
-// Puissance de 4 - pour l'exemple
-float S = pow(saturate(dot(R, V)), 4.0f);
-
-// Échantillonner la couleur du pixel à partir de la texture
-float4 couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgba;
-
-//float3 couleurFinale;
-
-
-// I = A + D * N.L + (R.V)n
-couleur =	couleurTexture * vAEcl.rgb * vAMat.rgb +
-			couleurTexture * vDEcl.rgb * vDMat.rgb;
-
-//couleur += S;
-
-return float4(couleur, 1.0f);
+	return float4(couleur, 1.0f);
 }
 
 technique11 MiniPhong
