@@ -89,3 +89,52 @@ void GameManager::setActiveZone(Zone zone) {
 void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
 }
+
+bool GameManager::allKeysCollected()
+{
+	if (greenKeyCollected && blueKeyCollected && redKeyCollected) 
+	{
+		return true;
+	}
+	return false;
+}
+
+void GameManager::activateFinalPortal()
+{
+	// TODO
+}
+
+void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
+{
+	SceneManager& sm = sceneManager;
+	/*std::unique_ptr<PickUpObject> objectActivated;*/
+	std::vector<std::unique_ptr<PickUpObject>>& PickUpObjectList = sm.getListPickUpObjectScene(static_cast<int>(activeZone));
+	/*for (auto& obj : PickUpObjectList)*/
+	for (auto It = PickUpObjectList.begin(); It != PickUpObjectList.end(); It++)
+	{
+		auto& obj = *It;
+		if (obj->body->getGlobalPose().p == pos) 
+		{
+			if (obj->getType() == PickUpObjectType::GreenKey) 
+			{
+				greenKeyCollected = true;
+			} 
+			else if (obj->getType() == PickUpObjectType::BlueKey)
+			{
+				blueKeyCollected = true;
+			}
+			else if (obj->getType() == PickUpObjectType::RedKey)
+			{
+				redKeyCollected = true;
+			}
+			else if (obj->getType() == PickUpObjectType::SpeedBuff) 
+			{
+				speedBuffCollected = true;
+				sm.player->setSpeed(sm.player->getSpeed() + 100);
+			}
+			PickUpObjectList.erase(It);
+			break;
+		}
+	}
+	// TODO : depending of the position of pickup object, activate its effects, then despawn it
+}

@@ -17,6 +17,8 @@
 #include "RandomGenerator.h"
 #include <future>
 #include <mutex>
+#include <unordered_map>
+#include "PickUpObject.h"
 
 
 enum class Zone {
@@ -33,11 +35,14 @@ class SceneManager
 private:
 	SceneManager();
 public:
-	
-	std::vector<PM3D::CObjetMesh> objectList;
 
 	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene(int scene);
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
+
+	
+	std::vector<std::unique_ptr<PickUpObject>>& getListPickUpObjectScene(int scene);
+	std::vector<std::vector<std::unique_ptr<PickUpObject>>>& getPickUpObjectScenes() noexcept;
+
 	
 	void InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
 	physx::PxVec3 getPortalPos(Zone current, Zone past);
@@ -48,7 +53,9 @@ public:
 
 private:
 	
-	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes;
+	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
+	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
+	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
 	enum {
 
@@ -56,7 +63,8 @@ private:
 		NBZONES = 4,
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
-		NBPORTAILS = 8
+		NBPORTAILS = 8,
+		NBPICKUPOBJECTS = 4
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
@@ -90,6 +98,21 @@ private:
 		physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f),
 		physx::PxVec3(BOXSIZE, 0.0f, 0.0f),
 	};
+
+	const PickUpObjectPlacementInfo pickupObjectsInfo[NBPICKUPOBJECTS]{
+		{ physx::PxVec3(500, 500, 500) , PickUpObjectType::RedKey , 0 },
+		{ physx::PxVec3(0, BOXSIZE + 500, 0) , PickUpObjectType::GreenKey , 1 },
+		{ physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0) , PickUpObjectType::BlueKey , 2 },
+		{ physx::PxVec3(-300, -300, -300) , PickUpObjectType::SpeedBuff , 0 },
+
+	};
+	/*const std::pair<PxVec3, PickUpObjectType> pickupObjectsInfo[NBPICKUPOBJECTS]{
+		std::make_pair(physx::PxVec3(500, 500, 500),PickUpObjectType::RedKey),
+		std::make_pair(physx::PxVec3(0, BOXSIZE + 500, 0),PickUpObjectType::GreenKey),
+		std::make_pair(physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0),PickUpObjectType::BlueKey),
+		std::make_pair(physx::PxVec3(300, 300, 300),PickUpObjectType::SpeedBuff)
+
+	};*/
 
 
 public:

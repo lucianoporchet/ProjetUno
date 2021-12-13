@@ -22,6 +22,9 @@ public:
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
+	bool allKeysCollected();
+	void activateFinalPortal();
+	void activatePickUpObjectFromPos(PxVec3 pos);
 	
 private:
 
@@ -31,6 +34,10 @@ private:
 	bool isPause = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;
+	bool greenKeyCollected = false;
+	bool blueKeyCollected = false;
+	bool redKeyCollected = false;
+	bool speedBuffCollected = false;
 
 	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();
