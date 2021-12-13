@@ -116,6 +116,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { 7038.0f, 871.0f, -1732.0f }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { 4807.0f, -1605.0f, -1732.0f }, true, 100.0f, 100.0f);
 
+	for (int i = 0; i < NBETOILES; ++i) {
+		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
+			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
+			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter) };
+		spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 0.02f, 0.02f);
+		//spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 1.0f, 1.0f);
+	}
+
 	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
 	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
 	//spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, true, 50.0f, 10.0f);
@@ -156,6 +164,7 @@ void SceneManager::Draw(Zone scene) {
 	}
 	// Billboards, sprites et panneaux
 	spriteManager->DrawZone(static_cast<int>(scene));
+	spriteManager->Draw();
 }
 
 void SceneManager::Anime(Zone scene, float tmps) {
@@ -166,6 +175,7 @@ void SceneManager::Anime(Zone scene, float tmps) {
 		obj->Anime(tmps);
 	}
 	// Billboards, sprites et panneaux
+	spriteManager->Anime(tmps);
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
 }
 

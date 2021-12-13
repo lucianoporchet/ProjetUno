@@ -38,8 +38,10 @@ namespace PM3D
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);		
 		void AjouterPanneau(int _zone, bool _isPortal, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
-			float _dx = 0.0f, float _dy = 0.0f);
+			float _dx = 0.0f, float _dy = 0.0f);		
+		void AjouterEtoile(const std::string& NomTexture, const XMFLOAT3& _offset, float _dx = 0.0f, float _dy = 0.0f);
 
+		int starAreaOffsetFromCenter = 10;
 	private:
 		class CSprite
 		{
@@ -85,8 +87,9 @@ namespace PM3D
 
 		// Tous nos sprites, panneaux et billboards. Separes pour pouvoir les differencier.
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
-		std::map<int, std::vector<std::unique_ptr<CSprite>>> tabSigns;
-		std::map<int, std::vector<std::unique_ptr<CSprite>>> tabBillboards;
+		std::vector<std::unique_ptr<CPanneau>> tabEtoiles;
+		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabSigns;
+		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabBillboards;
 
 		void InitEffet();
 	};

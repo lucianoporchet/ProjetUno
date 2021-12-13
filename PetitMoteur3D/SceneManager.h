@@ -61,7 +61,8 @@ private:
 		NBZONES = 4,
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
-		NBPORTAILS = 8
+		NBPORTAILS = 8,
+		NBETOILES = 128
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
