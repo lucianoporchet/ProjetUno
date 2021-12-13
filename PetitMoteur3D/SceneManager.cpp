@@ -41,12 +41,13 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		//Creation de la fausse skyBox (cube avec le culling inversé)
 		std::unique_ptr<PM3D::CBlocEffet1> skybox = std::make_unique<PM3D::CBlocEffet1>(BOXSIZE, BOXSIZE, BOXSIZE, pDispositif, i);
 		//ajoute une texture a la skybox
-		skybox->SetTextures(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\up2.dds", pDispositif),
-							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\down2.dds", pDispositif),
-							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\left.dds", pDispositif),
-							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\right2.dds", pDispositif),
-							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\back.dds", pDispositif),
-							TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\front2.dds", pDispositif));
+		std::wstring texture = L".\\modeles\\SkyBoxes\\" + std::to_wstring(i);
+		skybox->SetTextures(TexturesManager.GetNewTexture(texture + L"\\up.dds"s, pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\down.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\left.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\right.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\back.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\front.dds", pDispositif));
 
 		Scenes[i].push_back(std::move(skybox));
 	}
@@ -55,9 +56,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\4\\Planete.obm"s, pDispositif, 150.0f, PxVec3(0,BOXSIZE,0), 1, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\5\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, BOXSIZE, 0), 2, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\6\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, 0, 0), 3, [](Planet*) noexcept {}));
 	//ajoute la skybox a la scene
 
 	//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150

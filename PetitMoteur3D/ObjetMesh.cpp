@@ -207,12 +207,12 @@ void CObjetMesh::Anime(float tempsEcoule)
 	float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
 
 
-	if (distance <= 600.0f && !isTessellated)
+	if (distance <= 1500.0f && !isTessellated)
 	{
 		InitEffet(true);
 		isTessellated = true;
 	} 
-	else if (distance > 600.0f && isTessellated)
+	else if (distance > 1500.0f && isTessellated)
 	{
 		InitEffet(false);
 		isTessellated = false;

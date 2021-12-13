@@ -142,8 +142,7 @@ PxFilterFlags FilterShader(
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
 
-	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePortal) ||
-		(filterData0.word0 == FilterGroup::ePortal && filterData1.word0 == FilterGroup::ePlayer))
+	if ((filterData0.word0 == FilterGroup::ePortal || filterData1.word0 == FilterGroup::ePortal))
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
