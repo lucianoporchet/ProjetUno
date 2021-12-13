@@ -36,7 +36,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	pVectorTexturesD3D = {};
 
 	vector<CSommetTerrain> sommets;
-	float scale2 = 10 / 10.0f;
+
 
 	// Going through vertexes and normals to create each and every vertice on the buffer
 	vector<XMFLOAT3> vertexes = lecteur.getVertexes();
@@ -51,10 +51,10 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	int iterate_index = 0;
 	int cpt = 0;
 	for_each(vertexes.begin(), vertexes.end(), [&](XMFLOAT3 vertex) {
-		XMFLOAT3 vertexScaled = XMFLOAT3(vertex.x, vertex.y * scale2, vertex.z);
+		XMFLOAT3 vertexScaled = XMFLOAT3(vertex.x, vertex.y, vertex.z);
 
 		//ajout des sommets pour le mesh cooking
-		PxVec3 Pxvertex(vertex.x, vertex.y * scale2, vertex.z);
+		PxVec3 Pxvertex(vertex.x, vertex.y, vertex.z);
 		vertices[cpt++] = Pxvertex;
 
 		// Adding a new vertex with the following properties : x, y, z from our file, scaled down with the scale value
@@ -119,6 +119,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 
 	PxTolerancesScale scale1;
 	PxCookingParams params(scale1);
+	//ces flags permettent un chargement plus rapide du cooking, mais certains devraient etre désactivés en release
 	// disable mesh cleaning - perform mesh validation on development configurations
 	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
 	// disable edge precompute, edges are set for each triangle, slows contact generation
