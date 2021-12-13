@@ -439,7 +439,7 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
-	void CAfficheurSprite::AjouterPanneau(int _zone, const std::string& NomTexture,
+	void CAfficheurSprite::AjouterPanneau(int _zone, bool _isPortal, const std::string& NomTexture,
 		const XMFLOAT3& _position, bool _followsCam,
 		float _dx, float _dy)
 	{
@@ -450,6 +450,7 @@ namespace PM3D
 		std::wstring ws(NomTexture.begin(), NomTexture.end());
 
 		std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
+		pPanneau->portal = _isPortal;
 		pPanneau->pTextureD3D =
 			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
 
@@ -540,7 +541,7 @@ namespace PM3D
 	}
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
-	void CAfficheurSprite::AnimeZone(int _zone, float) {
+	void CAfficheurSprite::AnimeZone(int _zone, float tempsEcoule) {
 
 		if (tabBillboards[_zone].empty())
 			return;
@@ -564,23 +565,27 @@ namespace PM3D
 
 			PxQuat quat = quatY * quatZ;
 
-			//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
-			auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+			XMMATRIX rotTmp;
 
-			auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
-			auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
+			//auto posTmp = XMMatrixTranslation(posBoard.x, posBoard.y, posBoard.z);
+
+			if (pBoard->portal)
+			{
+				++pBoard->rotation;
+				quat = quat * PxQuat((XM_PIDIV4/12) * (float)pBoard->rotation, { 0.0f, 0.0f, 1.0f });
+				rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+			}
+			else
+			{
+				rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+			}
 
 			auto tmpPosMatrix = XMMatrixScaling(pBoard->dimension.x,
 				pBoard->dimension.y, 1.0f) * rotTmp *
 				XMMatrixTranslation(pBoard->position.x,
 					pBoard->position.y, pBoard->position.z);
 
-
 			sprite.get()->matPosDim = tmpPosMatrix;
-
-
-			//auto testPos = rotTmp * posTmp;
-			//sprite.get()->matPosDim = testPos;
 		}
 	}
 

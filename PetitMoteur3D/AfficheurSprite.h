@@ -36,8 +36,8 @@ namespace PM3D
 		void AnimeZone(int _zone, float);
 
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
-		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);
-		void AjouterPanneau(int _zone, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
+		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);		
+		void AjouterPanneau(int _zone, bool _isPortal, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
 			float _dx = 0.0f, float _dy = 0.0f);
 
 	private:
@@ -60,10 +60,14 @@ namespace PM3D
 		public:
 			XMFLOAT3 position;
 			XMFLOAT2 dimension;
+			bool portal;
+			int rotation;
 
 			CPanneau()
 			{
 				bPanneau = true;
+				portal = false;
+				rotation = 0;
 			}
 		};
 
