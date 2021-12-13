@@ -20,6 +20,7 @@ class PhysXManager
 {
 private:
 	PhysXManager() noexcept;
+	void createWall(const PxTransform& t, const PxGeometry& geometry, int scene);
 public:
 	PhysXManager(const PhysXManager&) = delete;
 	PhysXManager& operator=(const PhysXManager&) = delete;
@@ -38,7 +39,6 @@ public:
 
 	//creer un rigid body
 	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
-	
 
 public:
 	static PhysXManager& get() noexcept;

@@ -40,10 +40,17 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	auto f = [&](Player* p) { p->setCam(&camera); };
 
 	for (int i = 0; i < NBZONES; ++i) {
-		//Creation de la fausse skyBox (cube avec le culling inversé)
+		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
 		std::unique_ptr<PM3D::CBlocEffet1> skybox = std::make_unique<PM3D::CBlocEffet1>(BOXSIZE, BOXSIZE, BOXSIZE, pDispositif, i);
 		//ajoute une texture a la skybox
-		skybox->SetTexture(TexturesManager.GetNewTexture(L".\\modeles\\SkyBoxes\\box.dds", pDispositif));
+		std::wstring texture = L".\\modeles\\SkyBoxes\\" + std::to_wstring(i);
+		skybox->SetTextures(TexturesManager.GetNewTexture(texture + L"\\up.dds"s, pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\down.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\left.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\right.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\back.dds", pDispositif),
+							TexturesManager.GetNewTexture(texture + L"\\front.dds", pDispositif));
+
 		Scenes[i].push_back(std::move(skybox));
 	}
 
@@ -51,9 +58,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\4\\Planete.obm"s, pDispositif, 150.0f, PxVec3(0,BOXSIZE,0), 1, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\5\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, BOXSIZE, 0), 2, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\6\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, 0, 0), 3, [](Planet*) noexcept {}));
 	//ajoute la skybox a la scene
 
 	//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
@@ -66,15 +70,25 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
-	for (int i = 0; i < NBASTEROIDES; ++i) {
-		float scale = static_cast<float>(RandomGenerator::get().next(5, 20));
-		PxVec3 pos = RandomGenerator::get().randomVec3(-1000, -500);
-		futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, 0, [](Asteroid*) noexcept {}));
+	float scale;
+	PxVec3 pos;
+	for (int j = 0; j < NBZONES; ++j) {
+		for (int i = 0; i < NBASTEROIDES; ++i) {
+			
+			scale = static_cast<float>(RandomGenerator::get().next(5, 20));
+			pos = RandomGenerator::get().randomPosInZone(j);
+			futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, j, [](Asteroid*) noexcept {}));
+		}
 	}
 
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
 		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i], i/2, [&](Portal*) noexcept {}));
 		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i+1], i/2, [&](Portal*) noexcept {}));
+	}
+
+	for (int i = 0; i < NBMONSTRES; ++i) {
+		float scale = static_cast<float>(RandomGenerator::get().next(50, 200));
+		futures.push_back(std::async(load<Monster>, &Scenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
 	}
 
 	////Creation du player, constructeur avec format binaire
