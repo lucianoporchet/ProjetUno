@@ -68,10 +68,10 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	// Going through all the faces and pushing back only the indexes, converted
 	vector<long> faces = lecteur.getFaces();
 	PxU32* indices = new PxU32[faces.size() * 3];
-	int cpt2 = 0;
+	int cpt2 = static_cast<int>(faces.size()-1);
 	for_each(faces.begin(), faces.end(), [&](long index) {
 		indexes_terrain.push_back((uint32_t)index);
-		indices[cpt2++] = static_cast<PxU32>(index);
+		indices[cpt2--] = static_cast<PxU32>(index);
 	});
 
 	// Création du vertex buffer et copie des sommets
@@ -131,8 +131,6 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	PxTriangleMesh* triMesh = NULL;
 	triMesh = PhysXManager::get().getPxCooking()->createTriangleMesh(meshDesc, PhysXManager::get().getgPhysx()->getPhysicsInsertionCallback());
 	
-	//NORMALEMENT CA DEVRAIT SCALE MAIS CA LE FAIT PAS ET JE SAIS PAS PK
-	//JE CASSE TETE SUR MUR OUGAOUGA
 	PxMeshScale geomScale = PxMeshScale((PxVec3(scale)));
 	PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh, geomScale);
 	
