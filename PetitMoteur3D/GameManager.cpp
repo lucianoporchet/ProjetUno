@@ -48,11 +48,8 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		}
 	}
 
-	//si on est sur le menu pause
+	//si on est pas sur le menu pause
 	if (!getIsPauseStatus()) {
-
-		physXManager.stepPhysics(static_cast<int>(activeZone));
-
 
 		if (activeZone != nextZone) {
 			Zone pastZone = activeZone;
@@ -62,6 +59,11 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
 			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
+
+		physXManager.stepPhysics(static_cast<int>(activeZone));
+
+
+		
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
 

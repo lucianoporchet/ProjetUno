@@ -39,6 +39,7 @@ public:
 
 	//creer un rigid body
 	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
+	PxRigidStatic* createStatic(const PxTransform& t, const PxGeometry& geometry, int scene);
 
 public:
 	static PhysXManager& get() noexcept;

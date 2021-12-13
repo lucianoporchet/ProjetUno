@@ -86,10 +86,10 @@ private:
 	};
 
 	const XMVECTOR lightColor[4] = {
-		XMVectorSet(0.2f, 0.2f, 0.6f, 1.0f),
-		XMVectorSet(0.2f, 0.6f, 0.2f, 1.0f),
-		XMVectorSet(0.6f, 0.2f, 0.6f, 1.0f),
-		XMVectorSet(0.6f, 0.2f, 0.2f, 1.0f)
+		XMVectorSet(0.2f, 0.2f, 0.7f, 1.0f),
+		XMVectorSet(0.7f, 0.7f, 0.2f, 1.0f),
+		XMVectorSet(0.7f, 0.2f, 0.6f, 1.0f),
+		XMVectorSet(0.7f, 0.2f, 0.2f, 1.0f)
 	};
 
 public:

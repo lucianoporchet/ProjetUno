@@ -52,6 +52,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		Scenes[i].push_back(std::move(skybox));
 	}
 
+	for (int i = 0; i < NBTUNNELCOMPONENTS; ++i) {
+		std::unique_ptr<TunnelComponent> tunnel = std::make_unique<TunnelComponent>(".\\modeles\\VaisseauTunnel\\cube.obm", pDispositif, tunnelScale[i], tunnelPos[i], tunnelRot);
+		Scenes[1].push_back(std::move(tunnel));
+	}
+
 
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
