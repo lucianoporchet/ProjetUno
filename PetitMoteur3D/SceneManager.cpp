@@ -56,9 +56,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\4\\Planete.obm"s, pDispositif, 150.0f, PxVec3(0,BOXSIZE,0), 1, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\5\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, BOXSIZE, 0), 2, [](Planet*) noexcept {}));
-	futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\6\\Planete.obm"s, pDispositif, 150.0f, PxVec3(BOXSIZE, 0, 0), 3, [](Planet*) noexcept {}));
 	//ajoute la skybox a la scene
 
 	//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
