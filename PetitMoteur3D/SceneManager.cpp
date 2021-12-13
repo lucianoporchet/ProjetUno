@@ -81,12 +81,21 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
 
 	// Creation du gestionnaire de billboards, sprites et texte
-	
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
+
+	// Ajout des portails
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_red.dds"s, { 1153.0f, -617.0f, 493.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\portal_green.dds"s, { -1153.0f, 617.0f, -493.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_blue.dds"s, { -375.0f, 5296.0f, -343.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, ".\\modeles\\Billboards\\portal_purple.dds"s, { 693.0f, 7017.0f, -343.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_green.dds"s, { 4845.0f, 6825.0f, 602.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, ".\\modeles\\Billboards\\portal_red.dds"s, { 6331.0f, 4896.0f, 602.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_purple.dds"s, { 7038.0f, 871.0f, -1732.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, ".\\modeles\\Billboards\\portal_blue.dds"s, { 4807.0f, -1605.0f, -1732.0f }, true, 100.0f, 100.0f);
 
 	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
 	// celui-ci reste a sa position attribuee dans le monde et se tourne vers le vaisseau
-	spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, true, 50.0f, 10.0f);
+	//spriteManager->AjouterPanneau(0, ".\\modeles\\Billboards\\testing_tex.dds"s, { 10, 10, 10 }, true, 50.0f, 10.0f);
 
 	// exemple panneau. Params : zone, chemin vers texture, vecteur de position (centre du billboard), scale en x, scale en y.
 	// celui-ci a sa position attribuee dans le monde.
@@ -94,7 +103,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en centre du sprite, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
-	spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
+	//spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
 
 	// exemple texte.
 	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).
