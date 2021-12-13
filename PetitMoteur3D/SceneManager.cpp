@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "SceneManager.h"
+#include "Terrain.h"
+#include "LectureFichier.h"
 #include "AfficheurSprite.h"
 #include "AfficheurTexte.h"
+
 #include <functional>
 
 using namespace std::literals;
@@ -93,6 +96,12 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
+	
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(0.f),0, 1.0f);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\grass.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\water.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
 	// Creation du gestionnaire de billboards, sprites et texte
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
@@ -140,6 +149,7 @@ SceneManager::SceneManager() {
 
 void SceneManager::Draw(Zone scene) {
 	player->Draw();
+	terrain->Draw();
 	for (auto& obj : Scenes[static_cast<int>(scene)])
 	{
 		obj->Draw();
@@ -150,6 +160,7 @@ void SceneManager::Draw(Zone scene) {
 
 void SceneManager::Anime(Zone scene, float tmps) {
 	player->Anime(tmps);
+	terrain->Anime(tmps);
 	for (auto& obj : Scenes[static_cast<int>(scene)])
 	{
 		obj->Anime(tmps);

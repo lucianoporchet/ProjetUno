@@ -9,6 +9,7 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Terrain.h"
 #include "Asteroid.h"
 #include "Planet.h"
 #include "Portal.h"
@@ -98,7 +99,7 @@ private:
 
 public:
 	std::unique_ptr<Player> player;
-	
+	std::unique_ptr<PM3D::CTerrain> terrain;
 };
 
 

@@ -39,6 +39,10 @@ public:
 
 	//creer un rigid body
 	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
+	PxRigidStatic* createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene);
+	PxPhysics* getgPhysx();
+	PxCooking* getPxCooking();
+
 
 public:
 	static PhysXManager& get() noexcept;
@@ -52,6 +56,7 @@ private:
 	std::vector<PxScene*> gScenes;
 	PxMaterial* gMaterial = NULL;
 	PxPvd* gPvd = NULL;
+	PxCooking* mCooking;
 	
 	enum {
 		NBSCENES = 4

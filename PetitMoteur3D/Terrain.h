@@ -1,49 +1,35 @@
 #pragma once
-#include "objet3d.h"
-#include <string>
 #include "d3dx11effect.h"
-#include "sommetTerrain.h"
+#include "Objet3D.h"
+#include "dispositifD3D11.h"
+#include "LectureFichier.h"
+#include "PhysXManager.h"
+#include <map>
+#include "Texture.h"
 
-namespace PM3D
-{
-	class CDispositifD3D11;
-
-	class Terrain : public CObjet3D {
+namespace PM3D {
+	class CTerrain :
+		public CObjet3D
+	{
 	public:
+		CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, float scale);
 
-		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif);
-
-		// Destructeur
-		virtual ~Terrain();
+		virtual ~CTerrain();
 
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
 
+		std::map<std::pair<unsigned int, unsigned int>, float> mapSommets;
 
-		float getHeight(float x, float z);
-		int height;
-		int width;
-
-		XMFLOAT3 scale;
+		void AddTexture(CTexture* pTexture);
 
 	private:
-		CSommetTerrain* sommets;
+		void InitEffet();
 
-		char* filename;
 		CDispositifD3D11* pDispositif;
-		void InitShaders();
-		void InitEffect();
 
 		ID3D11Buffer* pVertexBuffer;
 		ID3D11Buffer* pIndexBuffer;
-
-		ID3D11VertexShader* pVertexShader;
-		ID3D11PixelShader* pPixelShader;
-		ID3D11InputLayout* pVertexLayout;
-
-		unsigned int* pIndices;
-		int nbSommets;
-		int nbPolygones;
 
 		// Définitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
@@ -54,5 +40,14 @@ namespace PM3D
 		ID3DX11Effect* pEffet;
 		ID3DX11EffectTechnique* pTechnique;
 		ID3DX11EffectPass* pPasse;
+		ID3D11InputLayout* pVertexLayout;
+
+		std::vector<ID3D11ShaderResourceView*> pVectorTexturesD3D; 
+		ID3D11SamplerState* pSampleState;
+		PxTriangleMeshDesc meshDesc;
+		PxRigidStatic* body;
+
 	};
 }
+
+

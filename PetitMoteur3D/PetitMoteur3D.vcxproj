@@ -145,7 +145,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <AdditionalDependencies>dxguid.lib;winmm.lib;d3d11.lib;DXGI.lib;d3dcompiler.lib;dinput8.lib;$(SolutionDir)Libs\glut32.lib;$(SolutionDir)Libs\PhysX_64.lib;$(SolutionDir)Libs\PhysXCommon_64.lib;$(SolutionDir)Libs\PhysXExtensions_static_64.lib;$(SolutionDir)Libs\PhysXFoundation_64.lib;$(SolutionDir)Libs\PhysXPvdSDK_static_64.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;winmm.lib;d3d11.lib;DXGI.lib;d3dcompiler.lib;dinput8.lib;$(SolutionDir)Libs\glut32.lib;$(SolutionDir)Libs\PhysX_64.lib;$(SolutionDir)Libs\PhysXCommon_64.lib;$(SolutionDir)Libs\PhysXExtensions_static_64.lib;$(SolutionDir)Libs\PhysXFoundation_64.lib;$(SolutionDir)Libs\PhysXPvdSDK_static_64.lib;$(SolutionDir)Libs\PhysXCooking_64.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -215,6 +215,7 @@
     <ClCompile Include="GestionnaireDeTextures.cpp" />
     <ClCompile Include="Horloge.cpp" />
     <ClCompile Include="InfoDispositif.cpp" />
+    <ClCompile Include="LectureFichier.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="MoteurWindows.cpp" />
@@ -231,6 +232,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="sommetbloc.cpp" />
+    <ClCompile Include="SommetTerrain.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -258,6 +260,7 @@
     <ClInclude Include="GSingleton.h" />
     <ClInclude Include="Horloge.h" />
     <ClInclude Include="InfoDispositif.h" />
+    <ClInclude Include="LectureFichier.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="MoteurWindows.h" />
@@ -276,7 +279,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="sommetbloc.h" />
-    <ClInclude Include="sommetTerrain.h" />
+    <ClInclude Include="SommetTerrain.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />

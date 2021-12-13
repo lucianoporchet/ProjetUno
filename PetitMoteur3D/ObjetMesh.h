@@ -145,6 +145,7 @@ private:
 	XMMATRIX mVPLight;
 
 	bool isTessellated = false;
+	bool canBeTesselated = true;
 };
 
 } // // namespace PM3D
