@@ -62,6 +62,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
 			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
+		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
 
@@ -89,4 +90,23 @@ void GameManager::setActiveZone(Zone zone) {
 
 void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
+}
+
+void GameManager::updateChrono()
+{
+	const int64_t currentTime = horloge.GetTimeCount();
+	const int64_t diff = currentTime - chronoStart;
+	const double secPerCount = horloge.GetSecPerCount();
+	const int mintmp = static_cast<int>((diff * secPerCount) / 60);
+	const int hour = mintmp / 60;
+	const int min = mintmp % 60;
+	const int sec = static_cast<int>(diff * secPerCount) % 60;
+	const int  millisec = static_cast<int>(((diff * secPerCount) - sec) * 1000);
+
+	std::wstring hourStr = std::to_wstring(hour);
+	std::wstring minStr = std::to_wstring(min);
+	std::wstring secStr = std::to_wstring(sec); 
+	std::wstring millisecStr = std::to_wstring(millisec);
+
+	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
 }

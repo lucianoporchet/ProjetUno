@@ -3,7 +3,6 @@
 #include "Terrain.h"
 #include "LectureFichier.h"
 #include "AfficheurSprite.h"
-#include "AfficheurTexte.h"
 
 #include <functional>
 
@@ -142,6 +141,29 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	//pTexte1 = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 256, 256, pPolice.get());
 	//spriteManager->AjouterSpriteTexte(pTexte1->GetTextureView(), 0, 257);
+
+	/******************HUD************************/
+	PM3D::CAfficheurTexte::Init();
+	const Gdiplus::FontFamily oFamily(L"Arial", nullptr);
+	pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold,
+		Gdiplus::UnitPixel);
+	/*************Fin init HUD********************/
+
+	/*******Chargement composants HUD*************/
+
+	//INIT DU CHRONO
+	pChronoTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
+	//couleur du texte, param 1 = alpha et ensuite RGB
+	pBrush = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255, 255));
+	// a l'init le chrono démarre a 0
+	pChronoTexte->Ecrire(L"0h0m0s 0"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(0, pChronoTexte->GetTextureView(), 70, 50);
+
+	//INIT D'AUTRES ELEMENTS
+
+
+	
+
 }
 
 SceneManager& SceneManager::get() noexcept {
@@ -177,6 +199,16 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	// Billboards, sprites et panneaux
 	spriteManager->Anime(tmps);
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
+}
+
+PM3D::CAfficheurTexte* SceneManager::GetpChronoTexte()
+{
+	return pChronoTexte.get();
+}
+
+Gdiplus::SolidBrush* SceneManager::GetpBrush()
+{
+	return pBrush.get();
 }
 
 physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {

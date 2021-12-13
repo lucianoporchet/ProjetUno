@@ -19,6 +19,7 @@
 #include <future>
 #include <mutex>
 #include "AfficheurSprite.h"
+#include "AfficheurTexte.h"
 
 
 enum class Zone {
@@ -31,6 +32,13 @@ enum class Zone {
 
 class SceneManager
 {
+protected :
+	// Pour le texte
+	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::wstring str;
+	std::unique_ptr<Gdiplus::Font> pPolice;
+	std::unique_ptr<Gdiplus::SolidBrush> pBrush;
+
 	
 private:
 	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
@@ -48,6 +56,9 @@ public:
 	physx::PxVec3 getPortalPos(Zone current, Zone past);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
+	PM3D::CAfficheurTexte* GetpChronoTexte();
+	Gdiplus::SolidBrush* GetpBrush();
+
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 

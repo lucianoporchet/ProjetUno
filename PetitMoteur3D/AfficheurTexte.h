@@ -12,7 +12,7 @@ class CAfficheurTexte
 public:
 	CAfficheurTexte(CDispositifD3D11* pDispositif, int largeur, int hauteur, Gdiplus::Font* pPolice);
 	~CAfficheurTexte();
-	void Ecrire(const std::wstring& s);
+	void Ecrire(const std::wstring& s, Gdiplus::Brush* pBrush);
 	ID3D11ShaderResourceView* GetTextureView() { return pTextureView; }
 
 	static void Init();
@@ -34,6 +34,10 @@ private:
 
 	// Variables statiques pour GDI+
 	static	ULONG_PTR token;
+
+protected:
+
+
 };
 
 } // namespace PM3D

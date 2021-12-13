@@ -22,12 +22,15 @@ public:
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
+	void updateChrono();
 	
 private:
 
 
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
+	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
+	int64_t chronoStart = horloge.GetTimeCount();
 	bool isPause = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;
