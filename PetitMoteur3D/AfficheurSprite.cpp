@@ -48,7 +48,6 @@ namespace PM3D
 		, pPasse(nullptr)
 		, pVertexLayout(nullptr)
 		, pSampleState(nullptr)
-		, pauseSprite(nullptr)
 	{
 		// Création du vertex buffer et copie des sommets
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
@@ -84,7 +83,7 @@ namespace PM3D
 		tabBillboards.clear();
 		tabSprites.clear();
 		tabSigns.clear();
-		pauseSprite = nullptr;
+		tabPauseSprite.clear();
 	}
 
 	void CAfficheurSprite::InitEffet()
@@ -233,21 +232,26 @@ namespace PM3D
 		}
 		else
 		{
-			// Initialiser et sélectionner les «constantes» de l'effet
-			ShadersParams sp;
-			sp.matWVP = XMMatrixTranspose(pauseSprite->matPosDim);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-				&sp, 0, 0);
+			for (auto& sprite : tabPauseSprite)
+			{	
+				// Initialiser et sélectionner les «constantes» de l'effet
+				ShadersParams sp;
+				sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+				pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+					&sp, 0, 0);
 
-			pCB->SetConstantBuffer(pConstantBuffer);
+				pCB->SetConstantBuffer(pConstantBuffer);
 
-			// Activation de la texture
-			variableTexture->SetResource(pauseSprite->pTextureD3D);
+				// Activation de la texture
+				variableTexture->SetResource(sprite->pTextureD3D);
 
-			pPasse->Apply(0, pImmediateContext);
+				pPasse->Apply(0, pImmediateContext);
 
-			// **** Rendu de l'objet
-			pImmediateContext->Draw(6, 0);
+				// **** Rendu de l'objet
+				pImmediateContext->Draw(6, 0);
+
+			}
+
 		}
 
 		pDispositif->DesactiverMelangeAlpha();
@@ -607,7 +611,7 @@ namespace PM3D
 			XMMatrixTranslation(posX, posY, 0.0f);
 
 		// On l'ajoute à notre classe
-		pauseSprite = std::move(pSprite);
+		tabPauseSprite.push_back(std::move(pSprite));
 	}
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera

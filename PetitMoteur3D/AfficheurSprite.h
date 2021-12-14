@@ -51,7 +51,7 @@ namespace PM3D
 		{
 		public:
 			ID3D11ShaderResourceView* pTextureD3D;
-
+			
 			XMMATRIX matPosDim;
 			bool bPanneau;
 			CSprite()
@@ -94,7 +94,7 @@ namespace PM3D
 		std::vector<std::unique_ptr<CPanneau>> tabEtoiles;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabSigns;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabBillboards;
-		std::unique_ptr<CSprite> pauseSprite;
+		std::vector<std::unique_ptr<CSprite>> tabPauseSprite;
 		bool pauseStatus = false;
 
 		void InitEffet();
