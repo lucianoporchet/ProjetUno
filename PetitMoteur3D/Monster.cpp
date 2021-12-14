@@ -8,7 +8,7 @@
 #include "SceneManager.h"
 #include <math.h>
 
-//TO DO
+
 
 Monster::Monster(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos, int scene) : MovingObject(nomfichier, _pDispositif, scale)
 {
@@ -22,7 +22,7 @@ Monster::Monster(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispos
 	/*body->addTorque(RandomGenerator::get().randomVec3(150, 300) * 1000.0f, PxForceMode::eIMPULSE);*/
 	/*PxVec3 posPlayer = SceneManager::get().player->body->getGlobalPose().p;
 	body->addForce(PxVec3(-pos + posPlayer) * rSpeed, PxForceMode::eIMPULSE);*/
-	body->setMass(scale * 1000000);
+	body->setMass(scale * 1000);
 }
 
 bool Monster::readyToAttack()
@@ -52,7 +52,20 @@ void Monster::Anime(float tempEcoule)
 
 	const PxQuat quat = quatX * quatY;
 	if (readyToAttack()) {
-		speed = 50.0f;
+		speed = 200.0f;
+		GameManager& gm = GameManager::get();
+		if (gm.isGreenKeyCollected()) 
+		{
+			speed += 50.0f;
+		}
+		if (gm.isBlueKeyCollected())
+		{
+			speed += 50.0f;
+		}
+		if (gm.isRedKeyCollected())
+		{
+			speed += 50.0f;
+		}
 		body->setLinearVelocity(PxVec3((direction).getNormalized()) * speed);
 		timeOfLastAttack = high_resolution_clock().now();
 	}
