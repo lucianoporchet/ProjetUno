@@ -26,14 +26,14 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	XMMATRIX matWorldViewProj;	// la matrice totale 
 	//XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
-	XMVECTOR vLumiere; 			// la position de la source d'éclairage (Point)
-	XMVECTOR vCamera; 			// la position de la caméra
-	XMVECTOR vAEcl; 			// la valeur ambiante de l'éclairage
-	XMVECTOR vAMat; 			// la valeur ambiante du matériau
-	XMVECTOR vDEcl; 			// la valeur diffuse de l'éclairage 
-	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
-	XMVECTOR vSEcl; 			// la valeur spéculaire de l'éclairage 
-	XMVECTOR vSMat; 			// la valeur spéculaire du matériau 
+	XMVECTOR vLumiere; 			// la position de la source d'Ã©clairage (Point)
+	XMVECTOR vCamera; 			// la position de la camÃ©ra
+	XMVECTOR vAEcl; 			// la valeur ambiante de l'Ã©clairage
+	XMVECTOR vAMat; 			// la valeur ambiante du matÃ©riau
+	XMVECTOR vDEcl; 			// la valeur diffuse de l'Ã©clairage 
+	XMVECTOR vDMat; 			// la valeur diffuse du matÃ©riau 
+	XMVECTOR vSEcl; 			// la valeur spÃ©culaire de l'Ã©clairage 
+	XMVECTOR vSMat; 			// la valeur spÃ©culaire du matÃ©riau 
 	float puissance;
 	int32_t bTex;					// Texture ou materiau 
 	XMFLOAT2 remplissage;
@@ -53,7 +53,7 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif
 }
 
 // Constructeur de conversion
-// Constructeur pour test ou pour création d'un objet de format OMB
+// Constructeur pour test ou pour crÃ©ation d'un objet de format OMB
 CObjetMesh::CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier, CDispositifD3D11* _pDispositif)
 	: pDispositif(_pDispositif) // prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
@@ -113,7 +113,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 	// Compilation et chargement du vertex shader
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
-	// Création d'un tampon pour les constantes du VS
+	// CrÃ©ation d'un tampon pour les constantes du VS
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -148,7 +148,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
 
-	// Créer l'organisation des sommets pour le VS de notre effet
+	// CrÃ©er l'organisation des sommets pour le VS de notre effet
 	D3DX11_PASS_SHADER_DESC effectVSDesc;
 	pPasse->GetVertexShaderDesc(&effectVSDesc);
 
@@ -168,7 +168,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 		&pVertexLayout),
 		DXE_CREATIONLAYOUT);
 
-	// Initialisation des paramètres de sampling de la texture
+	// Initialisation des paramÃ¨tres de sampling de la texture
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -185,7 +185,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	// Création de l'état de sampling
+	// CrÃ©ation de l'Ã©tat de sampling
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 }
 
@@ -207,17 +207,23 @@ void CObjetMesh::Anime(float tempsEcoule)
 	float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
 
 
-	if (distance <= 600.0f && !isTessellated)
+
+	if (distance <= 1500.0f && !isTessellated && canBeTesselated)
+
 	{
 		InitEffet(true);
 		isTessellated = true;
 	} 
-	else if (distance > 600.0f && isTessellated)
+	else if (distance > 1500.0f && isTessellated && canBeTesselated)
 	{
 		InitEffet(false);
 		isTessellated = false;
 	}
-	
+	else if (!canBeTesselated)
+	{
+		InitEffet(false);
+		isTessellated = false;
+	}
 }
 
 void CObjetMesh::Draw()
@@ -238,7 +244,7 @@ void CObjetMesh::Draw()
 	UINT offset = 0;
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
-	// Initialiser et sélectionner les «constantes» de l'effet
+	// Initialiser et sÃ©lectionner les Â«constantesÂ» de l'effet
 	ShadersParams sp;
 	const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
@@ -252,7 +258,7 @@ void CObjetMesh::Draw()
 
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
 	sp.vCamera = camPos;
-	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	sp.vAEcl = lightColor[static_cast<int>(GameManager::get().getActiveZone())];
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 
@@ -312,7 +318,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 {
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) CrÃ©ations des sommets dans un tableau temporaire
 	{
 		const size_t nombreSommets = chargeur.GetNombreSommets();
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
@@ -324,7 +330,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 			ts[i].coordTex = chargeur.GetCoordTex(i);
 		}
 
-		// 1. SOMMETS b) Création du vertex buffer et copie des sommets
+		// 1. SOMMETS b) CrÃ©ation du vertex buffer et copie des sommets
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -341,8 +347,8 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 	}
 
-	// 2. INDEX - Création de l'index buffer et copie des indices
-	//            Les indices étant habituellement des entiers, j'ai
+	// 2. INDEX - CrÃ©ation de l'index buffer et copie des indices
+	//            Les indices Ã©tant habituellement des entiers, j'ai
 	//            pris directement ceux du chargeur mais attention au 
 	//            format si vous avez autre chose que DXGI_FORMAT_R32_UINT
 	{
@@ -366,18 +372,18 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 	// 3. Les sous-objets
 	NombreSubset = chargeur.GetNombreSubset();
 
-	//    Début de chaque sous-objet et un pour la fin
+	//    DÃ©but de chaque sous-objet et un pour la fin
 	SubsetIndex.reserve(NombreSubset);
 	chargeur.CopieSubsetIndex(SubsetIndex);
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) CrÃ©er un matÃ©riau de dÃ©faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservÃ© 
 	//     celles du constructeur
 	Material.reserve(chargeur.GetNombreMaterial() + 1);
 	Material.emplace_back(CMaterial());
 
-	// 4b) Copie des matériaux dans la version locale
+	// 4b) Copie des matÃ©riaux dans la version locale
 	for (int32_t i = 0; i < chargeur.GetNombreMaterial(); ++i)
 	{
 		CMaterial mat;
@@ -401,7 +407,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		{
 			if (Material[index].NomMateriau == chargeur.GetMaterialName(i)) break;
 		}
-		if (index >= Material.size()) index = 0;  // valeur de défaut
+		if (index >= Material.size()) index = 0;  // valeur de dÃ©faut
 		SubsetMaterialIndex.push_back(index);
 	}
 
@@ -422,7 +428,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 {
 	std::ofstream fichier;
 	fichier.open(nomFichier, std::ios::out | std::ios_base::binary);
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) CrÃ©ations des sommets dans un tableau temporaire
 	{
 		int32_t nombreSommets = static_cast<int32_t>(chargeur.GetNombreSommets());
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
@@ -434,7 +440,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 			ts[i].coordTex = chargeur.GetCoordTex(i);
 		}
 
-		// 1. SOMMETS b) Écriture des sommets dans un fichier binaire
+		// 1. SOMMETS b) Ã‰criture des sommets dans un fichier binaire
 		fichier.write((char*)&nombreSommets, sizeof(nombreSommets));
 		fichier.write((char*)ts.get(), nombreSommets * sizeof(CSommetMesh));
 	}
@@ -448,7 +454,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 	// 3. Les sous-objets
 	const int32_t NombreSubset = chargeur.GetNombreSubset();
 
-	//    Début de chaque sous-objet et un pour la fin
+	//    DÃ©but de chaque sous-objet et un pour la fin
 	std::vector<int32_t> SI;
 	SI.reserve(NombreSubset);
 	chargeur.CopieSubsetIndex(SI);
@@ -457,15 +463,15 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 	fichier.write((char*)SI.data(), (NombreSubset + 1) * sizeof(int32_t));
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) CrÃ©er un matÃ©riau de dÃ©faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservÃ© 
 	//     celles du constructeur
 	int32_t NbMaterial = static_cast<int32_t>(chargeur.GetNombreMaterial());
 	std::vector<CMaterial> MatLoad;
 	MatLoad.reserve(NbMaterial + 1);
 	MatLoad.emplace_back(CMaterial());
 
-	// 4b) Copie des matériaux dans la version locale
+	// 4b) Copie des matÃ©riaux dans la version locale
 	CMaterial mat;
 	for (int32_t i = 0; i < NbMaterial; ++i)
 	{
@@ -500,7 +506,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 			if (MatLoad[index].NomMateriau == chargeur.GetMaterialName(i)) break;
 		}
 
-		if (index >= MatLoad.size()) index = 0;  // valeur de défaut
+		if (index >= MatLoad.size()) index = 0;  // valeur de dÃ©faut
 
 		SubsetMI.push_back(index);
 	}
@@ -516,17 +522,17 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 	fichier.open(nomFichier, std::ios::in | std::ios_base::binary);
 	assert(fichier.is_open());
 
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) CrÃ©ations des sommets dans un tableau temporaire
 	{
 		int32_t nombreSommets;
 		fichier.read((char*)&nombreSommets, sizeof(nombreSommets));
 
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
 
-		// 1. SOMMETS b) Lecture des sommets à partir d'un fichier binaire
+		// 1. SOMMETS b) Lecture des sommets Ã  partir d'un fichier binaire
 		fichier.read((char*)ts.get(), nombreSommets * sizeof(CSommetMesh));
 
-		// 1. SOMMETS b) Création du vertex buffer et copie des sommets
+		// 1. SOMMETS b) CrÃ©ation du vertex buffer et copie des sommets
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -570,7 +576,7 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 
 	// 3. Les sous-objets
 	fichier.read((char*)&NombreSubset, sizeof(NombreSubset));
-	//    Début de chaque sous-objet et un pour la fin
+	//    DÃ©but de chaque sous-objet et un pour la fin
 	{
 		std::unique_ptr<int32_t[]> si(new int32_t[NombreSubset + 1]);
 
@@ -579,8 +585,8 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 	}
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) CrÃ©er un matÃ©riau de dÃ©faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservÃ© 
 	//     celles du constructeur
 	CMaterial mat;
 

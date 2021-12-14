@@ -1,13 +1,25 @@
+
 #pragma once
-#include "sommetbloc.h"
 
-namespace PM3D {
+using namespace DirectX;
 
-	class CSommetTerrain : public CSommetBloc {
+namespace PM3D
+{
+
+	class CSommetTerrain
+	{
 	public:
 		CSommetTerrain() = default;
-		CSommetTerrain(const XMFLOAT3& position, const XMFLOAT3& normal) : CSommetBloc(position, normal) {
-			
-		}
+		CSommetTerrain(const XMFLOAT3& position, const XMFLOAT3& normal, const XMFLOAT2& coordTex);
+
+		static UINT numElements;
+		static D3D11_INPUT_ELEMENT_DESC layout[];
+
+	protected:
+		XMFLOAT3 m_Position;
+		XMFLOAT3 m_Normal;
+		XMFLOAT2 m_CoordTex;
 	};
-}
+
+} // namespace PM3D
+

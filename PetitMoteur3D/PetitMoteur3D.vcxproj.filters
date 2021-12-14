@@ -128,6 +128,14 @@
     </ClCompile>
     <ClCompile Include="PickUpObject.cpp">
       <Filter>Entities</Filter>
+    <ClCompile Include="LectureFichier.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SommetTerrain.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TunnelComponent.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,12 +208,6 @@
     <ClInclude Include="RandomGenerator.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="sommetTerrain.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="MyContactModification.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -253,6 +255,18 @@
     </ClInclude>
     <ClInclude Include="PickUpObject.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="LectureFichier.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="SommetTerrain.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="TunnelComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

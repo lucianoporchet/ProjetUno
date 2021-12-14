@@ -71,6 +71,46 @@ void Player::Anime(float tempEcoule)
 	//update la vue et la position de la cam en fonction des mouvements effectués plus tot
 	updateCam();
 	MovingObject::Anime(tempEcoule);
+
+	// TODO Tourner le joueur en fonction du vecteur up de la camera
+
+	const PxVec3 pos = body->getGlobalPose().p;
+	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
+	const XMVECTOR posVec = XMLoadFloat3(&posF3);
+
+	const PxQuat pquat = body->getGlobalPose().q;
+
+	auto camUp = camera->up;
+	PxVec3 vecDir = getDir();
+	float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
+	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+	float angleZ = -atan2(vecDir.y, 1.0f);
+	PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
+
+	PxQuat quat = (quatY * quatZ);
+	PxQuat temp = pquat;
+	
+
+	if (pquat.w < quat.w - offset) temp.w = pquat.w + offset;
+	else if (pquat.w > quat.w + offset) temp.w = pquat.w - offset;
+
+	if (pquat.x < quat.x - offset) temp.x = pquat.x + offset;
+	else if (pquat.x > quat.x + offset) temp.x = pquat.x - offset;
+
+	if (pquat.y < quat.y - offset) temp.y = pquat.y + offset;
+	else if (pquat.y > quat.y + offset) temp.y = pquat.y - offset;
+
+	if (pquat.z < quat.z - offset) temp.z = pquat.z + offset;
+	else if (pquat.z > quat.z + offset) temp.z = pquat.z - offset;
+
+	const XMFLOAT4 quatF3(temp.x, temp.y, temp.z, temp.w);
+	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
+
+	body->setGlobalPose(PxTransform(pos, temp));
+	//PxTransform transformPlayer = body->getGlobalPose();
+
+	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
+
 }
 
 //avancer
@@ -104,19 +144,19 @@ void Player::rotateLeft()
 //roulis y gauche
 void Player::moveUp()
 {
-	/*mUp.normalize();
-	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);*/
-	const PxQuat quat(0.05f, mDir.cross(mUp));
-	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	mUp.normalize();
+	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);
+	//const PxQuat quat(0.05f, mDir.cross(mUp));
+	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
 //roulis y droite
 void Player::moveDown()
 {
-	/*mUp.normalize();
-	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);*/
-	const PxQuat quat(-0.05f, mDir.cross(mUp));
-	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	mUp.normalize();
+	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);
+	//const PxQuat quat(-0.05f, mDir.cross(mUp));
+	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
 //assignation de la cam

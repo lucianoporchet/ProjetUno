@@ -9,16 +9,20 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Terrain.h"
 #include "Asteroid.h"
 #include "Planet.h"
 #include "Portal.h"
 #include "Monster.h"
 #include "GestionnaireDeTextures.h"
+#include "TunnelComponent.h"
 #include "RandomGenerator.h"
 #include <future>
 #include <mutex>
-#include <unordered_map>
 #include "PickUpObject.h"
+#include "AfficheurSprite.h"
+#include "AfficheurTexte.h"
+
 
 
 enum class Zone {
@@ -31,11 +35,21 @@ enum class Zone {
 
 class SceneManager
 {
+protected :
+	// Pour le texte
+	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::wstring str;
+	std::unique_ptr<Gdiplus::Font> pPolice;
+	std::unique_ptr<Gdiplus::SolidBrush> pBrush;
+
 	
 private:
+	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
+
 	SceneManager();
 public:
 
+	PM3D::CAfficheurSprite* getSpriteManager() { return spriteManager.get(); };
 	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene(int scene);
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
 
@@ -48,6 +62,9 @@ public:
 	physx::PxVec3 getPortalPos(Zone current, Zone past);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
+	PM3D::CAfficheurTexte* GetpChronoTexte();
+	Gdiplus::SolidBrush* GetpBrush();
+
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
@@ -64,7 +81,9 @@ private:
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
 		NBPORTAILS = 8,
-		NBPICKUPOBJECTS = 10
+		NBPICKUPOBJECTS = 10,
+		NBETOILES = 128,
+		NBTUNNELCOMPONENTS = 4
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
@@ -86,7 +105,7 @@ private:
 
 	const physx::PxVec3 portalPos[NBPORTAILS] = {
 	physx::PxVec3(1153.0f, -617.0f, 493.0f), physx::PxVec3(-1153.0f, 617.0f, -493.0f),		//Zone1
-	physx::PxVec3(-375.0f, 5296.0f, -343.0f), physx::PxVec3(693.0f, 7017.0f, -343.0f),		//Zone2
+	physx::PxVec3(-1365.0f, 4916.0f, 283.0f), physx::PxVec3(1411.0f, 7352.0f, -343.0f),		//Zone2
 	physx::PxVec3(4845.0f, 6825.0f, 602.0f), physx::PxVec3(6331.0f, 4896.0f, 602.0f),		//Zone3
 	physx::PxVec3(7038.0f, 871.0f, -1732.0f), physx::PxVec3(4807.0f, -1605.0f, -1732.0f)	//zone4
 	};
@@ -98,6 +117,7 @@ private:
 		physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f),
 		physx::PxVec3(BOXSIZE, 0.0f, 0.0f),
 	};
+
 
 	const PickUpObjectPlacementInfo pickupObjectsInfo[NBPICKUPOBJECTS]{
 		{ physx::PxVec3(500, 500, 500) , PickUpObjectType::RedKey , 0 },
@@ -113,11 +133,26 @@ private:
 
 	};
 	
+	const physx::PxVec3 tunnelPos[NBTUNNELCOMPONENTS] = {
+		physx::PxVec3(242.035f, 5764.03f, 154.102f),
+		physx::PxVec3(17.926f, 5574.52f, -748.041f),
+		physx::PxVec3(-166.146f, 6164.27f, -28.0985f),
+		physx::PxVec3(57.9616f, 6353.78f, 874.045f)
+	};
 
+	const physx::PxVec3 tunnelScale[NBTUNNELCOMPONENTS] = {
+		physx::PxVec3(1000.0f, 1000.0f, 100.0f),
+		physx::PxVec3(100.0f, 1000.0f, 200.0f),
+		physx::PxVec3(1000.0f, 1000.0f, 100.0f),
+		physx::PxVec3(100.0f, 1000.0f, 200.0f)
+	};
+
+	physx::PxQuat tunnelRot = physx::PxQuat(0.130f, 0.576f, -0.424f, 0.687f);
+	
 
 public:
 	std::unique_ptr<Player> player;
-	
+	std::unique_ptr<PM3D::CTerrain> terrain;
 };
 
 

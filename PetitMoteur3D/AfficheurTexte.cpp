@@ -104,13 +104,13 @@ CAfficheurTexte::~CAfficheurTexte()
 	DXRelacher(pTexture);
 }
 
-void CAfficheurTexte::Ecrire(const std::wstring& s)
+void CAfficheurTexte::Ecrire(const std::wstring& s, Gdiplus::Brush* pBrush)
 {
 	// Effacer
 	pCharGraphics->Clear(Gdiplus::Color(0, 0, 0, 0));
 
 	// Écrire le nouveau texte
-	pCharGraphics->DrawString(s.c_str(), static_cast<int>(s.size()), pFont, Gdiplus::PointF(0.0f, 0.0f), pBlackBrush.get());
+	pCharGraphics->DrawString(s.c_str(), static_cast<int>(s.size()), pFont, Gdiplus::PointF(0.0f, 0.0f), pBrush);
 
 	// Transférer
 	Gdiplus::BitmapData bmData;
