@@ -11,6 +11,7 @@ class GameManager : public Incopiable {
 	GameManager() = default;
 
 public:
+	void cleanManager();
 	inline static GameManager& get() noexcept { return instance; }
 	void setPauseMenu(bool) noexcept;
 	bool getIsPauseStatus() noexcept;

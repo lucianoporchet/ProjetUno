@@ -159,7 +159,7 @@ protected:
 	{
 		
 		// détruire les objets
-		manager.getSceneManager().getScenes().clear();
+		manager.cleanManager();
 		TexturesManager.ListeTextures.clear();
 		
 		// Détruire le dispositif

@@ -5,6 +5,11 @@
 GameManager GameManager::instance;
 
 
+void GameManager::cleanManager()
+{
+	sceneManager.getScenes().clear();
+}
+
 //set la pause et donc afficher ou effacer le curseur
 void GameManager::setPauseMenu(bool toShow) noexcept
 {
