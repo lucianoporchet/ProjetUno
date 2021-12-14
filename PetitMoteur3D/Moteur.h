@@ -157,9 +157,10 @@ protected:
 
 	virtual void Cleanup()
 	{
+		
 		// détruire les objets
 		manager.getSceneManager().getScenes().clear();
-
+		
 		// Détruire le dispositif
 		if (pDispositif)
 		{

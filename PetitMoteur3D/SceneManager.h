@@ -9,6 +9,7 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Terrain.h"
 #include "Asteroid.h"
 #include "Planet.h"
 #include "Portal.h"
@@ -18,6 +19,8 @@
 #include "RandomGenerator.h"
 #include <future>
 #include <mutex>
+#include "AfficheurSprite.h"
+#include "AfficheurTexte.h"
 
 
 enum class Zone {
@@ -30,13 +33,23 @@ enum class Zone {
 
 class SceneManager
 {
+protected :
+	// Pour le texte
+	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::wstring str;
+	std::unique_ptr<Gdiplus::Font> pPolice;
+	std::unique_ptr<Gdiplus::SolidBrush> pBrush;
+
 	
 private:
+	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
+
 	SceneManager();
 public:
 	
 	std::vector<PM3D::CObjetMesh> objectList;
 
+	PM3D::CAfficheurSprite* getSpriteManager() { return spriteManager.get(); };
 	std::vector<std::unique_ptr<PM3D::CObjet3D>>& getListScene(int scene);
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& getScenes() noexcept;
 	
@@ -44,6 +57,9 @@ public:
 	physx::PxVec3 getPortalPos(Zone current, Zone past);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
+	PM3D::CAfficheurTexte* GetpChronoTexte();
+	Gdiplus::SolidBrush* GetpBrush();
+
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
@@ -57,6 +73,8 @@ private:
 		NBZONES = 4,
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
+		NBPORTAILS = 8,
+		NBETOILES = 128
 		NBPORTAILS = 8,
 		NBTUNNELCOMPONENTS = 4
 	};
@@ -114,7 +132,7 @@ private:
 
 public:
 	std::unique_ptr<Player> player;
-	
+	std::unique_ptr<PM3D::CTerrain> terrain;
 };
 
 

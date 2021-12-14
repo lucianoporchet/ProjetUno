@@ -16,15 +16,16 @@ namespace PM3D
 		DXRelacher(mSolidCullBackRS);
 		DXRelacher(pDepthTexture);
 		DXRelacher(pDepthStencilView);
-
+		DXRelacher(pRenderTargetView);
+		
+		DXRelacher(pSwapChain);
+		DXRelacher(pD3DDevice);
 		if (pImmediateContext)
 		{
 			pImmediateContext->ClearState();
+			pImmediateContext->Flush();
 		}
-		DXRelacher(pRenderTargetView);
 		DXRelacher(pImmediateContext);
-		DXRelacher(pSwapChain);
-		DXRelacher(pD3DDevice);
 	}
 
 	//  FONCTION : CDispositifD3D11, constructeur paramètré 
