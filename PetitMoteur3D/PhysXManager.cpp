@@ -131,6 +131,14 @@ PxCooking* PhysXManager::getPxCooking()
 	return mCooking;
 }
 
+PxRigidStatic* PhysXManager::createStatic(const PxTransform& t, const PxGeometry& geometry, int scene)
+{
+	PxRigidStatic* statique = PxCreateStatic(*gPhysics, t, geometry, *gMaterial);
+	std::lock_guard<std::mutex> lock(physXMutex);
+	addToScene(statique, scene);
+	return statique;
+}
+
 PhysXManager& PhysXManager::get() noexcept {
 	static PhysXManager instance;
 	return instance;

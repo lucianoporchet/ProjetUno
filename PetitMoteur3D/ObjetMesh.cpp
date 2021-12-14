@@ -258,7 +258,7 @@ void CObjetMesh::Draw()
 
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
 	sp.vCamera = camPos;
-	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	sp.vAEcl = lightColor[static_cast<int>(GameManager::get().getActiveZone())];
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 

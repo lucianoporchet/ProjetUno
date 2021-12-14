@@ -241,6 +241,7 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TunnelComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AfficheurSprite.h" />
@@ -283,6 +284,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TunnelComponent.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>

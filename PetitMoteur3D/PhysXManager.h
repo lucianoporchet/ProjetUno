@@ -43,6 +43,7 @@ public:
 	PxPhysics* getgPhysx();
 	PxCooking* getPxCooking();
 
+	PxRigidStatic* createStatic(const PxTransform& t, const PxGeometry& geometry, int scene);
 
 public:
 	static PhysXManager& get() noexcept;

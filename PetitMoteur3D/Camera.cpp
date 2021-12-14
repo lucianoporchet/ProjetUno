@@ -31,8 +31,10 @@ namespace PM3D {
 		if ((0x80)) {
 			if (rGestionnaireDeSaisie.EtatSouris().lY != 0 || rGestionnaireDeSaisie.EtatSouris().lX != 0)
 			{
+				float temp = pitch;
 				yaw -= (float)rGestionnaireDeSaisie.EtatSouris().lX;
 				pitch -= (float)rGestionnaireDeSaisie.EtatSouris().lY;
+				if (pitch < -1600.0f || pitch > 1400.0f) pitch = temp;
 				rot = XMFLOAT3(pitch * 0.0009f, yaw * 0.0009f, 0.0f);
 				rotation = XMLoadFloat3(&rot);
 
@@ -125,7 +127,6 @@ namespace PM3D {
 
 	void CCamera::updateView() {
 		const XMMATRIX camRotationM = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
-
 		direction = XMVector3TransformCoord(DEFAULT_FOWARD, camRotationM);
 		direction += position;
 

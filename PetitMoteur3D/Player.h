@@ -34,6 +34,8 @@ public:
 
 private:
 	
+	float			angleRotation = PxPi/2;
+	const float		offset{ 0.005f };
 	PM3D::CCamera*	camera;
 
 };

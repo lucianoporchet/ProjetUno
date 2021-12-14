@@ -85,6 +85,13 @@ private:
 		}
 	};
 
+	const XMVECTOR lightColor[4] = {
+		XMVectorSet(0.2f, 0.2f, 0.7f, 1.0f),
+		XMVectorSet(0.7f, 0.7f, 0.2f, 1.0f),
+		XMVectorSet(0.7f, 0.2f, 0.6f, 1.0f),
+		XMVectorSet(0.7f, 0.2f, 0.2f, 1.0f)
+	};
+
 public:
 	CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
 	CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier, CDispositifD3D11* _pDispositif);
