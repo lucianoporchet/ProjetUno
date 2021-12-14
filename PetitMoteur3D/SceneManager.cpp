@@ -111,14 +111,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
 
 	// Ajout des portails
-	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\portal_red_light.dds"s, { 1153.0f, -617.0f, 493.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\portal_green_light.dds"s, { -1153.0f, 617.0f, -493.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(1, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { -375.0f, 5296.0f, -343.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(1, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { 693.0f, 7017.0f, -343.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(2, true, ".\\modeles\\Billboards\\portal_green_light.dds"s, { 4845.0f, 6825.0f, 602.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(2, true, ".\\modeles\\Billboards\\portal_red_light.dds"s, { 6331.0f, 4896.0f, 602.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { 7038.0f, 871.0f, -1732.0f }, true, 100.0f, 100.0f);
-	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { 4807.0f, -1605.0f, -1732.0f }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\portal_red_light.dds"s, { portalPos[0].x, portalPos[0].y, portalPos[0].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\portal_green_light.dds"s, { portalPos[1].x, portalPos[1].y, portalPos[1].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[2].x, portalPos[2].y, portalPos[2].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(1, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[3].x, portalPos[3].y, portalPos[3].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, true, ".\\modeles\\Billboards\\portal_green_light.dds"s, { portalPos[4].x, portalPos[4].y, portalPos[4].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(2, true, ".\\modeles\\Billboards\\portal_red_light.dds"s, { portalPos[5].x, portalPos[5].y, portalPos[5].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[6].x, portalPos[6].y, portalPos[6].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
 	for (int i = 0; i < NBETOILES; ++i) {
 		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
