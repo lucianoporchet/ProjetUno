@@ -28,6 +28,12 @@ PickUpObject::PickUpObject(const std::string& nomfichier, PM3D::CDispositifD3D11
 
 void PickUpObject::Anime(float tempEcoule)
 {
+	/*const PxTransform PickUpObjectCurrentInfo = body->getGlobalPose();
+	const PxQuat rot = PickUpObjectCurrentInfo.q;
+	float angleY = XM_PI / 4;
+	const PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+	const PxQuat newRot = quatY * rot;
+	body->setGlobalPose(PxTransform(PickUpObjectCurrentInfo.p,quatY));*/
 }
 
 PickUpObjectType PickUpObject::getType()
