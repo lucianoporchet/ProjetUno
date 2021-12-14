@@ -121,7 +121,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
 	// Ajout du sprite de pause
-	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, pDispositif->GetLargeur()/2, pDispositif->GetHauteur()/2, pDispositif->GetLargeur(), pDispositif->GetHauteur());
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, pDispositif->GetLargeur() / 2, pDispositif->GetHauteur() / 2);
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, pDispositif->GetLargeur() / 2, pDispositif->GetHauteur()/2, pDispositif->GetLargeur(), pDispositif->GetHauteur());
 
 	for (int i = 0; i < NBETOILES; ++i) {
 		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
