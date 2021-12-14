@@ -126,8 +126,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
-		float scale = static_cast<float>(RandomGenerator::get().next(50, 200));
-		futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, pickupObjectsInfo[i].objectType, scale, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff) 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\burger.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
+		else 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\key.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
 	}
 
 

@@ -154,6 +154,11 @@ PxFilterFlags FilterShader(
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
 		return PxFilterFlag::eDEFAULT;
 	}
+	else if ((filterData1.word0 == FilterGroup::ePickupObject) || (filterData0.word0 == FilterGroup::ePickupObject))
+	{
+		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		return PxFilterFlag::eDEFAULT;
+	}
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;
 }
