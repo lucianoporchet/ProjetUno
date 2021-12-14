@@ -47,7 +47,6 @@ namespace PM3D
 		{
 		public:
 			ID3D11ShaderResourceView* pTextureD3D;
-
 			XMMATRIX matPosDim;
 			bool bPanneau;
 			CSprite()

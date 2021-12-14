@@ -73,12 +73,13 @@ namespace PM3D
 
 	CAfficheurSprite ::~CAfficheurSprite()
 	{
+			
 		DXRelacher(pConstantBuffer);
 		DXRelacher(pSampleState);
 
 		DXRelacher(pEffet);
 		DXRelacher(pVertexLayout);
-		DXRelacher(pVertexBuffer);
+		DXRelacher(pVertexBuffer);		
 
 		tabBillboards.clear();
 		tabSprites.clear();

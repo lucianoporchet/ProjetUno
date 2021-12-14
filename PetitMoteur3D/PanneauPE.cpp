@@ -25,6 +25,7 @@ namespace PM3D
 
 	CPanneauPE::~CPanneauPE()
 	{
+
 		DXRelacher(pResourceView);
 		DXRelacher(pRenderTargetView);
 		DXRelacher(pTextureScene);
@@ -38,6 +39,8 @@ namespace PM3D
 		{
 			DXRelacher(pVertexLayout[i]);
 		}
+		DXRelacher(pOldRenderTargetView);
+		DXRelacher(pOldDepthStencilView);
 		DXRelacher(pVertexBuffer);
 	}
 

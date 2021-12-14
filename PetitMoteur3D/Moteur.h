@@ -160,6 +160,7 @@ protected:
 		
 		// détruire les objets
 		manager.getSceneManager().getScenes().clear();
+		TexturesManager.ListeTextures.clear();
 		
 		// Détruire le dispositif
 		if (pDispositif)
@@ -258,30 +259,17 @@ protected:
 	// Le gestionnaire de texture
 	CGestionnaireDeTextures TexturesManager;
 
-	// Pour le texte
-	std::unique_ptr<CAfficheurTexte> pTexte1;
-	std::wstring str;
-
-	std::unique_ptr<Gdiplus::Font> pPolice;
-	std::unique_ptr<CPanneauPE> pPanneauPE;
-
-
 	//gestionnaire de saisie
 	CDIManipulateur GestionnaireDeSaisie;
 
 	//game manager
 	GameManager& manager = GameManager::get();
-
 	
 	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();
 
 	//camera joueur
 	CCamera freeCam;
-
-
-
-
 };
 
 } // namespace PM3D

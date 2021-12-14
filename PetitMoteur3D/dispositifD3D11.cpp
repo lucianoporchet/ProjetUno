@@ -15,10 +15,24 @@ namespace PM3D
 		DXRelacher(alphaBlendDisable);
 		DXRelacher(mSolidCullBackRS);
 		DXRelacher(pDepthTexture);
+
+		// Remove any bound render target or depth/stencil buffer
+		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		pImmediateContext->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
 		DXRelacher(pDepthStencilView);
 		DXRelacher(pRenderTargetView);
 		
 		DXRelacher(pSwapChain);
+
+		/*#if defined(DEBUG) || defined(_DEBUG)
+		ID3D11Debug* d3dDebug;
+		HRESULT hr = pD3DDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
+		if (SUCCEEDED(hr))
+		{
+			hr = d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+		}
+		if (d3dDebug != nullptr)            d3dDebug->Release();
+		#endif*/
 		DXRelacher(pD3DDevice);
 		if (pImmediateContext)
 		{
