@@ -145,7 +145,7 @@ void Player::rotateLeft()
 void Player::moveUp()
 {
 	mUp.normalize();
-	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);
+	body->addForce(mUp * 3.0f, PxForceMode::eIMPULSE);
 	//const PxQuat quat(0.05f, mDir.cross(mUp));
 	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
@@ -154,7 +154,7 @@ void Player::moveUp()
 void Player::moveDown()
 {
 	mUp.normalize();
-	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);
+	body->addForce(mUp * -3.0f, PxForceMode::eIMPULSE);
 	//const PxQuat quat(-0.05f, mDir.cross(mUp));
 	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
