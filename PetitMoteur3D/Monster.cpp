@@ -39,7 +39,7 @@ void Monster::Anime(float tempEcoule)
 	const PxVec3 posPlayer = SceneManager::get().player->body->getGlobalPose().p;
 	const PxTransform MonsterCurrentInfo = body->getGlobalPose();
 	const PxVec3 pos = MonsterCurrentInfo.p;
-	const PxVec3 direction = (-pos + posPlayer).getNormalized();
+	PxVec3 direction = (-pos + posPlayer).getNormalized();
 	float angleY = -atan2(direction.z, direction.x) - XM_PI / 2;
 	
 	const PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
@@ -49,22 +49,23 @@ void Monster::Anime(float tempEcoule)
 	
 	PxQuat quatX = PxQuat(angleX, { sin(angleY), 0.0f, cos(angleY) });
 	
+	direction = posPlayer - pos + (SceneManager::get().player->getCameraDir()).getNormalized()* SceneManager::get().player->getSpeed();
 
 	const PxQuat quat = quatX * quatY;
 	if (readyToAttack()) {
-		speed = 200.0f;
+		speed = 500.0f;
 		GameManager& gm = GameManager::get();
 		if (gm.isGreenKeyCollected()) 
 		{
-			speed += 50.0f;
+			speed += 100.0f;
 		}
 		if (gm.isBlueKeyCollected())
 		{
-			speed += 50.0f;
+			speed += 100.0f;
 		}
 		if (gm.isRedKeyCollected())
 		{
-			speed += 50.0f;
+			speed += 100.0f;
 		}
 		body->setLinearVelocity(PxVec3((direction).getNormalized()) * speed);
 		timeOfLastAttack = high_resolution_clock().now();

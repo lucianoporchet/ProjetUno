@@ -59,6 +59,7 @@ namespace PM3D {
 		void updateCam(XMFLOAT3 camPos, XMFLOAT3 direction);
 		inline void SetPosition(const XMVECTOR& position_in) { position = position_in; };
 		inline void SetDirection(const XMVECTOR& direction_in) { direction = direction_in; }
+		inline XMVECTOR getDirection() { return direction; }
 		inline void SetUp(const XMVECTOR& up_in) { up = up_in; }
 		inline const XMVECTOR& getPosition() { return position; };
 		inline void setSommets(const std::vector<CSommetBloc>& sommets, const float& w) { 
