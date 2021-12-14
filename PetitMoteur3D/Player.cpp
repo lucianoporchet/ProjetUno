@@ -74,31 +74,43 @@ void Player::Anime(float tempEcoule)
 
 	// TODO Tourner le joueur en fonction du vecteur up de la camera
 
-	PxTransform transformPlayer = body->getGlobalPose();
+	const PxVec3 pos = body->getGlobalPose().p;
+	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
+	const XMVECTOR posVec = XMLoadFloat3(&posF3);
+
+	const PxQuat pquat = body->getGlobalPose().q;
+
 	auto camUp = camera->up;
-
 	PxVec3 vecDir = getDir();
-
-	vecDir = vecDir.getNormalized();
-
 	float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
 	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
-
 	float angleZ = -atan2(vecDir.y, 1.0f);
 	PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
 
 	PxQuat quat = (quatY * quatZ);
+	PxQuat temp = pquat;
+	
 
-	//auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(transformPlayer.q.x, transformPlayer.q.y, transformPlayer.q.z, transformPlayer.q.w));
-	auto rotTmp = XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+	if (pquat.w < quat.w - offset) temp.w = pquat.w + offset;
+	else if (pquat.w > quat.w + offset) temp.w = pquat.w - offset;
 
-	auto aled = transformPlayer.transform(PxVec3{ 0.0f, 0.0f, 1.0f });
-	auto posTmp = XMMatrixTranslation(transformPlayer.p.x, transformPlayer.p.y, transformPlayer.p.z);
-	//auto posTmp = pBoard->matPosDim;
+	if (pquat.x < quat.x - offset) temp.x = pquat.x + offset;
+	else if (pquat.x > quat.x + offset) temp.x = pquat.x - offset;
 
-	auto testPos = rotTmp * posTmp;
+	if (pquat.y < quat.y - offset) temp.y = pquat.y + offset;
+	else if (pquat.y > quat.y + offset) temp.y = pquat.y - offset;
 
-	setMatWorld(testPos);
+	if (pquat.z < quat.z - offset) temp.z = pquat.z + offset;
+	else if (pquat.z > quat.z + offset) temp.z = pquat.z - offset;
+
+	const XMFLOAT4 quatF3(temp.x, temp.y, temp.z, temp.w);
+	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
+
+	body->setGlobalPose(PxTransform(pos, temp));
+	//PxTransform transformPlayer = body->getGlobalPose();
+
+	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
+
 }
 
 //avancer
