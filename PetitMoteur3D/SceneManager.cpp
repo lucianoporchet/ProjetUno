@@ -120,6 +120,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[6].x, portalPos[6].y, portalPos[6].z }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
+	// Ajout du sprite de pause
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\testing_tex.dds"s, 350, 450, 1000, 1000);
+
 	for (int i = 0; i < NBETOILES; ++i) {
 		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
 			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
@@ -138,7 +141,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en centre du sprite, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
-	//spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
+	spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
 
 	// exemple texte.
 	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).
@@ -214,6 +217,18 @@ PM3D::CAfficheurTexte* SceneManager::GetpChronoTexte()
 Gdiplus::SolidBrush* SceneManager::GetpBrush()
 {
 	return pBrush.get();
+}
+
+void SceneManager::displayPause()
+{
+	pauseStatus = true;
+	spriteManager->displayPauseSprite();
+}
+
+void SceneManager::hidePause()
+{
+	pauseStatus = false;
+	spriteManager->hidePauseSprite();
 }
 
 physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {

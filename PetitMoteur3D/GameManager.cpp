@@ -12,9 +12,11 @@ void GameManager::setPauseMenu(bool toShow) noexcept
 	isPause = toShow;
 	if (toShow)
 	{
+		sceneManager.displayPause();
 		startPause = horloge.GetTimeCount();
 	}
 	else {
+		sceneManager.hidePause();
 		totalPauseTime += startPause - horloge.GetTimeCount();
 	}
 	

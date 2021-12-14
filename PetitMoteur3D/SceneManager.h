@@ -43,7 +43,7 @@ protected :
 	
 private:
 	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
-
+	bool pauseStatus = false;
 	SceneManager();
 public:
 	
@@ -60,6 +60,8 @@ public:
 	PM3D::CAfficheurTexte* GetpChronoTexte();
 	Gdiplus::SolidBrush* GetpBrush();
 
+	void displayPause();
+	void hidePause();
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
