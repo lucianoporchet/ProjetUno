@@ -144,19 +144,19 @@ void Player::rotateLeft()
 //roulis y gauche
 void Player::moveUp()
 {
-	/*mUp.normalize();
-	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);*/
-	const PxQuat quat(0.05f, mDir.cross(mUp));
-	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	mUp.normalize();
+	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);
+	//const PxQuat quat(0.05f, mDir.cross(mUp));
+	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
 //roulis y droite
 void Player::moveDown()
 {
-	/*mUp.normalize();
-	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);*/
-	const PxQuat quat(-0.05f, mDir.cross(mUp));
-	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	mUp.normalize();
+	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);
+	//const PxQuat quat(-0.05f, mDir.cross(mUp));
+	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
 //assignation de la cam

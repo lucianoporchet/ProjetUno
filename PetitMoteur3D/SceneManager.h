@@ -94,10 +94,10 @@ private:
 	};
 
 	const physx::PxVec3 tunnelPos[NBTUNNELCOMPONENTS] = {
-		physx::PxVec3(-31.4f, 5979.5f, -198.2f),
-		physx::PxVec3(-692.9f, 6554.5f, 164.7f),
-		physx::PxVec3(57.1f, 6020.7f, 393.7f),
-		physx::PxVec3(718.6f, 5445.7f, 30.7f),
+		physx::PxVec3(242.035f, 5764.03f, 154.102f),
+		physx::PxVec3(17.926f, 5574.52f, -748.041f),
+		physx::PxVec3(-166.146f, 6164.27f, -28.0985f),
+		physx::PxVec3(57.9616f, 6353.78f, 874.045f)
 	};
 
 	const physx::PxVec3 tunnelScale[NBTUNNELCOMPONENTS] = {
@@ -107,7 +107,7 @@ private:
 		physx::PxVec3(100.0f, 1000.0f, 200.0f)
 	};
 
-	physx::PxQuat tunnelRot = physx::PxQuat(-0.057f, 0.059f, -0.323f, 0.943f);
+	physx::PxQuat tunnelRot = physx::PxQuat(0.130f, 0.576f, -0.424f, 0.687f);
 	
 
 
