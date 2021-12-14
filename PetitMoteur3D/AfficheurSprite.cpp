@@ -228,6 +228,9 @@ namespace PM3D
 			pImmediateContext->Draw(6, 0);
 		}
 
+		pCB->Release();
+		variableSampler->Release();
+		variableTexture->Release();
 		pDispositif->DesactiverMelangeAlpha();
 	}
 
@@ -300,7 +303,9 @@ namespace PM3D
 			// **** Rendu de l'objet
 			pImmediateContext->Draw(6, 0);
 		}
-
+		pCB->Release();
+		variableSampler->Release();
+		variableTexture->Release();
 		pDispositif->DesactiverMelangeAlpha();
 	}
 

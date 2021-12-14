@@ -87,7 +87,7 @@ public:
 		if (TempsEcoule > EcartTemps)
 		{
 			// Affichage optimisé
-			pDispositif->Present(); // On enlevera «//» plus tard
+			pDispositif->Present();
 
 			// On prépare la prochaine image
 			AnimeScene(static_cast<float>(TempsEcoule));
