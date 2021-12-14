@@ -82,7 +82,7 @@ private:
 		NBMONSTRES = 4,
 		NBPORTAILS = 8,
 		NBPICKUPOBJECTS = 10,
-		NBETOILES = 128,
+		NBETOILES = 256,
 		NBTUNNELCOMPONENTS = 4
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
