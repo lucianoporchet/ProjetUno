@@ -142,12 +142,12 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 	for (auto It = PickUpObjectList.begin(); It != PickUpObjectList.end(); It++)
 	{
 		auto& obj = *It;
-		if (obj->body->getGlobalPose().p == pos) 
+		if (obj->body->getGlobalPose().p == pos)
 		{
-			if (obj->getType() == PickUpObjectType::GreenKey) 
+			if (obj->getType() == PickUpObjectType::GreenKey)
 			{
 				greenKeyCollected = true;
-			} 
+			}
 			else if (obj->getType() == PickUpObjectType::BlueKey)
 			{
 				blueKeyCollected = true;
@@ -156,7 +156,7 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			{
 				redKeyCollected = true;
 			}
-			else if (obj->getType() == PickUpObjectType::SpeedBuff) 
+			else if (obj->getType() == PickUpObjectType::SpeedBuff)
 			{
 				speedBuffCollected = true;
 				sm.player->setSpeed(sm.player->getSpeed() + 10);
@@ -165,6 +165,7 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			break;
 		}
 	}
+}
 	
 
 void GameManager::updateChrono()
