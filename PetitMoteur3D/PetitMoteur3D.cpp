@@ -1,7 +1,11 @@
 // PetitMoteur3D.cpp : définit le point d'entrée pour l'application.
 //
 
+
 #include "stdafx.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 #include "PetitMoteur3D.h"
 #include "MoteurWindows.h"
 
@@ -20,6 +24,7 @@ int APIENTRY _tWinMain(
 
 	try
 	{
+		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		// Création de l'objet Moteur
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 
@@ -31,8 +36,9 @@ int APIENTRY _tWinMain(
 
 		// Boucle d'application
 		rMoteur.Run();
-
+		//_CrtDumpMemoryLeaks();
 		return (int)1;
+
 	}
 
 	catch (const std::exception& E)
@@ -56,5 +62,5 @@ int APIENTRY _tWinMain(
 
 		return (int)99; // POURQUOI 99???
 	}
-
+	
 }
