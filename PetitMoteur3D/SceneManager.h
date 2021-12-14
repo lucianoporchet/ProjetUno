@@ -64,7 +64,7 @@ private:
 		NBPLANETES = 15,
 		NBMONSTRES = 4,
 		NBPORTAILS = 8,
-		NBPICKUPOBJECTS = 4
+		NBPICKUPOBJECTS = 10
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
@@ -104,15 +104,15 @@ private:
 		{ physx::PxVec3(0, BOXSIZE + 500, 0) , PickUpObjectType::GreenKey , 1 },
 		{ physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0) , PickUpObjectType::BlueKey , 2 },
 		{ physx::PxVec3(-300, -300, -300) , PickUpObjectType::SpeedBuff , 0 },
+		{ physx::PxVec3(-150, 300 + BOXSIZE, 100) , PickUpObjectType::SpeedBuff , 1 },
+		{ physx::PxVec3(-1000 + BOXSIZE, -300, 1000) , PickUpObjectType::SpeedBuff , 3 },
+		{ physx::PxVec3(BOXSIZE + 500, BOXSIZE - 500, -600) , PickUpObjectType::SpeedBuff , 2 },
+		{ physx::PxVec3(400, BOXSIZE - 600, 500) , PickUpObjectType::SpeedBuff , 1 },
+		{ physx::PxVec3(-1000, -300, 600) , PickUpObjectType::SpeedBuff , 0 },
+		{ physx::PxVec3(BOXSIZE - 1000, BOXSIZE + 600, 300) , PickUpObjectType::SpeedBuff , 2 },
 
 	};
-	/*const std::pair<PxVec3, PickUpObjectType> pickupObjectsInfo[NBPICKUPOBJECTS]{
-		std::make_pair(physx::PxVec3(500, 500, 500),PickUpObjectType::RedKey),
-		std::make_pair(physx::PxVec3(0, BOXSIZE + 500, 0),PickUpObjectType::GreenKey),
-		std::make_pair(physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0),PickUpObjectType::BlueKey),
-		std::make_pair(physx::PxVec3(300, 300, 300),PickUpObjectType::SpeedBuff)
-
-	};*/
+	
 
 
 public:

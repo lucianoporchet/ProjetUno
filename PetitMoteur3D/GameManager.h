@@ -22,6 +22,9 @@ public:
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
+	bool isGreenKeyCollected();
+	bool isBlueKeyCollected();
+	bool isRedKeyCollected();
 	bool allKeysCollected();
 	void activateFinalPortal();
 	void activatePickUpObjectFromPos(PxVec3 pos);

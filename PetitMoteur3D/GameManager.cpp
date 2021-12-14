@@ -90,6 +90,21 @@ void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
 }
 
+bool GameManager::isGreenKeyCollected()
+{
+	return greenKeyCollected;
+}
+
+bool GameManager::isBlueKeyCollected()
+{
+	return false;
+}
+
+bool GameManager::isRedKeyCollected()
+{
+	return false;
+}
+
 bool GameManager::allKeysCollected()
 {
 	if (greenKeyCollected && blueKeyCollected && redKeyCollected) 
@@ -130,11 +145,11 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			else if (obj->getType() == PickUpObjectType::SpeedBuff) 
 			{
 				speedBuffCollected = true;
-				sm.player->setSpeed(sm.player->getSpeed() + 100);
+				sm.player->setSpeed(sm.player->getSpeed() + 10);
 			}
 			PickUpObjectList.erase(It);
 			break;
 		}
 	}
-	// TODO : depending of the position of pickup object, activate its effects, then despawn it
+	
 }
