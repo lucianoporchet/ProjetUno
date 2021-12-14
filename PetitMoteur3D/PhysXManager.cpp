@@ -84,9 +84,12 @@ void PhysXManager::cleanupPhysics()
 	for (auto& s : gScenes) {
 		PX_RELEASE(s);
 	}
+	gScenes.clear();
 	//PX_RELEASE(gScene);
 	PX_RELEASE(gDispatcher);
 	PX_RELEASE(gPhysics);
+	PX_RELEASE(mCooking);
+
 	if (gPvd)
 	{
 		PxPvdTransport* transport = gPvd->getTransport();
