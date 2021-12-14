@@ -39,7 +39,7 @@ std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& SceneManager::getScen
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
 
 	std::vector<std::future<void>> futures;
-	auto f = [&](Player* p) { p->setCam(&camera); };
+	//auto f = [&](Player* p) { p->setCam(&camera); };
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
@@ -61,7 +61,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		Scenes[1].push_back(std::move(tunnel));
 	}
 
-
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
@@ -73,7 +72,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
 		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
 	}
-
 
 	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)

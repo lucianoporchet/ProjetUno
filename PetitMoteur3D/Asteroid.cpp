@@ -12,16 +12,12 @@ Asteroid::Asteroid(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisp
 {
 	//on donne une vitesse aleatoire aux asteroides
 	float rSpeed = static_cast<float>(RandomGenerator::get().next(500, 10000));
-
+	PxVec3 dir = (RandomGenerator::get().randomPosInZone(scene) - pos) * rSpeed;
 	//cree le rigid body de l'objet dans physX avec, pour le moment un capsule collider (donc collisions pas parfaites)
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxCapsuleGeometry(scale,scale*1.3f), PxVec3(0, 0, 0), scene);
 
-	//ajoute une rotation aleatoire, une force en direction du centre de la carte (la direction sera changée plus tard), et une masse proportionnelle a la taille
-	body->addTorque(RandomGenerator::get().randomVec3(-2, 2) * 1000000.0f, PxForceMode::eIMPULSE);
-	body->addForce((RandomGenerator::get().randomPosInZone(scene) - pos) * rSpeed, PxForceMode::eIMPULSE);
-	body->setMass(scale * 10);
-	body->setLinearDamping(0);
-	body->setAngularDamping(0);
+	PhysXManager::get().addForcesAsteroid(scale, body, dir);
+
 
 }
 

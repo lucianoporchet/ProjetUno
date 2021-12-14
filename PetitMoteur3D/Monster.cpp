@@ -7,21 +7,23 @@
 #include "resource.h"
 #include "SceneManager.h"
 #include <math.h>
+#include <mutex>
 
 //TO DO
-
+static std::mutex monsterMutex;
 Monster::Monster(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos, int scene) : MovingObject(nomfichier, _pDispositif, scale)
 {
 	//on donne une vitesse aleatoire au monstre entre 150 et 500
-	/*float rSpeed = static_cast<float>(RandomGenerator::get().next(15, 50));*/
+	//float rSpeed = static_cast<float>(RandomGenerator::get().next(15, 50));
 
 	//cree le rigid body de l'objet dans physX avec, pour le moment un capsule collider (donc collisions pas parfaites)
 	body = PhysXManager::get().createDynamic(PxTransform(PxVec3(pos)), PxSphereGeometry(scale * 0.5f), PxVec3(0, 0, 0), scene);
 
 	//ajoute une rotation aleatoire, une force en direction du centre de la carte (la direction sera changée plus tard), et une masse proportionnelle a la taille
-	/*body->addTorque(RandomGenerator::get().randomVec3(150, 300) * 1000.0f, PxForceMode::eIMPULSE);*/
-	/*PxVec3 posPlayer = SceneManager::get().player->body->getGlobalPose().p;
-	body->addForce(PxVec3(-pos + posPlayer) * rSpeed, PxForceMode::eIMPULSE);*/
+	//body->addTorque(RandomGenerator::get().randomVec3(150, 300) * 1000.0f, PxForceMode::eIMPULSE);*/
+	//PxVec3 posPlayer = SceneManager::get().player->body->getGlobalPose().p;
+	//body->addForce(PxVec3(-pos + posPlayer) * rSpeed, PxForceMode::eIMPULSE);
+	std::lock_guard<std::mutex> lock(monsterMutex);
 	body->setMass(scale * 1000000);
 }
 
