@@ -10,6 +10,14 @@ void GameManager::setPauseMenu(bool toShow) noexcept
 {
 	ShowCursor(toShow);
 	isPause = toShow;
+	if (toShow)
+	{
+		startPause = horloge.GetTimeCount();
+	}
+	else {
+		totalPauseTime += startPause - horloge.GetTimeCount();
+	}
+	
 }
 
 //retourne le statut pour savoir si la pause est active
@@ -62,6 +70,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
 			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
 		}
+
 		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
@@ -95,7 +104,7 @@ void GameManager::setNextZone(Zone zone) {
 void GameManager::updateChrono()
 {
 	const int64_t currentTime = horloge.GetTimeCount();
-	const int64_t diff = currentTime - chronoStart;
+	const int64_t diff = currentTime + totalPauseTime - chronoStart;
 	const double secPerCount = horloge.GetSecPerCount();
 	const int mintmp = static_cast<int>((diff * secPerCount) / 60);
 	const int hour = mintmp / 60;
