@@ -84,9 +84,12 @@ void PhysXManager::cleanupPhysics()
 	for (auto& s : gScenes) {
 		PX_RELEASE(s);
 	}
+	gScenes.clear();
 	//PX_RELEASE(gScene);
 	PX_RELEASE(gDispatcher);
 	PX_RELEASE(gPhysics);
+	PX_RELEASE(mCooking);
+
 	if (gPvd)
 	{
 		PxPvdTransport* transport = gPvd->getTransport();
@@ -214,6 +217,22 @@ PxFilterFlags FilterShader(
 	if ((filterData0.word0 == FilterGroup::ePortal || filterData1.word0 == FilterGroup::ePortal))
 	{
 		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else if ((filterData1.word0 == FilterGroup::ePortal) || (filterData0.word0 == FilterGroup::ePortal))
+	{
+		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	if ((filterData0.word0 == FilterGroup::ePlayer && filterData1.word0 == FilterGroup::ePickupObject) ||
+		(filterData0.word0 == FilterGroup::ePickupObject && filterData1.word0 == FilterGroup::ePlayer))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else if ((filterData1.word0 == FilterGroup::ePickupObject) || (filterData0.word0 == FilterGroup::ePickupObject))
+	{
+		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
 		return PxFilterFlag::eDEFAULT;
 	}
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;

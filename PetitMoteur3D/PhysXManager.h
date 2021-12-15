@@ -13,6 +13,7 @@ struct FilterGroup
 		eObstacle = (1 << 1),
 		eMonster = (1 << 2),
 		ePortal = (1 << 3),
+		ePickupObject = (1 << 4)
 		
 	};
 };

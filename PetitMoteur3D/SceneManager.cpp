@@ -24,6 +24,21 @@ void load(std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>* Scenes,
 	if(Scenes) (*Scenes)[scene].push_back(std::move(obj));
 }
 
+template<class T>
+void loadPickUp(std::vector<std::vector<std::unique_ptr<PickUpObject>>>* Scenes,
+	std::string&& nomfichier,
+	PM3D::CDispositifD3D11* _pDispositif,PickUpObjectType objType,
+	float scale,
+	physx::PxVec3 pos,
+	int scene,
+	std::function<void(T*)> func)
+{
+	std::unique_ptr<T> obj = std::make_unique<T>(nomfichier, _pDispositif,objType, scale, pos, scene);
+	func(obj.get());
+	std::lock_guard<std::mutex> lock(objMutex);
+	if (Scenes) (*Scenes)[scene].push_back(std::move(obj));
+}
+
 
 std::vector<std::unique_ptr<PM3D::CObjet3D>>& SceneManager::getListScene(int scene)
 {
@@ -35,11 +50,32 @@ std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& SceneManager::getScen
 	return Scenes;
 }
 
+std::vector<std::unique_ptr<PickUpObject>>& SceneManager::getListPickUpObjectScene(int scene)
+{
+	return PickUpObjectsScenes[scene];
+}
+
+std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUpObjectScenes() noexcept
+{
+	return PickUpObjectsScenes;
+}
+//std::vector<std::unique_ptr<PickUpObject>>& SceneManager::getListPickUpObjectScene(int scene)
+//{
+//	return PickUpObjectsScenes[scene];
+//}
+//
+//std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUpObjectScenes() noexcept
+//{
+//	return PickUpObjectsScenes;
+//}
+
 
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
 
 	std::vector<std::future<void>> futures;
+
 	//auto f = [&](Player* p) { p->setCam(&camera); };
+
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
@@ -73,9 +109,10 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
 	}
 
-	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
+
+	//Creation de plusieurs Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
-	float scale;
+	float scale{};
 	PxVec3 pos;
 	for (int j = 0; j < NBZONES; ++j) {
 		for (int i = 0; i < NBASTEROIDES; ++i) {
@@ -87,14 +124,28 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i], i/2, [&](Portal*) noexcept {}));
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i+1], i/2, [&](Portal*) noexcept {}));
+		PxVec3 portalposi = portalPos[i];
+		PxVec3 portalposiplus = portalPos[i+1];
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
-		float scale = static_cast<float>(RandomGenerator::get().next(50, 200));
+		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
 		futures.push_back(std::async(load<Monster>, &Scenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
 	}
+
+	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
+		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff) 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\burger.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
+		else 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\key.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
+	}
+
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
@@ -104,6 +155,10 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\grass.dds", pDispositif));
 	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\water.dds", pDispositif));
 	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
+
+	// Variables utiles
+	int largeur = pDispositif->GetLargeur();
+	int hauteur = pDispositif->GetHauteur();
 
 	// Creation du gestionnaire de billboards, sprites et texte
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
@@ -118,11 +173,36 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[6].x, portalPos[6].y, portalPos[6].z }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
+	// Ajout du sprite de pause
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur/2, largeur, hauteur);
+
+	// /UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
+	// | keys
+	int largeurCle = largeur / 18;
+	int hauteurCle = (int)(largeurCle * 1.832f); // Ratio du sprite de la cle pour largeur -> hauteur.
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_purple.dds"s, largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_green.dds"s, 2 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_blue.dds"s, 3 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	// | Speed-o-meter
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge0.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, true);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge1.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge2.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge3.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge4.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge5.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	// | Tomato warning
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
+	// | Portal status
+	int largeurPortal = largeur / 10;
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
+	// \DONE WITH UI
+
+	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
 		physx::PxVec3 off = RandomGenerator::get().randomVec3(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter);
 		XMFLOAT3 offset = { off.x, off.y, off.z };
 		spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 0.02f, 0.02f);
-		//spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 1.0f, 1.0f);
 	}
 
 	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
@@ -131,7 +211,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// exemple panneau. Params : zone, bool si portail, chemin vers texture, vecteur de position (centre du billboard), bool si billboard oriente, scale en x, scale en y.
 	// celui-ci a sa position attribuee dans le monde. Represente le 0,0
-	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, false, 100.0f, 100.0f);
+	//spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, false, 100.0f, 100.0f);
 
 	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en centre du sprite, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
@@ -147,7 +227,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	/******************HUD************************/
 	PM3D::CAfficheurTexte::Init();
 	const Gdiplus::FontFamily oFamily(L"Arial", nullptr);
-	pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold,
+	pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 20.0f, Gdiplus::FontStyleBold,
 		Gdiplus::UnitPixel);
 	/*************Fin init HUD********************/
 
@@ -158,13 +238,15 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//couleur du texte, param 1 = alpha et ensuite RGB
 	pBrush = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255, 255));
 	// a l'init le chrono démarre a 0
-	pChronoTexte->Ecrire(L"0h0m0s 0"s, pBrush.get());
-	spriteManager->AjouterSpriteTexte(0, pChronoTexte->GetTextureView(), 70, 50);
+	pChronoTexte->Ecrire(L"00:00"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(pChronoTexte->GetTextureView(), 80, 60);
+
+	// INIT DE LA VITESSE
+	pVitesseTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
+	pVitesseTexte->Ecrire(L"0"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
-
-
-	
 
 }
 
@@ -177,6 +259,10 @@ SceneManager::SceneManager() {
 	for (int i = 0; i < NBZONES; ++i) {
 		Scenes.push_back(std::vector<std::unique_ptr<PM3D::CObjet3D>>{});
 	}
+	for (int i = 0; i < NBZONES; ++i) 
+	{
+		PickUpObjectsScenes.push_back(std::vector<std::unique_ptr<PickUpObject>>{});
+	}
 }
 
 void SceneManager::Draw(Zone scene) {
@@ -186,6 +272,12 @@ void SceneManager::Draw(Zone scene) {
 	{
 		obj->Draw();
 	}
+
+	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)]) 
+	{
+		obj->Draw();
+	}
+
 	// Billboards, sprites et panneaux
 	spriteManager->DrawZone(static_cast<int>(scene));
 	spriteManager->Draw();
@@ -198,6 +290,12 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	{
 		obj->Anime(tmps);
 	}
+  
+	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)])
+	{
+		obj->Anime(tmps);
+	}
+
 	// Billboards, sprites et panneaux
 	spriteManager->Anime(tmps);
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
@@ -208,9 +306,27 @@ PM3D::CAfficheurTexte* SceneManager::GetpChronoTexte()
 	return pChronoTexte.get();
 }
 
+PM3D::CAfficheurTexte* SceneManager::GetpVitesseTexte()
+{
+	return pVitesseTexte.get();
+}
+
 Gdiplus::SolidBrush* SceneManager::GetpBrush()
 {
 	return pBrush.get();
+
+}
+
+void SceneManager::displayPause()
+{
+	pauseStatus = true;
+	spriteManager->displayPauseSprite();
+}
+
+void SceneManager::hidePause()
+{
+	pauseStatus = false;
+	spriteManager->hidePauseSprite();
 }
 
 physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {
@@ -229,4 +345,14 @@ physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {
 const float SceneManager::getBoxSize() {
 	return BOXSIZE;
 }
+
+void SceneManager::activateFinalPortal()
+{
+	// TODO
+	// Ajout du sprite du portail final
+	spriteManager->displayFinalPortal();
+	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
+}
+
+
 

@@ -31,6 +31,7 @@ public:
 	void setCam(PM3D::CCamera* cam);
 	void updateCam();
 	physx::PxVec3 getDir();
+	physx::PxVec3 getCameraDir();
 
 private:
 	

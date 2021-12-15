@@ -13,6 +13,7 @@ namespace PM3D
 
 CTexture::~CTexture()
 {
+	
 	DXRelacher(m_TexturResource);
 	DXRelacher(m_Texture);
 }

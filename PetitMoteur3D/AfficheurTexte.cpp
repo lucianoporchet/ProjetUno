@@ -102,6 +102,7 @@ CAfficheurTexte::~CAfficheurTexte()
 {
 	DXRelacher(pTextureView);
 	DXRelacher(pTexture);
+	DXRelacher(pSurface);
 }
 
 void CAfficheurTexte::Ecrire(const std::wstring& s, Gdiplus::Brush* pBrush)
