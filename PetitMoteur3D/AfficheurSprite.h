@@ -38,6 +38,8 @@ namespace PM3D
 		void displayPauseSprite();
 		void hidePauseSprite();
 		
+		void displayFinalPortal();
+
 		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);		
@@ -110,6 +112,7 @@ namespace PM3D
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabSigns;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabBillboards;
+		std::unique_ptr<CPanneau> finalPortal; // TO USE
 
 		std::vector<std::unique_ptr<CSprite>> tabPauseSprite;
 

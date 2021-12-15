@@ -171,18 +171,19 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(2, true, ".\\modeles\\Billboards\\portal_red_light.dds"s, { portalPos[5].x, portalPos[5].y, portalPos[5].z }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[6].x, portalPos[6].y, portalPos[6].z }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
+	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
 	// Ajout du sprite de pause
 	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
 	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur/2, largeur, hauteur);
 
-	// UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
+	// /UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
 	// | keys
 	int largeurCle = largeur / 18;
 	int hauteurCle = (int)(largeurCle * 1.832f); // Ratio du sprite de la cle pour largeur -> hauteur.
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_blue.dds"s, largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_green.dds"s, 2 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_purple.dds"s, 3 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_blue.dds"s, largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, true);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_green.dds"s, 2 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, true);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_purple.dds"s, 3 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, true);
 	// | Speed-o-meter
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge0.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, true);
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge1.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
@@ -193,7 +194,10 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// | Tomato warning
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
 	// | Portal status
-
+	int largeurPortal = largeur / 10;
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
+	// |
+	// \DONE WITH UI
 
 	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
@@ -346,7 +350,8 @@ const float SceneManager::getBoxSize() {
 
 void SceneManager::activateFinalPortal()
 {
-
+	// TODO
+	spriteManager->displayFinalPortal();
 }
 
 
