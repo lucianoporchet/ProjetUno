@@ -184,6 +184,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// | Tomato warning
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
 	// | Portal status
+	// | Speed-o-meter
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, false);
 
 	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
@@ -231,8 +233,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// INIT DE LA VITESSE
 	pVitesseTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
-	pVitesseTexte->Ecrire(L"0 fasts/h"s, pBrush.get());
-	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), 180, 160);
+	pVitesseTexte->Ecrire(L"0"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 110 , hauteur - 45);
 
 	//INIT D'AUTRES ELEMENTS
 

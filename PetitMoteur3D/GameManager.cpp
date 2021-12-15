@@ -208,5 +208,5 @@ void GameManager::updateSpeed()
 
 	std::wstring speedStr = std::to_wstring((int)plrSpeed);
 
-	sceneManager.GetpVitesseTexte()->Ecrire(speedStr + L" fasts/h"s, sceneManager.GetpBrush());
+	sceneManager.GetpVitesseTexte()->Ecrire(speedStr, sceneManager.GetpBrush());
 }
