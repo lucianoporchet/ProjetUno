@@ -226,8 +226,13 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//couleur du texte, param 1 = alpha et ensuite RGB
 	pBrush = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255, 255));
 	// a l'init le chrono démarre a 0
-	pChronoTexte->Ecrire(L"0h0m0s 0"s, pBrush.get());
-	spriteManager->AjouterSpriteTexte(0, pChronoTexte->GetTextureView(), 70, 50);
+	pChronoTexte->Ecrire(L"00:00"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(pChronoTexte->GetTextureView(), 80, 60);
+
+	// INIT DE LA VITESSE
+	pVitesseTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
+	pVitesseTexte->Ecrire(L"0 fasts/h"s, pBrush.get());
+	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), 180, 160);
 
 	//INIT D'AUTRES ELEMENTS
 
@@ -290,6 +295,11 @@ void SceneManager::Anime(Zone scene, float tmps) {
 PM3D::CAfficheurTexte* SceneManager::GetpChronoTexte()
 {
 	return pChronoTexte.get();
+}
+
+PM3D::CAfficheurTexte* SceneManager::GetpVitesseTexte()
+{
+	return pVitesseTexte.get();
 }
 
 Gdiplus::SolidBrush* SceneManager::GetpBrush()

@@ -38,6 +38,7 @@ class SceneManager
 protected :
 	// Pour le texte
 	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::unique_ptr<PM3D::CAfficheurTexte> pVitesseTexte;
 	std::wstring str;
 	std::unique_ptr<Gdiplus::Font> pPolice;
 	std::unique_ptr<Gdiplus::SolidBrush> pBrush;
@@ -63,6 +64,7 @@ public:
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
 	PM3D::CAfficheurTexte* GetpChronoTexte();
+	PM3D::CAfficheurTexte* GetpVitesseTexte();
 	Gdiplus::SolidBrush* GetpBrush();
 
 	void displayPause();

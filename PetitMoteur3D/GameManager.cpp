@@ -74,7 +74,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 
 		
-
+		updateSpeed();
 		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
@@ -189,6 +189,24 @@ void GameManager::updateChrono()
 	std::wstring secStr = std::to_wstring(sec); 
 	std::wstring millisecStr = std::to_wstring(millisec);
 
-	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
+	if (sec < 10)
+		secStr = L"0"s + secStr; // affichage en style X:00	
+	if (min < 10)
+		minStr = L"0"s + minStr; // affichage en style X:00
+	if (millisec < 100)
+		millisecStr = L"0"s + millisecStr;
+	if (millisec < 10)
+		millisecStr = L"0"s + millisecStr;
 
+	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L":"s + secStr + L"::" + millisecStr, sceneManager.GetpBrush());
+}
+
+
+void GameManager::updateSpeed() 
+{
+	float plrSpeed = sceneManager.player->body->getLinearVelocity().magnitude();
+
+	std::wstring speedStr = std::to_wstring((int)plrSpeed);
+
+	sceneManager.GetpVitesseTexte()->Ecrire(speedStr + L" fasts/h"s, sceneManager.GetpBrush());
 }

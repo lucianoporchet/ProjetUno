@@ -421,11 +421,11 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
-	void CAfficheurSprite::AjouterSpriteTexte(int _zone,
-		ID3D11ShaderResourceView* pTexture, int _x, int _y)
+	void CAfficheurSprite::AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y)
 	{
 		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
 		pSprite->pTextureD3D = pTexture;
+		//pSprite->displayed = true;
 
 		// Obtenir la dimension de la texture;
 		ID3D11Resource* pResource;

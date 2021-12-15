@@ -40,7 +40,7 @@ namespace PM3D
 		
 		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
-		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);		
+		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);		
 		void AjouterPanneau(int _zone, bool _isPortal, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
 			float _dx = 0.0f, float _dy = 0.0f);		
 		
