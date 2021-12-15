@@ -149,14 +149,17 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			if (obj->getType() == PickUpObjectType::GreenKey)
 			{
 				greenKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(1);
 			}
 			else if (obj->getType() == PickUpObjectType::BlueKey)
 			{
 				blueKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(0);
 			}
 			else if (obj->getType() == PickUpObjectType::RedKey)
 			{
 				redKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(2);
 			}
 			else if (obj->getType() == PickUpObjectType::SpeedBuff)
 			{
