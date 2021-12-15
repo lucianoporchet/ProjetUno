@@ -138,7 +138,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 	}
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
 
-	pFXBlob->Release();
+	DXRelacher(pFXBlob);
 
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
@@ -279,7 +279,6 @@ void CObjetMesh::Draw()
 				variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 				variableTexture->SetResource(Material[SubsetMaterialIndex[i]].pTextureD3D);
 				sp.bTex = 1;
-				variableTexture->Release();
 			}
 			else
 			{
@@ -294,11 +293,10 @@ void CObjetMesh::Draw()
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
 			pImmediateContext->DrawIndexed(indexDrawAmount, indexStart, 0);
-			pCB->Release();
+		
 		}
 	}
-	
-	variableSampler->Release();
+
 }
 
 void CObjetMesh::setMatWorld(XMMATRIX& matworld)
