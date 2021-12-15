@@ -3,7 +3,7 @@
 #include "DispositifD3D11.h"
 #include "Util.h"
 #include "InfoDispositif.h"
-
+#define _CRTDBG_MAP_ALLOC
 namespace PM3D
 {
 

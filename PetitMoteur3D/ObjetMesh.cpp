@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-
+#define _CRTDBG_MAP_ALLOC
 #include "ObjetMesh.h"
 #include "chargeur.h"
 #include "dispositifD3D11.h"

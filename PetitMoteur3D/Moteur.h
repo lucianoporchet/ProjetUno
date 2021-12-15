@@ -161,7 +161,7 @@ protected:
 		// détruire les objets
 		manager.cleanManager();
 		TexturesManager.ListeTextures.clear();
-		
+		physXManager.cleanupPhysics();
 		// Détruire le dispositif
 		if (pDispositif)
 		{
@@ -169,7 +169,7 @@ protected:
 			pDispositif = nullptr;
 		}
 
-		physXManager.cleanupPhysics();
+		
 	}
 
 	virtual int InitScene()

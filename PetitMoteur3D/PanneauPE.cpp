@@ -3,7 +3,7 @@
 #include "util.h"
 #include "resource.h"
 #include "dispositifD3D11.h"
-
+#define _CRTDBG_MAP_ALLOC
 namespace PM3D
 {
 	// Definir l'organisation de notre sommet

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-
+#define _CRTDBG_MAP_ALLOC
 #include "BlocEffet1.h"
 #include "sommetbloc.h"
 #include "util.h"
@@ -233,10 +233,18 @@ void CBlocEffet1::Draw()
 	pPasse->Apply(0, pImmediateContext);
 
 	pImmediateContext->DrawIndexed(ARRAYSIZE(index_bloc), 0, 0);
+	variableTextureu->Release();
+	variableTextured->Release();
+	variableTexturel->Release();
+	variableTexturer->Release();
+	variableTexturef->Release();
+	variableTextureb->Release();
+	variableSampler->Release();
 }
 
 CBlocEffet1::~CBlocEffet1()
 {
+
 	DXRelacher(pSampleState);
 	DXRelacher(pConstantBuffer);
 	DXRelacher(pEffet);
