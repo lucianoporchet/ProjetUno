@@ -49,19 +49,9 @@ void Monster::Anime(float tempEcoule)
 	
 	PxQuat quatX = PxQuat(angleX, { sin(angleY), 0.0f, cos(angleY) });
 	
-	PxVec3 playerVelocity = SceneManager::get().player->body->getLinearVelocity();
-
-	float S = (posPlayer.x - pos.x) * (posPlayer.x - pos.x) + (posPlayer.y - pos.y) * (posPlayer.y - pos.y) + (posPlayer.z - pos.z) * (posPlayer.z - pos.z);
-	float SPrime = (playerVelocity.x * (posPlayer.x - pos.x)) + (playerVelocity.y * (posPlayer.y - pos.y)) + (playerVelocity.z * (posPlayer.z - pos.z));
-	float SPrimePrime = (playerVelocity.x * playerVelocity.x) + (playerVelocity.y * playerVelocity.y) + (playerVelocity.z * playerVelocity.z) - speed * speed;
-	float delta = 4 * SPrime * SPrime - 4 * S * SPrimePrime;
-
-	float k = (-2 * SPrime - std::sqrt(delta)) / (2 * SPrimePrime);
-
-	direction = posPlayer - pos + SceneManager::get().player->body->getLinearVelocity()*k;
 	const PxQuat quat = quatX * quatY;
 	if (readyToAttack()) {
-		speed = 500.0f;
+		speed = 200.0f;
 		GameManager& gm = GameManager::get();
 		if (gm.isGreenKeyCollected()) 
 		{
@@ -75,6 +65,26 @@ void Monster::Anime(float tempEcoule)
 		{
 			speed += 100.0f;
 		}
+		PxVec3 playerVelocity = SceneManager::get().player->body->getLinearVelocity();
+		bool Hardmode = false;
+		float k;
+		if (Hardmode) 
+		{
+			//Hard Mode
+			float S = (posPlayer.x - pos.x) * (posPlayer.x - pos.x) + (posPlayer.y - pos.y) * (posPlayer.y - pos.y) + (posPlayer.z - pos.z) * (posPlayer.z - pos.z);
+			float SPrime = (playerVelocity.x * (posPlayer.x - pos.x)) + (playerVelocity.y * (posPlayer.y - pos.y)) + (playerVelocity.z * (posPlayer.z - pos.z));
+			float SPrimePrime = (playerVelocity.x * playerVelocity.x) + (playerVelocity.y * playerVelocity.y) + (playerVelocity.z * playerVelocity.z) - speed * speed;
+			float delta = 4 * SPrime * SPrime - 4 * S * SPrimePrime;
+
+			k = (-2 * SPrime - std::sqrt(delta)) / (2 * SPrimePrime);
+		}
+		else 
+		{
+			//Easy Mode
+			k = 0;
+		}
+
+		direction = posPlayer - pos + SceneManager::get().player->body->getLinearVelocity() * k;
 		body->setLinearVelocity(PxVec3((direction).getNormalized()) * speed);
 		timeOfLastAttack = high_resolution_clock().now();
 	}

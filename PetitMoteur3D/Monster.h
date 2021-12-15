@@ -15,7 +15,7 @@ class Monster : public MovingObject
 {
 private:
 	steady_clock::time_point timeOfLastAttack = high_resolution_clock().now();
-	steady_clock::duration attackCooldown = seconds(7);
+	steady_clock::duration attackCooldown = seconds(8);
 
 public:
 	Monster(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1, PxVec3 pos = PxVec3(0.0f),int scene = 0);
