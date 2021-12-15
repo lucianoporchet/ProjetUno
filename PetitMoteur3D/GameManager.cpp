@@ -5,6 +5,11 @@
 GameManager GameManager::instance;
 
 
+void GameManager::cleanManager()
+{
+	sceneManager.getScenes().clear();
+}
+
 //set la pause et donc afficher ou effacer le curseur
 void GameManager::setPauseMenu(bool toShow) noexcept
 {
@@ -210,4 +215,9 @@ void GameManager::updateSpeed()
 
 	sceneManager.GetpVitesseTexte()->Ecrire(speedStr, sceneManager.GetpBrush());
 	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
+}
+
+void GameManager::setChronoStart()
+{
+	chronoStart = horloge.GetTimeCount();
 }

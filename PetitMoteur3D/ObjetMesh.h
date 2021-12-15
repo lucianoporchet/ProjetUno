@@ -50,7 +50,6 @@ private:
 		XMFLOAT4 Specular;
 		float Puissance;
 		bool transparent;
-
 		CMaterial()
 			: pTextureD3D(nullptr)
 			, Ambient(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))

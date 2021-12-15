@@ -73,7 +73,7 @@ std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUp
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
 
 	std::vector<std::future<void>> futures;
-	auto f = [&](Player* p) { p->setCam(&camera); };
+	const auto f = [&](Player* p ) { p->setCam(&camera); };
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
@@ -109,9 +109,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 
-	//Creation de 4 Asteroides avec des tailles aleatoires entre 5 et 20
+	//Creation de plusieurs Asteroides avec des tailles aleatoires entre 5 et 20
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
-	float scale;
+	float scale{};
 	PxVec3 pos;
 	for (int j = 0; j < NBZONES; ++j) {
 		for (int i = 0; i < NBASTEROIDES; ++i) {
@@ -123,12 +123,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i], i/2, [&](Portal*) noexcept {}));
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalPos[i+1], i/2, [&](Portal*) noexcept {}));
+		PxVec3 portalposi = portalPos[i];
+		PxVec3 portalposiplus = portalPos[i+1];
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
-		float scale = static_cast<float>(RandomGenerator::get().next(50, 200));
+		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
 		futures.push_back(std::async(load<Monster>, &Scenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
 	}
 
@@ -243,9 +245,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
-
-
-	
 
 }
 

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ChargeurOBJ.h"
-
+#define _CRTDBG_MAP_ALLOC
 namespace
 {
 	// fonctions de conversion  ref:CodeGURU

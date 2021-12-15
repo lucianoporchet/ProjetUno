@@ -1,5 +1,4 @@
 #include "StdAfx.h"
-
 #include "ObjetMesh.h"
 #include "chargeur.h"
 #include "dispositifD3D11.h"
@@ -82,7 +81,6 @@ CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispos
 	// Initialisation de l'effet
 	InitEffet(false);
 
-	
 	matWorld = XMMatrixScaling(scale, scale, scale);
 }
 
@@ -91,15 +89,15 @@ CObjetMesh::~CObjetMesh()
 	SubsetMaterialIndex.clear();
 	SubsetIndex.clear();
 	Material.clear();
-
+	DXRelacher(pTechnique);
+	DXRelacher(pPasse);
 	DXRelacher(pConstantBuffer);
 	DXRelacher(pSampleState);
-
 	DXRelacher(pEffet);
 	DXRelacher(pVertexLayout);
 	DXRelacher(pIndexBuffer);
 	DXRelacher(pVertexBuffer);
-
+	
 	//DXRelacher(pShadowMapView);
 	//DXRelacher(pRenderTargetView);
 	//DXRelacher(pTextureShadowMap);
@@ -138,12 +136,9 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 			"fx_5_0", 0, 0, &pFXBlob, 0),
 			DXE_ERREURCREATION_FX);
 	}
-	
-
-
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
 
-	pFXBlob->Release();
+	DXRelacher(pFXBlob);
 
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
@@ -192,7 +187,7 @@ void CObjetMesh::InitEffet(bool booleanDistance)
 void CObjetMesh::Anime(float tempsEcoule)
 {
 
-	XMVECTOR camPos;
+	XMVECTOR camPos{};
 
 	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
 	camPos = moteur.GetFreeCamera().getPosition();
@@ -200,13 +195,11 @@ void CObjetMesh::Anime(float tempsEcoule)
 	XMFLOAT3 cpos;
 	XMStoreFloat3(&cpos, camPos);
 	
-	XMVECTOR objPos = XMVectorSet(matWorld._41, matWorld._42, matWorld._43, 1.0f);
+	const XMVECTOR objPos = XMVectorSet(matWorld._41, matWorld._42, matWorld._43, 1.0f);
 	XMFLOAT3 objpos;
 
 	XMStoreFloat3(&objpos, objPos);
-	float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
-
-
+	const float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
 
 	if (distance <= 1500.0f && !isTessellated && canBeTesselated)
 
@@ -300,8 +293,10 @@ void CObjetMesh::Draw()
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
 			pImmediateContext->DrawIndexed(indexDrawAmount, indexStart, 0);
+		
 		}
 	}
+
 }
 
 void CObjetMesh::setMatWorld(XMMATRIX& matworld)
@@ -621,6 +616,7 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 			Material[i].pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
 		}
 	}
+	fichier.close();
 }
 
 
