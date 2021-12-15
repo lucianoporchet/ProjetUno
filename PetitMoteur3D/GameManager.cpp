@@ -105,6 +105,71 @@ void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
 }
 
+
+bool GameManager::isGreenKeyCollected()
+{
+	return greenKeyCollected;
+}
+
+bool GameManager::isBlueKeyCollected()
+{
+	return false;
+}
+
+bool GameManager::isRedKeyCollected()
+{
+	return false;
+}
+
+bool GameManager::allKeysCollected()
+{
+	if (greenKeyCollected && blueKeyCollected && redKeyCollected) 
+	{
+		return true;
+	}
+	return false;
+}
+
+void GameManager::activateFinalPortal()
+{
+	// TODO
+}
+
+void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
+{
+	SceneManager& sm = sceneManager;
+	/*std::unique_ptr<PickUpObject> objectActivated;*/
+	std::vector<std::unique_ptr<PickUpObject>>& PickUpObjectList = sm.getListPickUpObjectScene(static_cast<int>(activeZone));
+	/*for (auto& obj : PickUpObjectList)*/
+	for (auto It = PickUpObjectList.begin(); It != PickUpObjectList.end(); It++)
+	{
+		auto& obj = *It;
+		if (obj->body->getGlobalPose().p == pos)
+		{
+			if (obj->getType() == PickUpObjectType::GreenKey)
+			{
+				greenKeyCollected = true;
+			}
+			else if (obj->getType() == PickUpObjectType::BlueKey)
+			{
+				blueKeyCollected = true;
+			}
+			else if (obj->getType() == PickUpObjectType::RedKey)
+			{
+				redKeyCollected = true;
+			}
+			else if (obj->getType() == PickUpObjectType::SpeedBuff)
+			{
+				speedBuffCollected = true;
+				sm.player->setSpeed(sm.player->getSpeed() + 10);
+			}
+			PickUpObjectList.erase(It);
+			break;
+		}
+	}
+}
+	
+
 void GameManager::updateChrono()
 {
 	const int64_t currentTime = horloge.GetTimeCount();
@@ -122,4 +187,5 @@ void GameManager::updateChrono()
 	std::wstring millisecStr = std::to_wstring(millisec);
 
 	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
+
 }

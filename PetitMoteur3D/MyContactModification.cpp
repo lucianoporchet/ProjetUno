@@ -52,6 +52,27 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
                 PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape->getActor());
                 GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
             }
+            else if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePickupObject) 
+            {
+                GameManager& gm = GameManager::get();
+                gm.activatePickUpObjectFromPos(shape2->getActor()->getGlobalPose().p);
+                /*shape2->getActor();*/
+                if (gm.allKeysCollected()) 
+                {
+                    gm.activateFinalPortal();
+                }
+                
+            }
+            else if (shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::ePickupObject)
+            {
+                GameManager& gm = GameManager::get();
+                gm.activatePickUpObjectFromPos(shape->getActor()->getGlobalPose().p);
+                /*shape2->getActor();*/
+                if (gm.allKeysCollected())
+                {
+                    gm.activateFinalPortal();
+                }
+            }
         }
     }
 }

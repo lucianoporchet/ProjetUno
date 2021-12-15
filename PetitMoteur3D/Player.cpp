@@ -188,3 +188,13 @@ void Player::updateCam()
 PxVec3 Player::getDir() {
 	return mDir.getNormalized();
 }
+
+PxVec3 Player::getCameraDir() {
+	XMVECTOR cameraDirection = camera->getDirection();
+	float x = cameraDirection.vector4_f32[0];
+	float y = cameraDirection.vector4_f32[1];
+	float z = cameraDirection.vector4_f32[2];
+
+
+	return PxVec3{ x,y,z };
+}

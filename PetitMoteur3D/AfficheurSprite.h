@@ -51,7 +51,7 @@ namespace PM3D
 		// Note : 0 = bleue, 1 = verte, 2 = violet. NE PAS UTILISER D'AUTRES VALEURS.
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 
-		int starAreaOffsetFromCenter = 10;
+		int starAreaOffsetFromCenter = 17;
 	private:
 		class CSprite
 		{
