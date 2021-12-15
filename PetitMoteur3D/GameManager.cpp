@@ -132,7 +132,7 @@ bool GameManager::allKeysCollected()
 
 void GameManager::activateFinalPortal()
 {
-	// TODO
+	sceneManager.activateFinalPortal();
 }
 
 void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
@@ -209,4 +209,5 @@ void GameManager::updateSpeed()
 	std::wstring speedStr = std::to_wstring((int)plrSpeed);
 
 	sceneManager.GetpVitesseTexte()->Ecrire(speedStr, sceneManager.GetpBrush());
+	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
 }

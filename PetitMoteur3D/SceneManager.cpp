@@ -181,11 +181,17 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_blue.dds"s, largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_green.dds"s, 2 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_purple.dds"s, 3 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	// | Speed-o-meter
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge0.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, true);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge1.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge2.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge3.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge4.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge5.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
 	// | Tomato warning
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
 	// | Portal status
-	// | Speed-o-meter
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, false);
+
 
 	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
@@ -234,7 +240,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// INIT DE LA VITESSE
 	pVitesseTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
 	pVitesseTexte->Ecrire(L"0"s, pBrush.get());
-	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 110 , hauteur - 45);
+	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
 
@@ -337,6 +343,11 @@ physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {
 
 const float SceneManager::getBoxSize() {
 	return BOXSIZE;
+}
+
+void SceneManager::activateFinalPortal()
+{
+
 }
 
 

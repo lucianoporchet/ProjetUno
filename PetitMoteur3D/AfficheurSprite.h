@@ -50,6 +50,8 @@ namespace PM3D
 
 		// Note : 0 = bleue, 1 = verte, 2 = violet. NE PAS UTILISER D'AUTRES VALEURS.
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
+		// Note : les jauges commencent a 3 dans le tableau et il y en a 6 sprites.
+		void updateGauge(int _speed);
 
 		int starAreaOffsetFromCenter = 17;
 	private:

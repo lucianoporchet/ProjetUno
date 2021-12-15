@@ -72,6 +72,8 @@ public:
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
+	void activateFinalPortal();
+
 private:
 	
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};

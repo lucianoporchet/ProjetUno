@@ -229,10 +229,10 @@ namespace PM3D
 				// **** Rendu de l'objet
 				pImmediateContext->Draw(6, 0);
 			}
-			
+
 			for (auto& sprite : tabUISprite)
 			{
-				if(sprite->displayed)
+				if (sprite->displayed)
 				{
 					// Initialiser et sélectionner les «constantes» de l'effet
 					ShadersParams sp;
@@ -692,6 +692,34 @@ namespace PM3D
 
 		// On l'ajoute à notre vecteur
 		tabUISprite.push_back(std::move(pSprite));
+	}
+
+	void CAfficheurSprite::updateGauge(int _speed)
+	{
+		for_each(tabUISprite.begin() + 3, tabUISprite.begin() + 9, [](auto& sprite) {
+			sprite->displayed = false;
+			});
+		switch (_speed / 30) 
+		{
+		case 0:
+			tabUISprite[3]->displayed = true;
+			break;
+		case 1:
+			tabUISprite[4]->displayed = true;
+			break;
+		case 2:
+			tabUISprite[5]->displayed = true;
+			break;
+		case 3:
+			tabUISprite[6]->displayed = true;
+			break;
+		case 4:
+			tabUISprite[7]->displayed = true;
+			break;
+		default:
+			tabUISprite[8]->displayed = true;
+			break;
+		}
 	}
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
