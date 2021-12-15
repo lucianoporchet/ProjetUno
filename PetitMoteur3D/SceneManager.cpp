@@ -119,9 +119,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
 	for (int i = 0; i < NBETOILES; ++i) {
-		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
-			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
-			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter) };
+		physx::PxVec3 off = RandomGenerator::get().randomVec3(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter);
+		XMFLOAT3 offset = { off.x, off.y, off.z };
 		spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 0.02f, 0.02f);
 		//spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 1.0f, 1.0f);
 	}
