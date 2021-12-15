@@ -3,7 +3,7 @@
 #include "util.h"
 #include "resource.h"
 #include "dispositifD3D11.h"
-
+#define _CRTDBG_MAP_ALLOC
 namespace PM3D
 {
 	// Definir l'organisation de notre sommet
@@ -26,6 +26,8 @@ namespace PM3D
 	CPanneauPE::~CPanneauPE()
 	{
 		DXRelacher(pResourceView);
+		DXRelacher(pTechnique);
+		DXRelacher(pPasse);
 		DXRelacher(pRenderTargetView);
 		DXRelacher(pTextureScene);
 		DXRelacher(pDepthStencilView);
@@ -38,10 +40,13 @@ namespace PM3D
 		{
 			DXRelacher(pVertexLayout[i]);
 		}
+		DXRelacher(pOldRenderTargetView);
+		DXRelacher(pOldDepthStencilView);
 		DXRelacher(pVertexBuffer);
 	}
 
-	//   FONCTION : CPanneauPE, constructeur paramètré 
+	//   FONCTION : C
+	// , constructeur paramètré 
 	//   BUT :	Constructeur d'une classe de PanneauPE
 	//   PARAMÈTRE:		
 	//		pDispositif: pointeur sur notre objet dispositif

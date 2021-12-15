@@ -153,6 +153,7 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 
 PM3D::CTerrain::~CTerrain()
 {
+	pVectorTexturesD3D.clear();
 	DXRelacher(pVertexBuffer);
 	DXRelacher(pIndexBuffer);
 	DXRelacher(pConstantBuffer);
