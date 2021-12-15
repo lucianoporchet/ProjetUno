@@ -107,6 +107,10 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\water.dds", pDispositif));
 	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
+	// Variables utiles
+	int largeur = pDispositif->GetLargeur();
+	int hauteur = pDispositif->GetHauteur();
+
 	// Creation du gestionnaire de billboards, sprites et texte
 	this->spriteManager = std::make_unique<PM3D::CAfficheurSprite>(pDispositif);
 
@@ -121,15 +125,26 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
 	// Ajout du sprite de pause
-	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, pDispositif->GetLargeur() / 2, pDispositif->GetHauteur() / 2);
-	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, pDispositif->GetLargeur() / 2, pDispositif->GetHauteur()/2, pDispositif->GetLargeur(), pDispositif->GetHauteur());
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
+	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur/2, largeur, hauteur);
 
+	// UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
+	// | keys
+	int largeurCle = largeur / 18;
+	int hauteurCle = (int)(largeurCle * 1.832f); // Ratio du sprite de la cle pour largeur -> hauteur.
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_blue.dds"s, largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_green.dds"s, 2 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\key_purple.dds"s, 3 * largeurCle, (int)(hauteur / 1.2), largeurCle, hauteurCle, false);
+	// | Tomato warning
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
+	// | Portal status
+
+	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
 		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
 			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
 			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter) };
 		spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 0.02f, 0.02f);
-		//spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 1.0f, 1.0f);
 	}
 
 	// exemple panneau oriente. Params : zone, chemin vers texture, vecteur de position (centre du sprite), scale en x, scale en y (non utilises actuellement).
@@ -138,11 +153,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// exemple panneau. Params : zone, bool si portail, chemin vers texture, vecteur de position (centre du billboard), bool si billboard oriente, scale en x, scale en y.
 	// celui-ci a sa position attribuee dans le monde. Represente le 0,0
-	spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, false, 100.0f, 100.0f);
+	//spriteManager->AjouterPanneau(0, true, ".\\modeles\\Billboards\\testing_tex.dds"s, { 0, 0, 0 }, false, 100.0f, 100.0f);
 
 	// exemple sprite. Params : zone, chemin vers texture, pos en X sur l'ecran, pos en Y sur l'ecran (0,0 en centre du sprite, attention), taille en px de la texture sur l'ecran x, puis y.
 	// attention, l'image grandit vers le haut-droite quand on monte les deux derniers params, a partir du point fourni dans les deux precedents.
-	spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
+	//spriteManager->AjouterSprite(0, ".\\modeles\\Billboards\\tomato_warn.dds"s, 350, 450, 200, 200);
 
 	// exemple texte.
 	// il faudrait mettre en place des variables dans moteur.h pour cela. Je le ferai une autre fois quand ce sera necessaire. (voir p.282 du poly du prof).

@@ -37,13 +37,19 @@ namespace PM3D
 
 		void displayPauseSprite();
 		void hidePauseSprite();
-
+		
+		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterSpriteTexte(int _zone, ID3D11ShaderResourceView* pTexture, int _x, int _y);		
 		void AjouterPanneau(int _zone, bool _isPortal, const std::string& NomTexture, const XMFLOAT3& _position, bool _followsCam,
 			float _dx = 0.0f, float _dy = 0.0f);		
+		
 		void AjouterEtoile(const std::string& NomTexture, const XMFLOAT3& _offset, float _dx = 0.0f, float _dy = 0.0f);
 		void AjouterPauseSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
+		void AjouterUISprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0, bool _displayed = false);
+
+		// Note : 0 = bleue, 1 = verte, 2 = violet. NE PAS UTILISER D'AUTRES VALEURS.
+		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 
 		int starAreaOffsetFromCenter = 10;
 	private:
@@ -58,6 +64,15 @@ namespace PM3D
 				: bPanneau(false)
 				, pTextureD3D(nullptr)
 			{
+			}
+		};
+		
+		class CUISprite : public CSprite
+		{
+		public:
+			bool displayed;
+			CUISprite() {
+				displayed = false;
 			}
 		};
 
@@ -91,10 +106,14 @@ namespace PM3D
 
 		// Tous nos sprites, panneaux et billboards. Separes pour pouvoir les differencier.
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
-		std::vector<std::unique_ptr<CPanneau>> tabEtoiles;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabSigns;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabBillboards;
+
 		std::vector<std::unique_ptr<CSprite>> tabPauseSprite;
+
+		std::vector<std::unique_ptr<CPanneau>> tabEtoiles;
+
+		std::vector<std::unique_ptr<CUISprite>> tabUISprite;
 		bool pauseStatus = false;
 
 		void InitEffet();

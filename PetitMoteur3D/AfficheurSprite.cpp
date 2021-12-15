@@ -229,6 +229,28 @@ namespace PM3D
 				// **** Rendu de l'objet
 				pImmediateContext->Draw(6, 0);
 			}
+			
+			for (auto& sprite : tabUISprite)
+			{
+				if(sprite->displayed)
+				{
+					// Initialiser et sélectionner les «constantes» de l'effet
+					ShadersParams sp;
+					sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+					pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+						&sp, 0, 0);
+
+					pCB->SetConstantBuffer(pConstantBuffer);
+
+					// Activation de la texture
+					variableTexture->SetResource(sprite->pTextureD3D);
+
+					pPasse->Apply(0, pImmediateContext);
+
+					// **** Rendu de l'objet
+					pImmediateContext->Draw(6, 0);
+				}
+			}
 		}
 		else
 		{
@@ -612,6 +634,64 @@ namespace PM3D
 
 		// On l'ajoute à notre classe
 		tabPauseSprite.push_back(std::move(pSprite));
+	}
+
+	void CAfficheurSprite::AjouterUISprite(const std::string& NomTexture, int _x, int _y, int _dx, int _dy, bool _displayed)
+	{
+		float x, y, dx, dy;
+		float posX, posY;
+		float facteurX, facteurY;
+
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+
+		std::unique_ptr<CUISprite> pSprite = std::make_unique<CUISprite>();;
+		pSprite->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		pSprite->displayed = _displayed;
+
+		// Obtenir les dimensions de la texture si _dx et _dy sont à 0;
+		if (_dx == 0 && _dy == 0)
+		{
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			dx = float(desc.Width);
+			dy = float(desc.Height);
+		}
+		else
+		{
+			dx = float(_dx);
+			dy = float(_dy);
+		}
+
+		// Dimension en facteur
+		facteurX = dx * 2.0f / pDispositif->GetLargeur();
+		facteurY = dy * 2.0f / pDispositif->GetHauteur();
+
+		// Position en coordonnées logiques
+		// 0,0 pixel = -1,1   
+		x = float(_x);
+		y = float(_y);
+
+		posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+		posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+
+		pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+			XMMatrixTranslation(posX, posY, 0.0f);
+
+		// On l'ajoute à notre vecteur
+		tabUISprite.push_back(std::move(pSprite));
 	}
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
