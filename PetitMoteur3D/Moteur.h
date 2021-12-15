@@ -1,14 +1,10 @@
 #pragma once
 #include "Singleton.h"
 #include "dispositif.h"
-
-
 #include "GameManager.h"
-
 #include "AfficheurSprite.h"
 #include "AfficheurTexte.h"
 #include "DIManipulateur.h"
-
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
@@ -221,7 +217,7 @@ protected:
 		
 		std::ofstream log{ "Log.txt" };
 		log << std::chrono::duration_cast<std::chrono::milliseconds>(result1).count();
-
+		manager.setChronoStart();
 		return true;
 	}
 

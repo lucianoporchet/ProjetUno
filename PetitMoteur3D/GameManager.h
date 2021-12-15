@@ -24,6 +24,7 @@ public:
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
 	void updateChrono();
+	void setChronoStart();
 	
 private:
 
@@ -33,7 +34,7 @@ private:
 	int64_t totalPauseTime = 0;
 	int64_t startPause = 0;
 	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
-	int64_t chronoStart = horloge.GetTimeCount();
+	int64_t chronoStart;
 	bool isPause = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;

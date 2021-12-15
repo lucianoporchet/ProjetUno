@@ -126,3 +126,8 @@ void GameManager::updateChrono()
 
 	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
 }
+
+void GameManager::setChronoStart()
+{
+	chronoStart = horloge.GetTimeCount();
+}
