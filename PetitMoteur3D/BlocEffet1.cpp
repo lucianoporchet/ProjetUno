@@ -233,18 +233,17 @@ void CBlocEffet1::Draw()
 	pPasse->Apply(0, pImmediateContext);
 
 	pImmediateContext->DrawIndexed(ARRAYSIZE(index_bloc), 0, 0);
-	variableTextureu->Release();
-	variableTextured->Release();
-	variableTexturel->Release();
-	variableTexturer->Release();
-	variableTexturef->Release();
-	variableTextureb->Release();
-	variableSampler->Release();
+	DXRelacher(variableTextureu);
+	DXRelacher(variableTextured);
+	DXRelacher(variableTexturel);
+	DXRelacher(variableTexturer);
+	DXRelacher(variableTexturef);
+	DXRelacher(variableTextureb);
+	DXRelacher(variableSampler);
 }
 
 CBlocEffet1::~CBlocEffet1()
 {
-
 	DXRelacher(pTechnique);
 	DXRelacher(pPasse);
 	DXRelacher(pSampleState);
@@ -278,8 +277,7 @@ void CBlocEffet1::InitEffet()
 		DXE_ERREURCREATION_FX);
 
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
-
-	pFXBlob->Release();
+	DXRelacher(pFXBlob);
 
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);

@@ -25,7 +25,6 @@ namespace PM3D
 
 	CPanneauPE::~CPanneauPE()
 	{
-
 		DXRelacher(pResourceView);
 		DXRelacher(pTechnique);
 		DXRelacher(pPasse);
@@ -46,7 +45,8 @@ namespace PM3D
 		DXRelacher(pVertexBuffer);
 	}
 
-	//   FONCTION : CPanneauPE, constructeur paramètré 
+	//   FONCTION : C
+	// , constructeur paramètré 
 	//   BUT :	Constructeur d'une classe de PanneauPE
 	//   PARAMÈTRE:		
 	//		pDispositif: pointeur sur notre objet dispositif
