@@ -206,9 +206,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge4.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge5.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
 	// | Tomato warning
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, false);
-	// | Portal status
 	int largeurPortal = largeur / 10;
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur - largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), 200, 200, false);
+	// | Portal status
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
 	// \DONE WITH UI
 
