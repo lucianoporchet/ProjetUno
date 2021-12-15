@@ -91,7 +91,6 @@ CObjetMesh::~CObjetMesh()
 	SubsetMaterialIndex.clear();
 	SubsetIndex.clear();
 	Material.clear();
-
 	DXRelacher(pConstantBuffer);
 	DXRelacher(pSampleState);
 

@@ -25,7 +25,7 @@ int APIENTRY _tWinMain(
 
 	try
 	{
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		// Création de l'objet Moteur
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 
@@ -37,7 +37,7 @@ int APIENTRY _tWinMain(
 
 		// Boucle d'application
 		rMoteur.Run();
-		_CrtDumpMemoryLeaks();
+		//_CrtDumpMemoryLeaks();
 		return (int)1;
 
 	}
