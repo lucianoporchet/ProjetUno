@@ -198,7 +198,7 @@ void GameManager::updateChrono()
 	if (millisec < 10)
 		millisecStr = L"0"s + millisecStr;
 
-	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L":"s + secStr + L"::" + millisecStr, sceneManager.GetpBrush());
+	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr, sceneManager.GetpBrush());
 }
 
 

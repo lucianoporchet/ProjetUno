@@ -215,7 +215,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	/******************HUD************************/
 	PM3D::CAfficheurTexte::Init();
 	const Gdiplus::FontFamily oFamily(L"Arial", nullptr);
-	pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 16.0f, Gdiplus::FontStyleBold,
+	pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 20.0f, Gdiplus::FontStyleBold,
 		Gdiplus::UnitPixel);
 	/*************Fin init HUD********************/
 
