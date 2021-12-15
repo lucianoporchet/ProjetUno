@@ -116,6 +116,7 @@ private:
 	physx::PxVec3(7038.0f, 871.0f, -1732.0f), physx::PxVec3(4807.0f, -1605.0f, -1732.0f)	//zone4
 	};
 
+	const XMFLOAT3 finalPortalPos = { 6000.0f, 0.0f, 0.0f }; // Zone 3
 
 	const physx::PxVec3 monsterPos[NBMONSTRES] = {
 		physx::PxVec3(-1000.0f, -1000.0f, -1000.0f),

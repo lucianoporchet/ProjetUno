@@ -38,7 +38,7 @@ namespace PM3D
 		void displayPauseSprite();
 		void hidePauseSprite();
 		
-		void displayFinalPortal();
+		void displayFinalPortal() { tabUISprite.back()->displayed = true; };
 
 		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
@@ -50,7 +50,7 @@ namespace PM3D
 		void AjouterPauseSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterUISprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0, bool _displayed = false);
 
-		// Note : 0 = bleue, 1 = verte, 2 = violet. NE PAS UTILISER D'AUTRES VALEURS.
+		// Note : 0, 1, 2. NE PAS UTILISER D'AUTRES VALEURS.
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 		// Note : les jauges commencent a 3 dans le tableau et il y en a 6 sprites.
 		void updateGauge(int _speed);
@@ -112,7 +112,6 @@ namespace PM3D
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabSigns;
 		std::map<int, std::vector<std::unique_ptr<CPanneau>>> tabBillboards;
-		std::unique_ptr<CPanneau> finalPortal; // TO USE
 
 		std::vector<std::unique_ptr<CSprite>> tabPauseSprite;
 

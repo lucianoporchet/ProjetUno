@@ -368,11 +368,6 @@ namespace PM3D
 		pauseStatus = false;
 	}
 
-	void CAfficheurSprite::displayFinalPortal()
-	{
-		// TODO
-	}
-
 	void CAfficheurSprite::AjouterSprite(int _zone, const std::string& NomTexture,
 		int _x, int _y,
 		int _dx, int _dy)
