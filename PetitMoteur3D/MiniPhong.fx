@@ -12,6 +12,10 @@ cbuffer param
 	float4 vSMat; // la valeur spéculaire du matériau
 	float puissance; // la puissance de spécularité
 	int bTex;	// la valeur diffuse du matériau 
+	float4 vLumiere2;
+	float4 vAEcl2;
+	float4 vDEcl2;
+	float4 vSEcl2;
 	float2 remplissage;
 }
 
@@ -20,8 +24,9 @@ struct VS_Sortie
 	float4 Pos : SV_Position;
 	float3 Norm :    TEXCOORD0;
 	float3 vDirLum : TEXCOORD1;
-	float3 vDirCam : TEXCOORD2;
-	float2 coordTex : TEXCOORD3;
+	float3 vDirLum2 : TEXCOORD2;
+	float3 vDirCam : TEXCOORD3;
+	float2 coordTex : TEXCOORD4;
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
@@ -29,7 +34,6 @@ static VS_Sortie sortie = (VS_Sortie)0;
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
-	
 	sortie.Pos = Pos;
 	sortie.coordTex = coordTex;
 
@@ -48,6 +52,7 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	vs.vDirLum = vLumiere.xyz - PosWorld;
 	vs.vDirCam = vCamera.xyz - PosWorld;
 
+	vs.vDirLum2 = vLumiere2.xyz - PosWorld;
 	//vs.vDirLum.z = -vs.vDirLum.z;
 
 
@@ -56,6 +61,13 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float3 N = normalize(vs.Norm);
 	float3 L = normalize(vs.vDirLum);
 	float3 V = normalize(vs.vDirCam);
+
+	float3 lightToPixelVec = vLumiere2.xyz - PosWorld;
+	float d = length(lightToPixelVec);
+	float range = 1000.0f;
+	vs.vDirLum2 /= d;
+	float howMuchLight = dot(vs.vDirLum2, N);
+	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
 
 	// Valeur de la composante diffuse
 	float3 diff = saturate(dot(N, L));
@@ -71,21 +83,37 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	{
 		// Échantillonner la couleur du pixel à partir de la texture
 		couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
-		// I = A + D * N.L + (R.V)n
-		//vAEcl.rgb = float3(1.f, 1.f, 1.f);
-		couleur = couleurTexture * vAEcl.rgb +
-			      couleurTexture * vDEcl.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+		if (d > range) {
+			// I = A + D * N.L + (R.V)n
+			couleur = couleurTexture * vAEcl.rgb +
+				couleurTexture * vDEcl.rgb * diff +
+				vSEcl.rgb * vSMat.rgb * S;
+		}
+		else
+			couleur = float3(1.0f, 0.0f, 0.0f);
+		//else if (howMuchLight > 0.0f) {
+		//	finalColor += howMuchLight * vAEcl2;
+		//	finalColor /= 0.2f * d;
+		//}
+		//couleur += finalColor;
 	}
 	else
 	{
-		couleur = vAEcl.rgb * vAMat.rgb +
-			      vDEcl.rgb * vDMat.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+		if (d > range) {
+			couleur = vAEcl.rgb * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
+				vSEcl.rgb * vSMat.rgb * S;
+		}
+		else
+			couleur = float3(1.0f, 0.0f, 0.0f);
+		//else if (howMuchLight > 0.0f) {
+		//	finalColor += howMuchLight * vAEcl2;
+		//	finalColor /= 0.2f * d;
+		//}
+		//couleur += finalColor;
 	}
 
-
-	return float4(couleur, 1.0f);
+	//if (PosWorld.y < 0.0f) couleur = float3(1.0f, 0.0f, 0.0f);
+	return float4(saturate(couleur), 1.0f);
 }
 
 [maxvertexcount(4)]

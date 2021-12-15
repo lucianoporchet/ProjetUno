@@ -33,11 +33,17 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	XMVECTOR vDEcl; 			// la valeur diffuse de l'éclairage 
 	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
 	XMVECTOR vSEcl; 			// la valeur spéculaire de l'éclairage 
-	XMVECTOR vSMat; 			// la valeur spéculaire du matériau 
+	XMVECTOR vSMat; 			// la valeur spéculaire du matériau 					// Texture ou materiau
+	int32_t bTex;
+	XMVECTOR vLumiere2;
+	XMVECTOR vAEcl2;
+	XMVECTOR vDEcl2;
+	XMVECTOR vSEcl2;
 	float puissance;
-	int32_t bTex;					// Texture ou materiau 
 	XMFLOAT2 remplissage;
+	
 };
+
 
 // Ancien constructeur
 CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif)
@@ -207,23 +213,22 @@ void CObjetMesh::Anime(float tempsEcoule)
 	float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
 
 
-
-	if (distance <= 1500.0f && !isTessellated && canBeTesselated)
-
-	{
-		InitEffet(true);
-		isTessellated = true;
-	} 
-	else if (distance > 1500.0f && isTessellated && canBeTesselated)
-	{
-		InitEffet(false);
-		isTessellated = false;
-	}
-	else if (!canBeTesselated)
-	{
-		InitEffet(false);
-		isTessellated = false;
-	}
+	//InitEffet(false);
+	//if (distance <= 1500.0f && !isTessellated && canBeTesselated)
+	//{
+	//	InitEffet(true);
+	//	isTessellated = true;
+	//} 
+	//else if (distance > 1500.0f && isTessellated && canBeTesselated)
+	//{
+	//	InitEffet(false);
+	//	isTessellated = false;
+	//}
+	//else if (!canBeTesselated)
+	//{
+	//	InitEffet(false);
+	//	isTessellated = false;
+	//}
 }
 
 void CObjetMesh::Draw()
@@ -256,11 +261,15 @@ void CObjetMesh::Draw()
 	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
 	camPos = moteur.GetFreeCamera().getPosition();
 
-	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
+	sp.vLumiere = XMVectorSet(3000.0f, 3000.0f, 0.0f, 1.0f);
 	sp.vCamera = camPos;
 	sp.vAEcl = lightColor[static_cast<int>(GameManager::get().getActiveZone())];
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+	sp.vLumiere2 = XMVectorSet(-27.0f, 6205.0f, 829.0f, 1.0f);
+	sp.vAEcl2 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	sp.vDEcl2 = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	sp.vSEcl2 = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 
 	// Le sampler state
 	ID3DX11EffectSamplerVariable* variableSampler;
