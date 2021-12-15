@@ -125,8 +125,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
 		PxVec3 portalposi = portalPos[i];
 		PxVec3 portalposiplus = portalPos[i+1];
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
