@@ -73,10 +73,10 @@ namespace PM3D
 
 	CAfficheurSprite ::~CAfficheurSprite()
 	{
-			
+		DXRelacher(pTechnique);
+		DXRelacher(pPasse);
 		DXRelacher(pConstantBuffer);
 		DXRelacher(pSampleState);
-
 		DXRelacher(pEffet);
 		DXRelacher(pVertexLayout);
 		DXRelacher(pVertexBuffer);		

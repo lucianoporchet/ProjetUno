@@ -27,6 +27,8 @@ namespace PM3D
 	{
 
 		DXRelacher(pResourceView);
+		DXRelacher(pTechnique);
+		DXRelacher(pPasse);
 		DXRelacher(pRenderTargetView);
 		DXRelacher(pTextureScene);
 		DXRelacher(pDepthStencilView);

@@ -245,6 +245,8 @@ void CBlocEffet1::Draw()
 CBlocEffet1::~CBlocEffet1()
 {
 
+	DXRelacher(pTechnique);
+	DXRelacher(pPasse);
 	DXRelacher(pSampleState);
 	DXRelacher(pConstantBuffer);
 	DXRelacher(pEffet);

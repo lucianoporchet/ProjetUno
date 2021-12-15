@@ -16,9 +16,6 @@ namespace PM3D
 		DXRelacher(mSolidCullBackRS);
 		DXRelacher(pDepthTexture);
 
-		// Remove any bound render target or depth/stencil buffer
-		ID3D11RenderTargetView* nullViews[] = { nullptr };
-		pImmediateContext->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
 		DXRelacher(pDepthStencilView);
 		DXRelacher(pRenderTargetView);
 		
@@ -34,6 +31,10 @@ namespace PM3D
 		if (d3dDebug != nullptr)            d3dDebug->Release();
 		#endif
 		DXRelacher(pD3DDevice);
+
+		// Remove any bound render target or depth/stencil buffer
+		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		pImmediateContext->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
 		if (pImmediateContext)
 		{
 			pImmediateContext->ClearState();
@@ -54,15 +55,15 @@ namespace PM3D
 	CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 		const HWND hWnd)
 	{
-		UINT largeur;
-		UINT hauteur;
+		UINT largeur{};
+		UINT hauteur{};
 		UINT createDeviceFlags = 0;
 
 #ifdef _DEBUG
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-		D3D_FEATURE_LEVEL featureLevels[] =
+		const D3D_FEATURE_LEVEL featureLevels[] =
 		{
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
@@ -77,7 +78,7 @@ namespace PM3D
 		ZeroMemory(&sd, sizeof(sd));
 
 		// Obtenir les informations de l'adaptateur de défaut
-		CInfoDispositif Dispo0(ADAPTATEUR_COURANT);
+		const CInfoDispositif Dispo0(ADAPTATEUR_COURANT);
 
 		largeur = 1024;
 		hauteur = 768;
@@ -104,7 +105,7 @@ namespace PM3D
 		desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-		CInfoDispositif DispoVoulu(desc);
+		const CInfoDispositif DispoVoulu(desc);
 		DispoVoulu.GetDesc(desc);
 
 		largeur = desc.Width;
@@ -246,7 +247,7 @@ namespace PM3D
 
 	void CDispositifD3D11::ActiverMelangeAlpha()
 	{
-		float facteur[4] = { 0.0f,0.0f,0.0f,0.0f };
+		const float facteur[4] = { 0.0f,0.0f,0.0f,0.0f };
 
 		// Activer le mélange - alpha blending.
 		pImmediateContext->OMSetBlendState(alphaBlendEnable, facteur, 0xffffffff);
@@ -254,7 +255,7 @@ namespace PM3D
 
 	void CDispositifD3D11::DesactiverMelangeAlpha()
 	{
-		float facteur[4] = { 0.0f,0.0f,0.0f,0.0f };
+		const float facteur[4] = { 0.0f,0.0f,0.0f,0.0f };
 
 		// Désactiver le mélange - alpha blending.
 		pImmediateContext->OMSetBlendState(alphaBlendDisable, facteur, 0xffffffff);
