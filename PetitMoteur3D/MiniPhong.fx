@@ -20,8 +20,9 @@ struct VS_Sortie
 	float4 Pos : SV_Position;
 	float3 Norm :    TEXCOORD0;
 	float3 vDirLum : TEXCOORD1;
-	float3 vDirCam : TEXCOORD2;
-	float2 coordTex : TEXCOORD3;
+	float3 vDirLum2 : TEXCOORD2;
+	float3 vDirCam : TEXCOORD3;
+	float2 coordTex : TEXCOORD4;
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
@@ -29,7 +30,6 @@ static VS_Sortie sortie = (VS_Sortie)0;
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
-	
 	sortie.Pos = Pos;
 	sortie.coordTex = coordTex;
 
@@ -40,6 +40,10 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 Texture2D textureEntree;  // la texture
 SamplerState SampleState;  // l'état de sampling
 
+static float3 lum1 = float3(408.0f, 6578.0f, 636.0f);
+static float3 lum2 = float3(-348.0f, 5943.0f, 964.0f);
+static float3 coulLum = float3(1.0f, 0.0f, 0.0f);
+
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
@@ -48,14 +52,21 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	vs.vDirLum = vLumiere.xyz - PosWorld;
 	vs.vDirCam = vCamera.xyz - PosWorld;
 
-	//vs.vDirLum.z = -vs.vDirLum.z;
+	float3 WorldPos = mul(vs.Pos, matWorld);
 
-
+	float range = 500.0f;
+	float att = 0.000025f;
 
 	// Normaliser les paramètres
 	float3 N = normalize(vs.Norm);
 	float3 L = normalize(vs.vDirLum);
 	float3 V = normalize(vs.vDirCam);
+
+	float3 lightToPixelVec = lum1 - WorldPos.xyz;
+	float d1 = length(lightToPixelVec);
+
+	lightToPixelVec = lum2 - WorldPos.xyz;
+	float d2 = length(lightToPixelVec);
 
 	// Valeur de la composante diffuse
 	float3 diff = saturate(dot(N, L));
@@ -67,25 +78,35 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float S = pow(saturate(dot(R, V)), puissance);
 	float3 couleurTexture;
 
+	float3 totalAbiant = vAEcl.rgb;
+
+	if (d1 <= range) {
+		totalAbiant += coulLum.rgb / (att * d1 * d1);
+	}
+	if (d2 <= range) {
+		totalAbiant += coulLum.rgb / (att * d2 * d2);
+	}
+
 	if (bTex > 0)
 	{
 		// Échantillonner la couleur du pixel à partir de la texture
 		couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
-		// I = A + D * N.L + (R.V)n
-		//vAEcl.rgb = float3(1.f, 1.f, 1.f);
-		couleur = couleurTexture * vAEcl.rgb +
-			      couleurTexture * vDEcl.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+
+
+		couleur = couleurTexture * totalAbiant +
+			couleurTexture * vDEcl.rgb * diff +
+			vSEcl.rgb * vSMat.rgb * S;
+
 	}
 	else
 	{
-		couleur = vAEcl.rgb * vAMat.rgb +
-			      vDEcl.rgb * vDMat.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+
+		couleur = totalAbiant * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
+			vSEcl.rgb * vSMat.rgb * S;
 	}
 
-
-	return float4(couleur, 1.0f);
+	
+	return float4(saturate(couleur), 1.0f);
 }
 
 [maxvertexcount(4)]

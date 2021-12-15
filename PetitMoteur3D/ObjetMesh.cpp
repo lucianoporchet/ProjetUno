@@ -23,7 +23,7 @@ UINT CObjetMesh::CSommetMesh::numElements;
 struct ShadersParams // toujours un multiple de 16 pour les constantes
 {
 	XMMATRIX matWorldViewProj;	// la matrice totale 
-	//XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
+		//XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
 	XMVECTOR vLumiere; 			// la position de la source d'éclairage (Point)
 	XMVECTOR vCamera; 			// la position de la caméra
@@ -36,7 +36,9 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	float puissance;
 	int32_t bTex;					// Texture ou materiau 
 	XMFLOAT2 remplissage;
+	
 };
+
 
 // Ancien constructeur
 CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif)
@@ -199,10 +201,11 @@ void CObjetMesh::Anime(float tempsEcoule)
 	XMFLOAT3 objpos;
 
 	XMStoreFloat3(&objpos, objPos);
+
 	const float distance = abs(sqrt((objpos.x - cpos.x) * (objpos.x - cpos.x) + (objpos.y - cpos.y) * (objpos.y - cpos.y) + (objpos.z - cpos.z) * (objpos.z - cpos.z)));
 
-	if (distance <= 1500.0f && !isTessellated && canBeTesselated)
 
+	if (distance <= 1500.0f && !isTessellated && canBeTesselated)
 	{
 		InitEffet(true);
 		isTessellated = true;
@@ -249,11 +252,12 @@ void CObjetMesh::Draw()
 	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
 	camPos = moteur.GetFreeCamera().getPosition();
 
-	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
+	sp.vLumiere = XMVectorSet(3000.0f, 3000.0f, 0.0f, 1.0f);
 	sp.vCamera = camPos;
 	sp.vAEcl = lightColor[static_cast<int>(GameManager::get().getActiveZone())];
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+	
 
 	// Le sampler state
 	ID3DX11EffectSamplerVariable* variableSampler;

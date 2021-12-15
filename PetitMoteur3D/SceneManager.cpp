@@ -73,7 +73,9 @@ std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUp
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
 
 	std::vector<std::future<void>> futures;
-	const auto f = [&](Player* p ) { p->setCam(&camera); };
+
+	//auto f = [&](Player* p) { p->setCam(&camera); };
+
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
@@ -94,7 +96,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		std::unique_ptr<TunnelComponent> tunnel = std::make_unique<TunnelComponent>(".\\modeles\\VaisseauTunnel\\cube.obm", pDispositif, tunnelScale[i], tunnelPos[i], tunnelRot);
 		Scenes[1].push_back(std::move(tunnel));
 	}
-
 
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
@@ -199,9 +200,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// Effet "etoiles"
 	for (int i = 0; i < NBETOILES; ++i) {
-		XMFLOAT3 offset = { (float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
-			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter),
-			(float)RandomGenerator::get().next(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter) };
+		physx::PxVec3 off = RandomGenerator::get().randomVec3(-spriteManager->starAreaOffsetFromCenter, spriteManager->starAreaOffsetFromCenter);
+		XMFLOAT3 offset = { off.x, off.y, off.z };
 		spriteManager->AjouterEtoile(".\\modeles\\Billboards\\star.dds"s, offset, 0.02f, 0.02f);
 	}
 
