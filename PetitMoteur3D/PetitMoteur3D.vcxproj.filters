@@ -126,6 +126,8 @@
     <ClCompile Include="Portal.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="PickUpObject.cpp">
+      <Filter>Entities</Filter>
     <ClCompile Include="LectureFichier.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -250,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="Portal.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpObject.h">
+      <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>Entities</Filter>

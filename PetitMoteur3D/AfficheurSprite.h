@@ -41,7 +41,7 @@ namespace PM3D
 			float _dx = 0.0f, float _dy = 0.0f);		
 		void AjouterEtoile(const std::string& NomTexture, const XMFLOAT3& _offset, float _dx = 0.0f, float _dy = 0.0f);
 
-		int starAreaOffsetFromCenter = 10;
+		int starAreaOffsetFromCenter = 17;
 	private:
 		class CSprite
 		{

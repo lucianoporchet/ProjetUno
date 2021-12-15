@@ -23,21 +23,31 @@ public:
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
+
+	bool isGreenKeyCollected();
+	bool isBlueKeyCollected();
+	bool isRedKeyCollected();
+	bool allKeysCollected();
+	void activateFinalPortal();
+	void activatePickUpObjectFromPos(PxVec3 pos);
+
 	void updateChrono();
 	void setChronoStart();
 	
 private:
 
-
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
 	int64_t totalPauseTime = 0;
 	int64_t startPause = 0;
-	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
 	int64_t chronoStart;
 	bool isPause = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;
+	bool greenKeyCollected = false;
+	bool blueKeyCollected = false;
+	bool redKeyCollected = false;
+	bool speedBuffCollected = false;
 
 	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();

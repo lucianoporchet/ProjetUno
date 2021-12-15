@@ -24,6 +24,21 @@ void load(std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>* Scenes,
 	if(Scenes) (*Scenes)[scene].push_back(std::move(obj));
 }
 
+template<class T>
+void loadPickUp(std::vector<std::vector<std::unique_ptr<PickUpObject>>>* Scenes,
+	std::string&& nomfichier,
+	PM3D::CDispositifD3D11* _pDispositif,PickUpObjectType objType,
+	float scale,
+	physx::PxVec3 pos,
+	int scene,
+	std::function<void(T*)> func)
+{
+	std::unique_ptr<T> obj = std::make_unique<T>(nomfichier, _pDispositif,objType, scale, pos, scene);
+	func(obj.get());
+	std::lock_guard<std::mutex> lock(objMutex);
+	if (Scenes) (*Scenes)[scene].push_back(std::move(obj));
+}
+
 
 std::vector<std::unique_ptr<PM3D::CObjet3D>>& SceneManager::getListScene(int scene)
 {
@@ -34,6 +49,25 @@ std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>& SceneManager::getScen
 {
 	return Scenes;
 }
+
+std::vector<std::unique_ptr<PickUpObject>>& SceneManager::getListPickUpObjectScene(int scene)
+{
+	return PickUpObjectsScenes[scene];
+}
+
+std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUpObjectScenes() noexcept
+{
+	return PickUpObjectsScenes;
+}
+//std::vector<std::unique_ptr<PickUpObject>>& SceneManager::getListPickUpObjectScene(int scene)
+//{
+//	return PickUpObjectsScenes[scene];
+//}
+//
+//std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUpObjectScenes() noexcept
+//{
+//	return PickUpObjectsScenes;
+//}
 
 
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
@@ -99,6 +133,18 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
 		futures.push_back(std::async(load<Monster>, &Scenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
 	}
+
+	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
+		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff) 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\burger.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
+		else 
+		{
+			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\key.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
+		}
+	}
+
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
@@ -179,6 +225,10 @@ SceneManager::SceneManager() {
 	for (int i = 0; i < NBZONES; ++i) {
 		Scenes.push_back(std::vector<std::unique_ptr<PM3D::CObjet3D>>{});
 	}
+	for (int i = 0; i < NBZONES; ++i) 
+	{
+		PickUpObjectsScenes.push_back(std::vector<std::unique_ptr<PickUpObject>>{});
+	}
 }
 
 void SceneManager::Draw(Zone scene) {
@@ -188,6 +238,12 @@ void SceneManager::Draw(Zone scene) {
 	{
 		obj->Draw();
 	}
+
+	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)]) 
+	{
+		obj->Draw();
+	}
+
 	// Billboards, sprites et panneaux
 	spriteManager->DrawZone(static_cast<int>(scene));
 	spriteManager->Draw();
@@ -200,6 +256,12 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	{
 		obj->Anime(tmps);
 	}
+  
+	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)])
+	{
+		obj->Anime(tmps);
+	}
+
 	// Billboards, sprites et panneaux
 	spriteManager->Anime(tmps);
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
@@ -213,6 +275,7 @@ PM3D::CAfficheurTexte* SceneManager::GetpChronoTexte()
 Gdiplus::SolidBrush* SceneManager::GetpBrush()
 {
 	return pBrush.get();
+
 }
 
 physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {
@@ -231,4 +294,6 @@ physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {
 const float SceneManager::getBoxSize() {
 	return BOXSIZE;
 }
+
+
 
