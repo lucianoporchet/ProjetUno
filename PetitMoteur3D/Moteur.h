@@ -281,6 +281,7 @@ protected:
 
 	//camera joueur
 	CCamera freeCam;
+	std::unique_ptr<CPanneauPE> pPanneauPE;
 };
 
 } // namespace PM3D

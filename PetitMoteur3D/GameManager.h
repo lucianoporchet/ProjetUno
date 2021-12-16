@@ -62,7 +62,6 @@ private:
 	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
 	int64_t chronoStart = horloge.GetTimeCount();
 	bool hardmode = true;
-	int64_t chronoStart;
 	bool isPause = false;
 	bool gameOverStatus = false;
 	bool gameWon = false;
