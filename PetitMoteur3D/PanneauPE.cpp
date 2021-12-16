@@ -3,7 +3,12 @@
 #include "util.h"
 #include "resource.h"
 #include "dispositifD3D11.h"
+
+#include "GameManager.h"
+
+
 #define _CRTDBG_MAP_ALLOC
+
 namespace PM3D
 {
 	// Definir l'organisation de notre sommet
@@ -145,6 +150,137 @@ namespace PM3D
 			&pVertexLayout[1]),
 			DXE_CREATIONLAYOUT);
 
+
+
+		pTechnique = pEffet->GetTechniqueByIndex(2);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr3 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[2]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(3);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr4 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[3]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(4);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr5 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[4]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(5);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr6 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[5]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(6);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr7 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[6]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(7);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr8 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[7]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(8);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr9 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[8]),
+			DXE_CREATIONLAYOUT);
+
+		pTechnique = pEffet->GetTechniqueByIndex(9);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr10 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[9]),
+			DXE_CREATIONLAYOUT);
+
+
 		// Initialisation des paramètres de sampling de la texture
 		// Pas nécessaire d'être compliqué puisque l'affichage sera
 		// en 1 pour 1 et à plat
@@ -275,8 +411,10 @@ namespace PM3D
 		const UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
+
+		// REMINDER
 		// Choix de la technique
-		pTechnique = pEffet->GetTechniqueByIndex(1);
+		pTechnique = pEffet->GetTechniqueByIndex(GameManager::get().getShaderTechnique());
 		pPasse = pTechnique->GetPassByIndex(0);
 
 		// input layout des sommets

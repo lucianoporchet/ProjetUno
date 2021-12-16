@@ -48,7 +48,7 @@ private:
 	ID3DX11EffectTechnique* pTechnique;
 	ID3DX11EffectPass* pPasse;
 
-	static const int NOMBRE_TECHNIQUES = 2;
+	static const int NOMBRE_TECHNIQUES = 10;
 	ID3D11InputLayout* pVertexLayout[NOMBRE_TECHNIQUES];
 
 	ID3D11SamplerState* pSampleState;
