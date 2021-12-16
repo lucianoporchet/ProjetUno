@@ -150,4 +150,16 @@ namespace PM3D {
 			updateFctPtr = &CCamera::update3RD;
 		}
 	}
+
+	bool CCamera::isCamera1st()
+	{
+		if (updateFctPtr == &CCamera::update3RD)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 }

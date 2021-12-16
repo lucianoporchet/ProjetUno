@@ -24,6 +24,7 @@ public:
 	void moveUp();
 	void moveDown();
 	void rotateRight();
+	PM3D::CCamera* getCam();
 
 	/*
 	Ajouter la cam liée au joueur actuellement et update sa position et direction

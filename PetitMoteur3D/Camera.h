@@ -69,6 +69,7 @@ namespace PM3D {
 		void updateView();
 
 		void toggleFirstPerson();
+		bool isCamera1st();
 
 
 	public:
