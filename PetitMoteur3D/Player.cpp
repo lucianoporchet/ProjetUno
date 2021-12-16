@@ -134,6 +134,11 @@ void Player::rotateRight()
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
+PM3D::CCamera* Player::getCam()
+{
+	return camera;
+}
+
 //roulis x gauche
 void Player::rotateLeft() 
 {
