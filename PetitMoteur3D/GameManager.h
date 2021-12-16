@@ -62,7 +62,8 @@ private:
 	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
 	int64_t chronoStart = horloge.GetTimeCount();
 	bool hardmode = true;
-	bool isPause = false;
+	bool isPause = true;
+	bool onTitleScreen = true;
 	bool gameOverStatus = false;
 	bool gameWon = false;
 	Zone activeZone = Zone::ZONE1;

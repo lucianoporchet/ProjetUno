@@ -66,6 +66,8 @@ namespace PM3D
 		void updateGauge(int _speed);
 
 		void changePauseToGameOver(bool _gameWon, std::unique_ptr<CAfficheurTexte> & _timerTex);
+		void changePauseToTitleScreen();
+		void changePauseToPauseUI();
 
 		int starAreaOffsetFromCenter = 17;
 	private:
@@ -130,7 +132,7 @@ namespace PM3D
 		std::vector<std::unique_ptr<CPanneau>> tabEtoiles;
 
 		std::vector<std::unique_ptr<CUISprite>> tabUISprite;
-		bool pauseStatus = false;
+		bool pauseStatus = true;
 
 		void InitEffet();
 	};

@@ -215,10 +215,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		}
 	}
 
-
-	// Ajout du sprite de pause
-	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
-	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur/2, largeur, hauteur);
+	// Ajout des sprites du menu visuel
+	spriteManager->changePauseToTitleScreen();
 
 	// /UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
 	// | keys
