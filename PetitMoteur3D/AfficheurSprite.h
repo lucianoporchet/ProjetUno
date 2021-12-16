@@ -37,6 +37,9 @@ namespace PM3D
 
 		void displayPauseSprite();
 		void hidePauseSprite();
+
+		void displayWarning() { tabUISprite[9]->displayed = true; };
+		void hideWarning() { tabUISprite[9]->displayed = false; };
 		
 		void displayFinalPortal() { tabUISprite.back()->displayed = true; };
 

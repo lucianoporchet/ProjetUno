@@ -25,6 +25,21 @@ void load(std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>>* Scenes,
 }
 
 template<class T>
+void loadMonster(std::map<int, std::unique_ptr<Monster>>* Scenes,
+	std::string&& nomfichier,
+	PM3D::CDispositifD3D11* _pDispositif,
+	float scale,
+	physx::PxVec3 pos,
+	int scene,
+	std::function<void(T*)> func)
+{
+	std::unique_ptr<T> obj = std::make_unique<T>(nomfichier, _pDispositif, scale, pos, scene);
+	func(obj.get());
+	std::lock_guard<std::mutex> lock(objMutex);
+	if (Scenes) (*Scenes)[scene] = std::move(obj);
+}
+
+template<class T>
 void loadPickUp(std::vector<std::vector<std::unique_ptr<PickUpObject>>>* Scenes,
 	std::string&& nomfichier,
 	PM3D::CDispositifD3D11* _pDispositif,PickUpObjectType objType,
@@ -132,7 +147,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
 		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
-		futures.push_back(std::async(load<Monster>, &Scenes, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
+		futures.push_back(std::async(loadMonster<Monster>, &Monsters, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
@@ -205,9 +220,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge4.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\gauge5.dds"s, largeur - 150, 7 * (hauteur / 8), 0, 0, false);
 	// | Tomato warning
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur / 2, hauteur / 4, 200, 200, true);
-	// | Portal status
 	int largeurPortal = largeur / 10;
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur - largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), 200, 200, false);
+	// | Portal status
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
 	// \DONE WITH UI
 
@@ -285,6 +300,7 @@ void SceneManager::Draw(Zone scene) {
 	{
 		obj->Draw();
 	}
+	Monsters[static_cast<int>(scene)]->Draw();
 
 	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)]) 
 	{
@@ -303,6 +319,7 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	{
 		obj->Anime(tmps);
 	}
+	Monsters[static_cast<int>(scene)]->Anime(tmps);
   
 	for (auto& obj : PickUpObjectsScenes[static_cast<int>(scene)])
 	{
@@ -311,6 +328,15 @@ void SceneManager::Anime(Zone scene, float tmps) {
 
 	// Billboards, sprites et panneaux
 	spriteManager->Anime(tmps);
+	float distance = (player->body->getGlobalPose().p - Monsters[static_cast<int>(scene)]->getPosition().p).magnitude();
+	if (distance < 600.0f)
+	{
+		spriteManager->displayWarning();
+	}
+	else
+	{
+		spriteManager->hideWarning();
+	}
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
 }
 

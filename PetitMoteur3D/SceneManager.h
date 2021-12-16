@@ -77,6 +77,7 @@ public:
 private:
 	
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
+	std::map<int, std::unique_ptr<Monster>> Monsters;
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
 	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
