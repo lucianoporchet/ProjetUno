@@ -71,7 +71,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		physXManager.stepPhysics(static_cast<int>(activeZone));
 
 
-		
+		updateShader();
 
 		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
@@ -103,6 +103,31 @@ void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
 }
 
+void GameManager::setLastTeleportTime()
+{
+	lastTeleport = horloge.GetTimeCount();
+}
+
+int GameManager::getShaderTechnique()
+{
+	return currentPosteffectShader;
+}
+
+void GameManager::setShaderTechniqueToBlur()
+{
+	currentPosteffectShader = chosenBlurPosteffectShader;
+}
+
+void GameManager::setShaderTechniqueToClear()
+{
+	currentPosteffectShader = chosenPosteffectShader;
+}
+
+bool GameManager::IsHardModeOn()
+{
+	return hardmode;
+}
+
 
 bool GameManager::isGreenKeyCollected()
 {
@@ -116,7 +141,7 @@ bool GameManager::isBlueKeyCollected()
 
 bool GameManager::isRedKeyCollected()
 {
-	return false;
+	return hardmode;
 }
 
 bool GameManager::allKeysCollected()
@@ -186,4 +211,15 @@ void GameManager::updateChrono()
 
 	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
 
+}
+
+void GameManager::updateShader()
+{
+	if (currentPosteffectShader == chosenBlurPosteffectShader) 
+	{
+		if (horloge.GetTimeBetweenCounts(lastTeleport, horloge.GetTimeCount()) > blurShaderFadeTimer)
+		{
+			setShaderTechniqueToClear();
+		}
+	}
 }
