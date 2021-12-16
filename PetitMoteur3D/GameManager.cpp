@@ -54,54 +54,47 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 	if (gameOverStatus)
 	{
-		// TODO placeholder. Calculate actual end time.
-		sceneManager.changePauseToGameOver(gameWon, L"time"s);
-		// TODO : Special pause for game over.
-		if (!gameWon)
-		{
-			// TODO : change shader to black and white if game lost.
-		}
-		else
-		{
-			// TODO : Some other stuff?
-		}
+		// TODO : Special pause for game over. Softlock.
+		// Needs to watch for reset.
 	}
-
-	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
+	else
 	{
-		if (getIsPauseStatus())
+		if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
 		{
-			setPauseMenu(false);
-		}
-		else {
-			setPauseMenu(true);
-		}
-	}
-
-	//si on est pas sur le menu pause
-	if (!getIsPauseStatus()) {
-
-		if (activeZone != nextZone) {
-			Zone pastZone = activeZone;
-			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
-			activeZone = nextZone;
-			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
-			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
-			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
+			if (getIsPauseStatus())
+			{
+				setPauseMenu(false);
+			}
+			else {
+				setPauseMenu(true);
+			}
 		}
 
-		physXManager.stepPhysics(static_cast<int>(activeZone));
+		//si on est pas sur le menu pause
+		if (!getIsPauseStatus()) {
+
+			if (activeZone != nextZone) {
+				Zone pastZone = activeZone;
+				physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
+				activeZone = nextZone;
+				physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
+				PxQuat qua = sceneManager.player->body->getGlobalPose().q;
+				sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
+			}
+
+			physXManager.stepPhysics(static_cast<int>(activeZone));
 
 
 		
-		updateSpeed();
-		updateChrono();
-		sceneManager.Anime(activeZone, tempsEcoule);
+			updateSpeed();
+			updateChrono();
+			sceneManager.Anime(activeZone, tempsEcoule);
 
-		float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
-		if (distance > 2500.0f)
-		{
-			gameOver(false);
+			float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
+			if (distance > 2500.0f)
+			{
+				gameOver(false);
+			}
 		}
 	}
 
@@ -242,7 +235,33 @@ void GameManager::updateSpeed()
 void GameManager::gameOver(bool _win)
 {
 	// Do stuff that makes the game is over
-	sceneManager.changePauseToGameOver(_win, L"LOL TMORT"s);
+	gameOverStatus = true;
+
+	// stuff for the timer
+	const int64_t currentTime = horloge.GetTimeCount();
+	const int64_t diff = currentTime + totalPauseTime - chronoStart;
+	const double secPerCount = horloge.GetSecPerCount();
+	const int mintmp = static_cast<int>((diff * secPerCount) / 60);
+	const int hour = mintmp / 60;
+	const int min = mintmp % 60;
+	const int sec = static_cast<int>(diff * secPerCount) % 60;
+	const int  millisec = static_cast<int>(((diff * secPerCount) - sec - (min * 60)) * 1000);
+
+	std::wstring hourStr = std::to_wstring(hour);
+	std::wstring minStr = std::to_wstring(min);
+	std::wstring secStr = std::to_wstring(sec);
+	std::wstring millisecStr = std::to_wstring(millisec);
+
+	if (sec < 10)
+		secStr = L"0"s + secStr; // affichage en style X:00	
+	if (min < 10)
+		minStr = L"0"s + minStr; // affichage en style X:00
+	if (millisec < 100)
+		millisecStr = L"0"s + millisecStr;
+	if (millisec < 10)
+		millisecStr = L"0"s + millisecStr;
+
+	sceneManager.changePauseToGameOver(_win, hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr);
 	setPauseMenu(true);
 }
 
