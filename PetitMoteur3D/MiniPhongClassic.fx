@@ -27,8 +27,11 @@ struct VS_Sortie
 };
 
 
-static float3 lum1 = float3(408.0f, 6578.0f, 636.0f);
-static float3 lum2 = float3(-348.0f, 5943.0f, 964.0f);
+static float3 lum1 = float3(398.0f, 5821.0f, -422.0f);
+static float3 lum2 = float3(31.0f, 5689.0f, 98.0f);
+static float3 lum3 = float3(-336.0f, 5514.0f, 528.0f);
+static float3 lum4 = float3(459.0f, 6244.0f, 353.0f);
+static float3 lum5 = float3(-334.0f, 5224.0f, -127.0f);
 static float3 coulLum = float3(1.0f, 0.0f, 0.0f);
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
@@ -71,6 +74,15 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	lightToPixelVec = lum2 - vs.WorldPos.xyz;
 	float d2 = length(lightToPixelVec);
 
+	lightToPixelVec = lum3 - vs.WorldPos.xyz;
+	float d3 = length(lightToPixelVec);
+
+	lightToPixelVec = lum4 - vs.WorldPos.xyz;
+	float d4 = length(lightToPixelVec);
+
+	lightToPixelVec = lum5 - vs.WorldPos.xyz;
+	float d5 = length(lightToPixelVec);
+
 	
 	// Valeur de la composante diffuse
 	float3 diff = saturate(dot(N, L));
@@ -88,6 +100,15 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	}
 	if (d2 <= range) {
 		totalAbiant += coulLum.rgb / (att * d2 * d2);
+	}
+	if (d3 <= range) {
+		totalAbiant += coulLum.rgb / (att * d3 * d3);
+	}
+	if (d4 <= range) {
+		totalAbiant += coulLum.rgb / (att * d4 * d4);
+	}
+	if (d5 <= range) {
+		totalAbiant += coulLum.rgb / (att * d5 * d5);
 	}
 
 	if (bTex > 0)
