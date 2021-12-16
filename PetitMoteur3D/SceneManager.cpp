@@ -169,7 +169,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		}
 	}
 
-
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
 
@@ -277,7 +276,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
-
+	pGameOverTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
 }
 
 SceneManager& SceneManager::get() noexcept {
@@ -393,11 +392,14 @@ const float SceneManager::getBoxSize() {
 
 void SceneManager::activateFinalPortal()
 {
-	// TODO
+	// TODO : activer un collider-portail
 	// Ajout du sprite du portail final
 	spriteManager->displayFinalPortal();
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
 }
 
-
-
+void SceneManager::changePauseToGameOver(bool _gameWon, std::wstring _finalTime)
+{
+	pGameOverTexte->Ecrire(_finalTime, pBrush.get());
+	spriteManager->changePauseToGameOver(_gameWon, pGameOverTexte);
+}

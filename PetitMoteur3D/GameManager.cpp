@@ -52,6 +52,21 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	// Prendre en note l'état de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
+	if (gameOverStatus)
+	{
+		// TODO placeholder. Calculate actual end time.
+		sceneManager.changePauseToGameOver(gameWon, L"time"s);
+		// TODO : Special pause for game over.
+		if (!gameWon)
+		{
+			// TODO : change shader to black and white if game lost.
+		}
+		else
+		{
+			// TODO : Some other stuff?
+		}
+	}
+
 	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
 	{
 		if (getIsPauseStatus())
@@ -216,6 +231,10 @@ void GameManager::updateSpeed()
 
 	sceneManager.GetpVitesseTexte()->Ecrire(speedStr, sceneManager.GetpBrush());
 	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
+}
+
+void GameManager::gameOver(bool _win)
+{
 }
 
 void GameManager::setChronoStart()

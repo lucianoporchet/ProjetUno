@@ -38,6 +38,7 @@ class SceneManager
 protected :
 	// Pour le texte
 	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::unique_ptr<PM3D::CAfficheurTexte> pGameOverTexte;
 	std::unique_ptr<PM3D::CAfficheurTexte> pVitesseTexte;
 	std::wstring str;
 	std::unique_ptr<Gdiplus::Font> pPolice;
@@ -73,6 +74,8 @@ public:
 	const float getBoxSize();
 
 	void activateFinalPortal();
+
+	void changePauseToGameOver(bool _gameWon, std::wstring _finalTime);
 
 private:
 	

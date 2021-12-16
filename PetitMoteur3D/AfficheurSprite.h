@@ -1,6 +1,7 @@
 #pragma once
 #include "Objet3D.h"
 #include <map>
+#include "AfficheurTexte.h"
 
 namespace PM3D
 {
@@ -59,6 +60,8 @@ namespace PM3D
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 		// Note : les jauges commencent a 3 dans le tableau et il y en a 6 sprites.
 		void updateGauge(int _speed);
+
+		void changePauseToGameOver(bool _gameWon, std::unique_ptr<CAfficheurTexte> & _timerTex);
 
 		int starAreaOffsetFromCenter = 17;
 	private:
