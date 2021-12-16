@@ -144,11 +144,20 @@ protected:
 	// Fonctions de rendu et de présentation de la scène
 	virtual bool RenderScene()
 	{
-		
+		BeginRenderSceneSpecific();
+
+		pPanneauPE->DebutPostEffect();
+
 		BeginRenderSceneSpecific();
 
 		// Appeler les fonctions de dessin de chaque objet de la scène
 		manager.getSceneManager().Draw(manager.getActiveZone());
+
+		EndRenderSceneSpecific();
+		
+		pPanneauPE->FinPostEffect();
+
+		pPanneauPE->Draw();
 
 		EndRenderSceneSpecific();
 
@@ -220,6 +229,8 @@ protected:
 		
 		std::ofstream log{ "Log.txt" };
 		log << std::chrono::duration_cast<std::chrono::milliseconds>(result1).count();
+
+		pPanneauPE = std::make_unique<CPanneauPE>(pDispositif);
 
 		return true;
 	}

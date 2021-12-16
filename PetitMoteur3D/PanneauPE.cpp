@@ -140,6 +140,24 @@ namespace PM3D
 			&pVertexLayout[1]),
 			DXE_CREATIONLAYOUT);
 
+
+
+		pTechnique = pEffet->GetTechniqueByIndex(2);
+		pPasse = pTechnique->GetPassByIndex(0);
+
+		pPasse->GetVertexShaderDesc(&effectVSDesc);
+		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
+
+		const void* vsCodePtr3 = effectVSDesc2.pBytecode;
+		vsCodeLen = effectVSDesc2.BytecodeLength;
+
+		DXEssayer(pD3DDevice->CreateInputLayout(CSommetPanneauPE::layout,
+			CSommetPanneauPE::numElements,
+			vsCodePtr2,
+			vsCodeLen,
+			&pVertexLayout[2]),
+			DXE_CREATIONLAYOUT);
+
 		// Initialisation des paramètres de sampling de la texture
 		// Pas nécessaire d'être compliqué puisque l'affichage sera
 		// en 1 pour 1 et à plat
@@ -270,8 +288,10 @@ namespace PM3D
 		const UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
+
+		// REMINDER
 		// Choix de la technique
-		pTechnique = pEffet->GetTechniqueByIndex(1);
+		pTechnique = pEffet->GetTechniqueByIndex(2);
 		pPasse = pTechnique->GetPassByIndex(0);
 
 		// input layout des sommets
