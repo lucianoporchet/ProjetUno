@@ -45,7 +45,8 @@ private:
 	int64_t totalPauseTime = 0;
 	int64_t startPause = 0;
 	int64_t chronoStart;
-	bool isPause = false;
+	bool isPause = true;
+	bool onTitleScreen = true;
 	bool gameOverStatus = false;
 	bool gameWon = false;
 	Zone activeZone = Zone::ZONE1;

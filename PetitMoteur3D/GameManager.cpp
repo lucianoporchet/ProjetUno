@@ -52,48 +52,77 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	// Prendre en note l'état de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
-	if (gameOverStatus)
+	if (onTitleScreen)
 	{
-		// TODO : Special pause for game over. Softlock.
-		// Needs to watch for reset.
+		// E-Z mode
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_1))
+		{
+			onTitleScreen = false;
+			isPause = false;
+			sceneManager.hidePause();
+			sceneManager.getSpriteManager()->changePauseToPauseUI();
+			chronoStart = horloge.GetTimeCount();
+
+			// TODO set ai in ez mode
+		}
+		// HARD mode
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_2))
+		{
+			onTitleScreen = false;
+			isPause = false;
+			sceneManager.hidePause();
+			sceneManager.getSpriteManager()->changePauseToPauseUI();
+			chronoStart = horloge.GetTimeCount();
+
+			// TODO set ai in hard mode
+		}
 	}
 	else
 	{
-		if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
+		// game running
+		if (gameOverStatus)
 		{
-			if (getIsPauseStatus())
-			{
-				setPauseMenu(false);
-			}
-			else {
-				setPauseMenu(true);
-			}
+			// TODO : Special pause for game over. Softlock.
+			// Needs to watch for reset.
 		}
-
-		//si on est pas sur le menu pause
-		if (!getIsPauseStatus()) {
-
-			if (activeZone != nextZone) {
-				Zone pastZone = activeZone;
-				physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
-				activeZone = nextZone;
-				physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
-				PxQuat qua = sceneManager.player->body->getGlobalPose().q;
-				sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
+		else
+		{
+			if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
+			{
+				if (getIsPauseStatus())
+				{
+					setPauseMenu(false);
+				}
+				else {
+					setPauseMenu(true);
+				}
 			}
 
-			physXManager.stepPhysics(static_cast<int>(activeZone));
+			//si on est pas sur le menu pause
+			if (!getIsPauseStatus()) {
+
+				if (activeZone != nextZone) {
+					Zone pastZone = activeZone;
+					physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
+					activeZone = nextZone;
+					physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
+					PxQuat qua = sceneManager.player->body->getGlobalPose().q;
+					sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
+				}
+
+				physXManager.stepPhysics(static_cast<int>(activeZone));
 
 
-		
-			updateSpeed();
-			updateChrono();
-			sceneManager.Anime(activeZone, tempsEcoule);
 
-			float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
-			if (distance > 2500.0f)
-			{
-				gameOver(false);
+				updateSpeed();
+				updateChrono();
+				sceneManager.Anime(activeZone, tempsEcoule);
+
+				float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
+				if (distance > 2500.0f)
+				{
+					gameOver(false);
+				}
 			}
 		}
 	}

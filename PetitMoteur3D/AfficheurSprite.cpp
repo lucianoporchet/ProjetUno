@@ -272,9 +272,7 @@ namespace PM3D
 
 				// **** Rendu de l'objet
 				pImmediateContext->Draw(6, 0);
-
 			}
-
 		}
 
 		pCB->Release();
@@ -796,6 +794,30 @@ namespace PM3D
 			this->AjouterPauseSprite(".\\modeles\\Billboards\\gameOver.dds"s, largeur / 2, hauteur / 3, (int)(largeur / 2), (int)(largeur / (2 * 2.24)));
 		}
 
+	}
+
+	void CAfficheurSprite::changePauseToTitleScreen()
+	{
+		int largeur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetLargeur();
+		int hauteur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetHauteur();
+
+		tabPauseSprite.clear();
+
+		// Title display
+		this->AjouterPauseSprite(".\\modeles\\Billboards\\title.dds"s, largeur / 2, hauteur / 2, 0, 0);
+		// Options display
+		//this->AjouterPauseSprite(".\\modeles\\Billboards\\titleScreen.dds"s, largeur / 2, hauteur / 2);
+	}
+
+	void CAfficheurSprite::changePauseToPauseUI()
+	{
+		int largeur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetLargeur();
+		int hauteur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetHauteur();
+
+		tabPauseSprite.clear();
+
+		this->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
+		this->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur / 2, largeur, hauteur);
 	}
 
 
