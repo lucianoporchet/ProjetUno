@@ -121,9 +121,9 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	PxCookingParams params(scale1);
 	//ces flags permettent un chargement plus rapide du cooking, mais certains devraient etre désactivés en release
 	// disable mesh cleaning - perform mesh validation on development configurations
-	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+	//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
 	// disable edge precompute, edges are set for each triangle, slows contact generation
-	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+	//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
 	// lower hierarchy for internal mesh
 	params.midphaseDesc.mBVH33Desc.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
 
@@ -245,7 +245,7 @@ void PM3D::CTerrain::InitEffet()
 
 	D3DX11CreateEffectFromMemory(pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
 
-	pFXBlob->Release();
+	//pFXBlob->Release();
 
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
