@@ -700,6 +700,18 @@ namespace PM3D
 		tabUISprite.push_back(std::move(pSprite));
 	}
 
+	void CAfficheurSprite::removeBillboardAtPos(int _zone, XMFLOAT3 _pos)
+	{
+		for (auto It = tabBillboards[_zone].begin(); It != tabBillboards[_zone].end(); It++)
+		{
+			if (It->get()->position.x == _pos.x && It->get()->position.z == _pos.z && It->get()->position.z == _pos.z)
+			{
+				tabBillboards[_zone].erase(It);
+				break;
+			}
+		}
+	}
+
 	void CAfficheurSprite::updateGauge(int _speed)
 	{
 		for_each(tabUISprite.begin() + 3, tabUISprite.begin() + 9, [](auto& sprite) {

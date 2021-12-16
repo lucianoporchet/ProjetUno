@@ -170,6 +170,7 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			{
 				speedBuffCollected = true;
 				sm.player->setSpeed(sm.player->getSpeed() + 10);
+				sceneManager.getSpriteManager()->removeBillboardAtPos(static_cast<int>(activeZone), { pos.x, pos.y, pos.z });
 			}
 			PickUpObjectList.erase(It);
 			break;

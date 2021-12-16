@@ -50,6 +50,8 @@ namespace PM3D
 		void AjouterPauseSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
 		void AjouterUISprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0, bool _displayed = false);
 
+		void removeBillboardAtPos(int _zone, XMFLOAT3 _pos);
+
 		// Note : 0, 1, 2. NE PAS UTILISER D'AUTRES VALEURS.
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 		// Note : les jauges commencent a 3 dans le tableau et il y en a 6 sprites.
