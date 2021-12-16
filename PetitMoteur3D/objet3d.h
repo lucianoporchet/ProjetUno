@@ -1,5 +1,5 @@
 #pragma once
-
+#define _CRTDBG_MAP_ALLOC
 using namespace DirectX;
 
 namespace PM3D

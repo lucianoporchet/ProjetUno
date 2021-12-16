@@ -234,6 +234,7 @@ void CBloc::InitShaders()
 		DXE_CREATION_PS);
 
 	pPSBlob->Release(); //  On n'a plus besoin du blob
+	pD3DDevice->Release();
 }
 
 } // namespace PM3D

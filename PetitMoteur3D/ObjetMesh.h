@@ -50,7 +50,6 @@ private:
 		XMFLOAT4 Specular;
 		float Puissance;
 		bool transparent;
-
 		CMaterial()
 			: pTextureD3D(nullptr)
 			, Ambient(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))
@@ -138,7 +137,7 @@ private:
 	ID3DX11EffectPass* pPasse;
 	ID3D11InputLayout* pVertexLayout;
 
-	static const int SHADOWMAP_DIM = 512;
+	//static const int SHADOWMAP_DIM = 512;
 
 	//ID3D11InputLayout* pVertexLayoutShadow;
 	//ID3D11Texture2D* pTextureShadowMap;         // Texture pour le shadow map
@@ -147,9 +146,9 @@ private:
 	//ID3D11Texture2D* pDepthTexture;				// texture de profondeur
 	//ID3D11DepthStencilView* pDepthStencilView;  // Vue tampon de profondeur
 
-	XMMATRIX mVLight;
-	XMMATRIX mPLight;
-	XMMATRIX mVPLight;
+	//XMMATRIX mVLight;
+	//XMMATRIX mPLight;
+	//XMMATRIX mVPLight;
 
 	bool isTessellated = false;
 	bool canBeTesselated = true;

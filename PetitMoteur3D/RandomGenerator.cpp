@@ -25,7 +25,7 @@ physx::PxVec3 RandomGenerator::randomVec3(int min, int max) {
 
 physx::PxVec3 RandomGenerator::randomPosInZone(int zone) {
 
-	const float boxsize = SceneManager::get().getBoxSize() - 50.0f;
+	const float boxsize = SceneManager::get().getBoxSize() - 100.0f;
 	const float z = static_cast<float>(std::uniform_int_distribution<int>{static_cast<int>(-boxsize / 2), static_cast<int>(boxsize / 2)}(prng));
 	float x, y;
 	switch (zone)

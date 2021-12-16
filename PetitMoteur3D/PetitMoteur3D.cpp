@@ -3,11 +3,12 @@
 
 
 #include "stdafx.h"
+#include "PetitMoteur3D.h"
+#include "MoteurWindows.h"
+
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "PetitMoteur3D.h"
-#include "MoteurWindows.h"
 
 using namespace PM3D;
 

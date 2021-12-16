@@ -8,7 +8,7 @@ class PM3D::CDispositifD3D11;
 class NPC : public MovingObject
 {
 public:
-	NPC(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, int scene);
+	NPC(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos, int scene);
 	virtual void Anime(float tempEcoule) override;
 
 	void move();

@@ -20,8 +20,10 @@ struct VS_Sortie
 	float4 Pos : SV_Position;
 	float3 Norm :    TEXCOORD0;
 	float3 vDirLum : TEXCOORD1;
-	float3 vDirCam : TEXCOORD2;
-	float2 coordTex : TEXCOORD3;
+	float3 vDirLum2 : TEXCOORD2;
+	float3 vDirCam : TEXCOORD3;
+	float2 coordTex : TEXCOORD4;
+	float3 WorldPos : POSITION;
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
@@ -29,8 +31,8 @@ static VS_Sortie sortie = (VS_Sortie)0;
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
-	
 	sortie.Pos = Pos;
+	sortie.WorldPos = mul(Pos, matWorld);
 	sortie.coordTex = coordTex;
 
 	
@@ -40,6 +42,13 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 Texture2D textureEntree;  // la texture
 SamplerState SampleState;  // l'état de sampling
 
+static float3 lum1 = float3(398.0f, 5821.0f, -422.0f);
+static float3 lum2 = float3(31.0f, 5689.0f, 98.0f);
+static float3 lum3 = float3(-336.0f, 5514.0f, 528.0f);
+static float3 lum4 = float3(459.0f, 6244.0f, 353.0f);
+static float3 lum5 = float3(-334.0f, 5224.0f, -127.0f);
+static float3 coulLum = float3(1.0f, 0.0f, 0.0f);
+
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
@@ -48,14 +57,28 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	vs.vDirLum = vLumiere.xyz - PosWorld;
 	vs.vDirCam = vCamera.xyz - PosWorld;
 
-	//vs.vDirLum.z = -vs.vDirLum.z;
-
-
+	float range = 500.0f;
+	float att = 0.000025f;
 
 	// Normaliser les paramètres
 	float3 N = normalize(vs.Norm);
 	float3 L = normalize(vs.vDirLum);
 	float3 V = normalize(vs.vDirCam);
+
+	float3 lightToPixelVec = lum1 - vs.WorldPos.xyz;
+	float d1 = length(lightToPixelVec);
+
+	lightToPixelVec = lum2 - vs.WorldPos.xyz;
+	float d2 = length(lightToPixelVec);
+
+	lightToPixelVec = lum3 - vs.WorldPos.xyz;
+	float d3 = length(lightToPixelVec);
+
+	lightToPixelVec = lum4 - vs.WorldPos.xyz;
+	float d4 = length(lightToPixelVec);
+
+	lightToPixelVec = lum5 - vs.WorldPos.xyz;
+	float d5 = length(lightToPixelVec);
 
 	// Valeur de la composante diffuse
 	float3 diff = saturate(dot(N, L));
@@ -67,25 +90,44 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float S = pow(saturate(dot(R, V)), puissance);
 	float3 couleurTexture;
 
+	float3 totalAbiant = vAEcl.rgb;
+
+	if (d1 <= range) {
+		totalAbiant += coulLum.rgb / (att * d1 * d1);
+	}
+	if (d2 <= range) {
+		totalAbiant += coulLum.rgb / (att * d2 * d2);
+	}
+	if (d3 <= range) {
+		totalAbiant += coulLum.rgb / (att * d3 * d3);
+	}
+	if (d4 <= range) {
+		totalAbiant += coulLum.rgb / (att * d4 * d4);
+	}
+	if (d5 <= range) {
+		totalAbiant += coulLum.rgb / (att * d5 * d5);
+	}
+
 	if (bTex > 0)
 	{
 		// Échantillonner la couleur du pixel à partir de la texture
 		couleurTexture = textureEntree.Sample(SampleState, vs.coordTex).rgb;
-		// I = A + D * N.L + (R.V)n
-		//vAEcl.rgb = float3(1.f, 1.f, 1.f);
-		couleur = couleurTexture * vAEcl.rgb +
-			      couleurTexture * vDEcl.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+
+
+		couleur = couleurTexture * totalAbiant +
+			couleurTexture * vDEcl.rgb * diff +
+			vSEcl.rgb * vSMat.rgb * S;
+
 	}
 	else
 	{
-		couleur = vAEcl.rgb * vAMat.rgb +
-			      vDEcl.rgb * vDMat.rgb * diff +
-		          vSEcl.rgb * vSMat.rgb * S;
+
+		couleur = totalAbiant * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
+			vSEcl.rgb * vSMat.rgb * S;
 	}
 
-
-	return float4(couleur, 1.0f);
+	
+	return float4(saturate(couleur), 1.0f);
 }
 
 [maxvertexcount(4)]
@@ -104,6 +146,7 @@ void MiniPhongGS(triangle VS_Sortie input[3],
 			sortie.Pos = mul(input[i].Pos, matWorldViewProj);
 			sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 			sortie.coordTex = input[i].coordTex;
+			sortie.WorldPos = mul(input[i].Pos, matWorld);
 			TriStream.Append(sortie);
 		}
 		// Point supplémentaire
@@ -111,12 +154,14 @@ void MiniPhongGS(triangle VS_Sortie input[3],
 		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[0].coordTex +
 			(input[2].coordTex - input[0].coordTex) / 2;
+		sortie.WorldPos = mul(PointSupp, matWorld);
 		TriStream.Append(sortie);
+		
 		// Point 2
 		sortie.Pos = mul(input[2].Pos, matWorldViewProj);
 		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[2].coordTex;
-	
+		sortie.WorldPos = mul(input[2].Pos, matWorld);
 		TriStream.Append(sortie);
 	
 }

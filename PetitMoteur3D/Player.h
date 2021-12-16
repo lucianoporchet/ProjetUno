@@ -24,6 +24,7 @@ public:
 	void moveUp();
 	void moveDown();
 	void rotateRight();
+	PM3D::CCamera* getCam();
 
 	/*
 	Ajouter la cam liée au joueur actuellement et update sa position et direction
@@ -35,7 +36,6 @@ public:
 
 private:
 	
-	float			angleRotation = PxPi/2;
 	const float		offset{ 0.005f };
 	PM3D::CCamera*	camera;
 

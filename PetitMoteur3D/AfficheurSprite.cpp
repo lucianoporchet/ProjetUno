@@ -73,16 +73,18 @@ namespace PM3D
 
 	CAfficheurSprite ::~CAfficheurSprite()
 	{
+		DXRelacher(pTechnique);
+		DXRelacher(pPasse);
 		DXRelacher(pConstantBuffer);
 		DXRelacher(pSampleState);
-
 		DXRelacher(pEffet);
 		DXRelacher(pVertexLayout);
-		DXRelacher(pVertexBuffer);
+		DXRelacher(pVertexBuffer);		
 
 		tabBillboards.clear();
 		tabSprites.clear();
 		tabSigns.clear();
+		tabPauseSprite.clear();
 	}
 
 	void CAfficheurSprite::InitEffet()
@@ -207,26 +209,77 @@ namespace PM3D
 			pImmediateContext->Draw(6, 0);
 		}
 
-		// Faire le rendu de tous nos sprites
-		for (auto& sprite : tabSprites)
+		if (!pauseStatus)
 		{
-			// Initialiser et sélectionner les «constantes» de l'effet
-			ShadersParams sp;
-			sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-				&sp, 0, 0);
+			// Faire le rendu de tous nos sprites
+			for (auto& sprite : tabSprites)
+			{
+				// Initialiser et sélectionner les «constantes» de l'effet
+				ShadersParams sp;
+				sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+				pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+					&sp, 0, 0);
 
-			pCB->SetConstantBuffer(pConstantBuffer);
+				pCB->SetConstantBuffer(pConstantBuffer);
 
-			// Activation de la texture
-			variableTexture->SetResource(sprite->pTextureD3D);
+				// Activation de la texture
+				variableTexture->SetResource(sprite->pTextureD3D);
 
-			pPasse->Apply(0, pImmediateContext);
+				pPasse->Apply(0, pImmediateContext);
 
-			// **** Rendu de l'objet
-			pImmediateContext->Draw(6, 0);
+				// **** Rendu de l'objet
+				pImmediateContext->Draw(6, 0);
+			}
+
+			for (auto& sprite : tabUISprite)
+			{
+				if (sprite->displayed)
+				{
+					// Initialiser et sélectionner les «constantes» de l'effet
+					ShadersParams sp;
+					sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+					pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+						&sp, 0, 0);
+
+					pCB->SetConstantBuffer(pConstantBuffer);
+
+					// Activation de la texture
+					variableTexture->SetResource(sprite->pTextureD3D);
+
+					pPasse->Apply(0, pImmediateContext);
+
+					// **** Rendu de l'objet
+					pImmediateContext->Draw(6, 0);
+				}
+			}
+		}
+		else
+		{
+			for (auto& sprite : tabPauseSprite)
+			{	
+				// Initialiser et sélectionner les «constantes» de l'effet
+				ShadersParams sp;
+				sp.matWVP = XMMatrixTranspose(sprite->matPosDim);
+				pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+					&sp, 0, 0);
+
+				pCB->SetConstantBuffer(pConstantBuffer);
+
+				// Activation de la texture
+				variableTexture->SetResource(sprite->pTextureD3D);
+
+				pPasse->Apply(0, pImmediateContext);
+
+				// **** Rendu de l'objet
+				pImmediateContext->Draw(6, 0);
+
+			}
+
 		}
 
+		pCB->Release();
+		variableSampler->Release();
+		variableTexture->Release();
 		pDispositif->DesactiverMelangeAlpha();
 	}
 
@@ -299,8 +352,20 @@ namespace PM3D
 			// **** Rendu de l'objet
 			pImmediateContext->Draw(6, 0);
 		}
-
+		pCB->Release();
+		variableSampler->Release();
+		variableTexture->Release();
 		pDispositif->DesactiverMelangeAlpha();
+	}
+
+	void CAfficheurSprite::displayPauseSprite()
+	{
+		pauseStatus = true;
+	}
+
+	void CAfficheurSprite::hidePauseSprite()
+	{
+		pauseStatus = false;
 	}
 
 	void CAfficheurSprite::AjouterSprite(int _zone, const std::string& NomTexture,
@@ -362,11 +427,11 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
-	void CAfficheurSprite::AjouterSpriteTexte(int _zone,
-		ID3D11ShaderResourceView* pTexture, int _x, int _y)
+	void CAfficheurSprite::AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y)
 	{
 		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
 		pSprite->pTextureD3D = pTexture;
+		//pSprite->displayed = true;
 
 		// Obtenir la dimension de la texture;
 		ID3D11Resource* pResource;
@@ -518,6 +583,221 @@ namespace PM3D
 		// On l'ajoute à notre vecteur
 		tabEtoiles.push_back(std::move(pPanneau));
 	}
+
+	void CAfficheurSprite::AjouterPauseSprite(const std::string& NomTexture, int _x, int _y,
+		int _dx, int _dy)
+	{
+		float x, y, dx, dy;
+		float posX, posY;
+		float facteurX, facteurY;
+
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+
+		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();;
+		pSprite->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+
+		// Obtenir les dimensions de la texture si _dx et _dy sont à 0;
+		if (_dx == 0 && _dy == 0)
+		{
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			dx = float(desc.Width);
+			dy = float(desc.Height);
+		}
+		else
+		{
+			dx = float(_dx);
+			dy = float(_dy);
+		}
+
+		// Dimension en facteur
+		facteurX = dx * 2.0f / pDispositif->GetLargeur();
+		facteurY = dy * 2.0f / pDispositif->GetHauteur();
+
+		// Position en coordonnées logiques
+		// 0,0 pixel = -1,1   
+		x = float(_x);
+		y = float(_y);
+
+		posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+		posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+
+		pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+			XMMatrixTranslation(posX, posY, 0.0f);
+
+		// On l'ajoute à notre classe
+		tabPauseSprite.push_back(std::move(pSprite));
+	}
+
+	void CAfficheurSprite::AjouterUISprite(const std::string& NomTexture, int _x, int _y, int _dx, int _dy, bool _displayed)
+	{
+		float x, y, dx, dy;
+		float posX, posY;
+		float facteurX, facteurY;
+
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+
+		std::unique_ptr<CUISprite> pSprite = std::make_unique<CUISprite>();;
+		pSprite->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		pSprite->displayed = _displayed;
+
+		// Obtenir les dimensions de la texture si _dx et _dy sont à 0;
+		if (_dx == 0 && _dy == 0)
+		{
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			dx = float(desc.Width);
+			dy = float(desc.Height);
+		}
+		else
+		{
+			dx = float(_dx);
+			dy = float(_dy);
+		}
+
+		// Dimension en facteur
+		facteurX = dx * 2.0f / pDispositif->GetLargeur();
+		facteurY = dy * 2.0f / pDispositif->GetHauteur();
+
+		// Position en coordonnées logiques
+		// 0,0 pixel = -1,1   
+		x = float(_x);
+		y = float(_y);
+
+		posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+		posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+
+		pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+			XMMatrixTranslation(posX, posY, 0.0f);
+
+		// On l'ajoute à notre vecteur
+		tabUISprite.push_back(std::move(pSprite));
+	}
+
+	void CAfficheurSprite::removeBillboardAtPos(int _zone, XMFLOAT3 _pos)
+	{
+		for (auto It = tabBillboards[_zone].begin(); It != tabBillboards[_zone].end(); It++)
+		{
+			if (It->get()->position.x == _pos.x && It->get()->position.z == _pos.z && It->get()->position.z == _pos.z)
+			{
+				tabBillboards[_zone].erase(It);
+				break;
+			}
+		}
+	}
+
+	void CAfficheurSprite::updateGauge(int _speed)
+	{
+		for_each(tabUISprite.begin() + 3, tabUISprite.begin() + 9, [](auto& sprite) {
+			sprite->displayed = false;
+			});
+		switch (_speed / 30) 
+		{
+		case 0:
+			tabUISprite[3]->displayed = true;
+			break;
+		case 1:
+			tabUISprite[4]->displayed = true;
+			break;
+		case 2:
+			tabUISprite[5]->displayed = true;
+			break;
+		case 3:
+			tabUISprite[6]->displayed = true;
+			break;
+		case 4:
+			tabUISprite[7]->displayed = true;
+			break;
+		default:
+			tabUISprite[8]->displayed = true;
+			break;
+		}
+	}
+
+	void CAfficheurSprite::changePauseToGameOver(bool _gameWon, std::unique_ptr<PM3D::CAfficheurTexte>& _timerTex)
+	{
+		// Erasing usual pause menu to replace it with a game over sprite
+		tabPauseSprite.clear();
+
+		int largeur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetLargeur();
+		int hauteur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetHauteur();
+
+		// Affichage Timer resultat
+		{
+			std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
+			pSprite->pTextureD3D = _timerTex->GetTextureView();
+
+			// Obtenir la dimension de la texture;
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			const float dx = float(desc.Width);
+			const float dy = float(desc.Height);
+
+			// Dimension en facteur
+			const float facteurX = dx * 2.0f / pDispositif->GetLargeur();
+			const float facteurY = dy * 2.0f / pDispositif->GetHauteur();
+
+			// Position en coordonnées logiques
+			// 0,0 pixel = -1,1   
+			const float x = float(hauteur / 2);
+			const float y = float((largeur / 2));
+
+			const float posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+			const float posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+
+			pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+				XMMatrixTranslation(posX, posY, 0.0f);
+
+			// On l'ajoute à notre vecteur
+			tabPauseSprite.push_back(std::move(pSprite));
+		}
+
+		// Affichage GameOver
+		if (_gameWon)
+		{
+			this->AjouterPauseSprite(".\\modeles\\Billboards\\gameWon.dds"s, largeur / 2, hauteur / 3, (int)(largeur / 2), (int)(largeur / (2 * 2.24)));
+		}
+		else
+		{
+			this->AjouterPauseSprite(".\\modeles\\Billboards\\gameOver.dds"s, largeur / 2, hauteur / 3, (int)(largeur / 2), (int)(largeur / (2 * 2.24)));
+		}
+
+	}
+
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
 	void CAfficheurSprite::Anime(float) {

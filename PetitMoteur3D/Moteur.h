@@ -1,14 +1,10 @@
 #pragma once
 #include "Singleton.h"
 #include "dispositif.h"
-
-
 #include "GameManager.h"
-
 #include "AfficheurSprite.h"
 #include "AfficheurTexte.h"
 #include "DIManipulateur.h"
-
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
@@ -87,7 +83,7 @@ public:
 		if (TempsEcoule > EcartTemps)
 		{
 			// Affichage optimisé
-			pDispositif->Present(); // On enlevera «//» plus tard
+			pDispositif->Present();
 
 			// On prépare la prochaine image
 			AnimeScene(static_cast<float>(TempsEcoule));
@@ -168,8 +164,9 @@ protected:
 	{
 		
 		// détruire les objets
-		manager.getSceneManager().getScenes().clear();
-		
+		manager.cleanManager();
+		TexturesManager.ListeTextures.clear();
+		physXManager.cleanupPhysics();
 		// Détruire le dispositif
 		if (pDispositif)
 		{
@@ -177,7 +174,7 @@ protected:
 			pDispositif = nullptr;
 		}
 
-		physXManager.cleanupPhysics();
+		
 	}
 
 	virtual int InitScene()
@@ -230,7 +227,11 @@ protected:
 		std::ofstream log{ "Log.txt" };
 		log << std::chrono::duration_cast<std::chrono::milliseconds>(result1).count();
 
+
 		pPanneauPE = std::make_unique<CPanneauPE>(pDispositif);
+
+
+		manager.setChronoStart();
 
 		return true;
 	}
@@ -269,30 +270,17 @@ protected:
 	// Le gestionnaire de texture
 	CGestionnaireDeTextures TexturesManager;
 
-	// Pour le texte
-	std::unique_ptr<CAfficheurTexte> pTexte1;
-	std::wstring str;
-
-	std::unique_ptr<Gdiplus::Font> pPolice;
-	std::unique_ptr<CPanneauPE> pPanneauPE;
-
-
 	//gestionnaire de saisie
 	CDIManipulateur GestionnaireDeSaisie;
 
 	//game manager
 	GameManager& manager = GameManager::get();
-
 	
 	//PhysX manager
 	PhysXManager& physXManager = PhysXManager::get();
 
 	//camera joueur
 	CCamera freeCam;
-
-
-
-
 };
 
 } // namespace PM3D

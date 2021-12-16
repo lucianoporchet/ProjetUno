@@ -11,6 +11,7 @@ class GameManager : public Incopiable {
 	GameManager() = default;
 
 public:
+	void cleanManager();
 	inline static GameManager& get() noexcept { return instance; }
 	void setPauseMenu(bool) noexcept;
 	bool getIsPauseStatus() noexcept;
@@ -38,14 +39,21 @@ public:
 
 	void updateChrono();
 	void updateShader();
+	void updateSpeed();
 
+	void gameOver(bool _win);
+
+	void setChronoStart();
 	
 private:
+
 
 	int currentPosteffectShader = 0;
 	int chosenPosteffectShader = 0;
 	int chosenBlurPosteffectShader = 1;
 	int blurShaderFadeTimer = 3;
+
+
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
 	int64_t totalPauseTime = 0;
@@ -54,7 +62,10 @@ private:
 	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
 	int64_t chronoStart = horloge.GetTimeCount();
 	bool hardmode = true;
+	int64_t chronoStart;
 	bool isPause = false;
+	bool gameOverStatus = false;
+	bool gameWon = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;
 	bool greenKeyCollected = false;

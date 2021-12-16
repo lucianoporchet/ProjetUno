@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
-#include <mutex>
+
 
 
 #define PX_RELEASE(x) if(x) { x->release(); x = NULL; }
-
+static std::mutex physXMutex, mutexPlanet, mutexAsteroid;
 
 PhysXManager::PhysXManager() noexcept {
 	for (int i = 0; i < NBSCENES; ++i) {
@@ -84,9 +84,12 @@ void PhysXManager::cleanupPhysics()
 	for (auto& s : gScenes) {
 		PX_RELEASE(s);
 	}
+	gScenes.clear();
 	//PX_RELEASE(gScene);
 	PX_RELEASE(gDispatcher);
 	PX_RELEASE(gPhysics);
+	PX_RELEASE(mCooking);
+
 	if (gPvd)
 	{
 		PxPvdTransport* transport = gPvd->getTransport();
@@ -111,12 +114,12 @@ PxRigidStatic* PhysXManager::createTerrain(const PxTransform& t, PxTriangleMeshG
 	return body;
 }
 
-static std::mutex physXMutex;
+
 PxRigidDynamic* PhysXManager::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene)
 {
+	std::lock_guard<std::mutex> lock(physXMutex);
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 1.0f);
 	dynamic->setLinearVelocity(velocity);
-	std::lock_guard<std::mutex> lock(physXMutex);
 	addToScene(dynamic, scene);
 	return dynamic;
 }
@@ -161,6 +164,45 @@ void PhysXManager::setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 
 	free(shapes);
 }
 
+void PhysXManager::addForcesPlanet(float scale, PxRigidDynamic* body)
+{
+	std::lock_guard<std::mutex> lock(mutexPlanet);
+	body->setAngularDamping(0.f); //enleve l'angular damping pour que les planetes tournent sans s'arreter
+	body->setLinearDamping(0.5f); //ajoute du linear damping pour qu'en cas de grosse collision la planete de bouge pas a l'infini
+	body->setMass(scale * 10000); //ajoute une masse proportionnelle a la taille
+	//choisi un sens de rotation pour la Planete, aleatoirement entre 4 sens de rotation definis
+	int rotaAxis = RandomGenerator::get().next(1, 4);
+	switch (rotaAxis)
+	{
+	case 1:
+		body->addTorque(PxVec3(static_cast<float>(pow(scale * 2, 4)), 0, 0), PxForceMode::eIMPULSE);
+		break;
+	case 2:
+		body->addTorque(PxVec3(0, static_cast<float>(pow(scale * 2, 4)), 0), PxForceMode::eIMPULSE);
+		break;
+	case 3:
+		body->addTorque(PxVec3(0, 0, static_cast<float>(pow(scale * 2, 4))), PxForceMode::eIMPULSE);
+		break;
+	case 4:
+		body->addTorque(PxVec3(static_cast<float>(pow(scale * 2, 4)), static_cast<float>(pow(scale * 2, 4)), 0), PxForceMode::eIMPULSE);
+		break;
+	default:
+		break;
+	}
+
+}
+
+void PhysXManager::addForcesAsteroid(float scale, PxRigidDynamic* body, PxVec3 dir) {
+
+	std::lock_guard<std::mutex> lock(mutexAsteroid);
+	body->addTorque(RandomGenerator::get().randomVec3(-20, 20) * static_cast<float>(pow(scale * 3, 4)), PxForceMode::eIMPULSE);
+	body->addForce(dir, PxForceMode::eIMPULSE);
+	body->setMass(scale * 10);
+	body->setLinearDamping(0);
+	body->setAngularDamping(0);
+
+}
+
 
 void PhysXManager::removeActor(PxActor& actor, int scene) {
 	gScenes[scene]->removeActor(actor);
@@ -190,6 +232,18 @@ PxFilterFlags FilterShader(
 		return PxFilterFlag::eDEFAULT;
 	}
 	else if ((filterData1.word0 == FilterGroup::ePickupObject) || (filterData0.word0 == FilterGroup::ePickupObject))
+	{
+		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		return PxFilterFlag::eDEFAULT;
+	}
+
+	if (((filterData0.word0 == FilterGroup::eFinalPortal) && (filterData1.word0 == FilterGroup::ePlayer)) ||
+		((filterData1.word0 == FilterGroup::eFinalPortal) && (filterData0.word0 == FilterGroup::ePlayer)))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else if ((filterData0.word0 == FilterGroup::eFinalPortal) || (filterData1.word0 == FilterGroup::eFinalPortal))
 	{
 		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
 		return PxFilterFlag::eDEFAULT;

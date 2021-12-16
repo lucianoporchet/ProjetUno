@@ -26,7 +26,6 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 
 	//vitesse influant sur les mouvements du joueur
 	speed = 30.0f;
-	
 }
 
 //fonction d'animation du player
@@ -63,7 +62,6 @@ void Player::Anime(float tempEcoule)
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2))
 	{
-		// breakpoint
 		// Toggle la cam 1ere personne
 		camera->toggleFirstPerson();
 	}
@@ -80,16 +78,14 @@ void Player::Anime(float tempEcoule)
 
 	const PxQuat pquat = body->getGlobalPose().q;
 
-	auto camUp = camera->up;
-	PxVec3 vecDir = getDir();
-	float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
-	PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
-	float angleZ = -atan2(vecDir.y, 1.0f);
-	PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
-
-	PxQuat quat = (quatY * quatZ);
+	const auto camUp = camera->up;
+	const PxVec3 vecDir = getDir();
+	const float angleY = -atan2(vecDir.z, vecDir.x) - XM_PIDIV2;
+	const PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
+	const float angleZ = -atan2(vecDir.y, 1.0f);
+	const PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
+	const PxQuat quat = (quatY * quatZ);
 	PxQuat temp = pquat;
-	
 
 	if (pquat.w < quat.w - offset) temp.w = pquat.w + offset;
 	else if (pquat.w > quat.w + offset) temp.w = pquat.w - offset;
@@ -107,10 +103,8 @@ void Player::Anime(float tempEcoule)
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
 	body->setGlobalPose(PxTransform(pos, temp));
-	//PxTransform transformPlayer = body->getGlobalPose();
 
 	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
-
 }
 
 //avancer
@@ -134,6 +128,12 @@ void Player::rotateRight()
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
+//retourner la caméra liée au joueur
+PM3D::CCamera* Player::getCam()
+{
+	return camera;
+}
+
 //roulis x gauche
 void Player::rotateLeft() 
 {
@@ -141,22 +141,18 @@ void Player::rotateLeft()
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
-//roulis y gauche
+//monter
 void Player::moveUp()
 {
 	mUp.normalize();
-	body->addForce(mUp * (speed/10), PxForceMode::eIMPULSE);
-	//const PxQuat quat(0.05f, mDir.cross(mUp));
-	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	body->addForce(mUp * 3.0f, PxForceMode::eIMPULSE);
 }
 
-//roulis y droite
+//descendre
 void Player::moveDown()
 {
 	mUp.normalize();
-	body->addForce(mUp * -(speed /10), PxForceMode::eIMPULSE);
-	//const PxQuat quat(-0.05f, mDir.cross(mUp));
-	//body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
+	body->addForce(mUp * -3.0f, PxForceMode::eIMPULSE);
 }
 
 //assignation de la cam
@@ -168,10 +164,6 @@ void Player::setCam(PM3D::CCamera* cam)
 //update de la cam en fonction du player et inversement
 void Player::updateCam() 
 {
-	//mDir.normalize();
-	//const PxVec3 posCam = body->getGlobalPose().p - (mDir * 10);
-	//const XMFLOAT3 camPos(posCam.x, posCam.y, posCam.z);
-	//camera->updateCam(camPos, body->GetGlo);
 	mDir.normalize();
 	const PxVec3 bodyPos = body->getGlobalPose().p;
 	const XMFLOAT3 camPos(bodyPos.x, bodyPos.y, bodyPos.z);
@@ -190,11 +182,10 @@ PxVec3 Player::getDir() {
 }
 
 PxVec3 Player::getCameraDir() {
-	XMVECTOR cameraDirection = camera->getDirection();
-	float x = cameraDirection.vector4_f32[0];
-	float y = cameraDirection.vector4_f32[1];
-	float z = cameraDirection.vector4_f32[2];
-
+	const XMVECTOR cameraDirection = camera->getDirection();
+	const float x = cameraDirection.vector4_f32[0];
+	const float y = cameraDirection.vector4_f32[1];
+	const float z = cameraDirection.vector4_f32[2];
 
 	return PxVec3{ x,y,z };
 }

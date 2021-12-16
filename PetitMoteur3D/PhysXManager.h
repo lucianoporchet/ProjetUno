@@ -1,6 +1,7 @@
 #pragma once
 #include "PxPhysicsAPI.h"
 #include "MyContactModification.h"
+#include <mutex>
 
 using namespace physx;
 //filter group pour gerer les collission dans physX
@@ -12,8 +13,8 @@ struct FilterGroup
 		eObstacle = (1 << 1),
 		eMonster = (1 << 2),
 		ePortal = (1 << 3),
-		ePickupObject = (1 << 4)
-		
+		ePickupObject = (1 << 4),
+		eFinalPortal = (1 << 5)		
 	};
 };
 //singleton de la classe du physX manager
@@ -29,7 +30,8 @@ public:
 	//ajouter une gestion de collision entre deux objets a l'aide de leur FilterGroup
 	void setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask);
 
-
+	void addForcesPlanet(float scale, PxRigidDynamic* body);
+	void addForcesAsteroid(float scale, PxRigidDynamic* body, PxVec3 dir);
 	
 	void initPhysics();					//lancer la physique
 	void stepPhysics(int scene);		//update la physique
@@ -48,6 +50,7 @@ public:
 
 public:
 	static PhysXManager& get() noexcept;
+	
 
 private:
 	PxDefaultAllocator		gAllocator;

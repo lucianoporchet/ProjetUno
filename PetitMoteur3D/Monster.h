@@ -21,6 +21,7 @@ private:
 
 public:
 	Monster(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale = 1, PxVec3 pos = PxVec3(0.0f),int scene = 0);
+	PxTransform getPosition() { return body->getGlobalPose(); };
 
 	bool readyToAttack();
 	//update la position et rotation de l'objet en fonction des calculs de physX

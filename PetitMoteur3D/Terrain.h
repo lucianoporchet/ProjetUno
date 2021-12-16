@@ -12,7 +12,7 @@ namespace PM3D {
 		public CObjet3D
 	{
 	public:
-		CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, float scale);
+		CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, PxVec3 scale, PxQuat quat);
 
 		virtual ~CTerrain();
 
