@@ -46,7 +46,9 @@ namespace PM3D
 			DXRelacher(pVertexLayout[i]);
 		}
 		DXRelacher(pOldRenderTargetView);
-		DXRelacher(pOldDepthStencilView);
+		if (pOldDepthStencilView != nullptr) {
+			DXRelacher(pOldDepthStencilView);
+		}
 		DXRelacher(pVertexBuffer);
 	}
 
