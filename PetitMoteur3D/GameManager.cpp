@@ -63,6 +63,8 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			sceneManager.getSpriteManager()->changePauseToPauseUI();
 			chronoStart = horloge.GetTimeCount();
 
+			hardmode = false;
+
 			// TODO set ai in ez mode
 		}
 		// HARD mode
@@ -73,6 +75,8 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			sceneManager.hidePause();
 			sceneManager.getSpriteManager()->changePauseToPauseUI();
 			chronoStart = horloge.GetTimeCount();
+
+			hardmode = true;
 
 			// TODO set ai in hard mode
 		}

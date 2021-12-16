@@ -79,7 +79,7 @@ void Monster::Anime(float tempEcoule)
 		else 
 		{
 			//Easy Mode
-			k = 0;
+			k = 2;
 		}
 
 		direction = posPlayer - pos + SceneManager::get().player->body->getLinearVelocity() * k;
