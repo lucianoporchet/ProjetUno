@@ -60,7 +60,7 @@ void Player::Anime(float tempEcoule)
 	{
 		moveUp();
 	}
-	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2))
+	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2) && hasBeenEnoughTimeSinceLastCameraSwitch())
 	{
 		// Toggle la cam 1ere personne
 		camera->toggleFirstPerson();
@@ -188,4 +188,14 @@ PxVec3 Player::getCameraDir() {
 	const float z = cameraDirection.vector4_f32[2];
 
 	return PxVec3{ x,y,z };
+}
+
+bool Player::hasBeenEnoughTimeSinceLastCameraSwitch()
+{
+	if (horloge.GetTimeBetweenCounts(lastPaused, horloge.GetTimeCount()) >= 1)
+	{
+		lastPaused = horloge.GetTimeCount();
+		return true;
+	}
+	return false;
 }
