@@ -126,10 +126,17 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//ajoute la skybox a la scene
 
 	//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
-
+	int plan = 1;
 	for (const auto& pos : planetePos1) {
 		float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
-		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\3\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
+		string NB = to_string(plan);
+		if (plan == 8)
+		{
+			plan = 1;
+		}
+		
+		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\" + NB + "\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
+		++plan;
 	}
 
 
