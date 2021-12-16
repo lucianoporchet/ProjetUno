@@ -134,9 +134,9 @@ private:
 	};
 	
 	const physx::PxVec3 tunnelPos[NBTUNNELCOMPONENTS] = {
-		physx::PxVec3(242.035f, 5764.03f, 154.102f),
+		physx::PxVec3(242.035f, 5764.03f, 154.102f),//dessous
 		physx::PxVec3(17.926f, 5574.52f, -748.041f),
-		physx::PxVec3(-166.146f, 6164.27f, -28.0985f),
+		physx::PxVec3(-166.146f, 6164.27f, -28.0985f), 
 		physx::PxVec3(57.9616f, 6353.78f, 874.045f)
 	};
 
