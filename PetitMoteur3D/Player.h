@@ -25,6 +25,7 @@ public:
 	void moveDown();
 	void rotateRight();
 	PM3D::CCamera* getCam();
+	bool hasBeenEnoughTimeSinceLastCameraSwitch();
 
 	/*
 	Ajouter la cam liée au joueur actuellement et update sa position et direction
@@ -38,6 +39,8 @@ private:
 	
 	const float		offset{ 0.005f };
 	PM3D::CCamera*	camera;
+	PM3D::Horloge horloge;
+	int64_t lastPaused = 0;
 
 };
 
