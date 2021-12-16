@@ -348,10 +348,6 @@ void SceneManager::Anime(Zone scene, float tmps) {
 		float distance = (player->body->getGlobalPose().p - zonesCenters[static_cast<int>(scene)]).magnitude();
 		if (distance > 2000.0f)
 		{
-			if (distance > 2500.0f)
-			{
-				// TODO put player in game over
-			}
 			spriteManager->displayOutOfBoundsWarns();
 		}
 		else

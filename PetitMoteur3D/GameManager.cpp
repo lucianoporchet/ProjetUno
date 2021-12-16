@@ -97,6 +97,12 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		updateSpeed();
 		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
+
+		float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
+		if (distance > 2500.0f)
+		{
+			gameOver(false);
+		}
 	}
 
 
@@ -235,6 +241,9 @@ void GameManager::updateSpeed()
 
 void GameManager::gameOver(bool _win)
 {
+	// Do stuff that makes the game is over
+	sceneManager.changePauseToGameOver(_win, L"LOL TMORT"s);
+	setPauseMenu(true);
 }
 
 void GameManager::setChronoStart()
