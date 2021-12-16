@@ -50,32 +50,31 @@ void Monster::Anime(float tempEcoule)
 	
 	const PxQuat quat = quatX * quatY;
 	if (readyToAttack()) {
-		speed = 200.0f;
+		speed = monsterBaseSpeed;
 		GameManager& gm = GameManager::get();
 		if (gm.isGreenKeyCollected()) 
 		{
-			speed += 100.0f;
+			speed += keyPickupSpeedBoost;
 		}
 		if (gm.isBlueKeyCollected())
 		{
-			speed += 100.0f;
+			speed += keyPickupSpeedBoost;
 		}
 		if (gm.isRedKeyCollected())
 		{
-			speed += 100.0f;
+			speed += keyPickupSpeedBoost;
 		}
 		PxVec3 playerVelocity = SceneManager::get().player->body->getLinearVelocity();
-		bool Hardmode = false;
-		float k;
-		if (Hardmode) 
+		float k = 0;
+		if (gm.IsHardModeOn()) 
 		{
 			//Hard Mode
-			float S = (posPlayer.x - pos.x) * (posPlayer.x - pos.x) + (posPlayer.y - pos.y) * (posPlayer.y - pos.y) + (posPlayer.z - pos.z) * (posPlayer.z - pos.z);
-			float SPrime = (playerVelocity.x * (posPlayer.x - pos.x)) + (playerVelocity.y * (posPlayer.y - pos.y)) + (playerVelocity.z * (posPlayer.z - pos.z));
-			float SPrimePrime = (playerVelocity.x * playerVelocity.x) + (playerVelocity.y * playerVelocity.y) + (playerVelocity.z * playerVelocity.z) - speed * speed;
-			float delta = 4 * SPrime * SPrime - 4 * S * SPrimePrime;
+			float C = (posPlayer.x - pos.x) * (posPlayer.x - pos.x) + (posPlayer.y - pos.y) * (posPlayer.y - pos.y) + (posPlayer.z - pos.z) * (posPlayer.z - pos.z);
+			float B = 2*((playerVelocity.x * (posPlayer.x - pos.x)) + (playerVelocity.y * (posPlayer.y - pos.y)) + (playerVelocity.z * (posPlayer.z - pos.z)));
+			float A = (playerVelocity.x * playerVelocity.x) + (playerVelocity.y * playerVelocity.y) + (playerVelocity.z * playerVelocity.z) - speed * speed;
+			float delta = B*B - 4*A*C;
 
-			k = (-2 * SPrime - std::sqrt(delta)) / (2 * SPrimePrime);
+			k = (-B - std::sqrt(delta)) / (2 * A);
 		}
 		else 
 		{

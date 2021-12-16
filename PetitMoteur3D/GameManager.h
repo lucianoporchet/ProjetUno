@@ -23,6 +23,12 @@ public:
 	const Zone& getActiveZone();
 	void setActiveZone(Zone zone);
 	void setNextZone(Zone zone);
+	void setLastTeleportTime();
+	int getShaderTechnique();
+	void setShaderTechniqueToBlur();
+	void setShaderTechniqueToClear();
+
+	bool IsHardModeOn();
 
 	bool isGreenKeyCollected();
 	bool isBlueKeyCollected();
@@ -32,6 +38,7 @@ public:
 	void activatePickUpObjectFromPos(PxVec3 pos);
 
 	void updateChrono();
+	void updateShader();
 	void updateSpeed();
 
 	void gameOver(bool _win);
@@ -40,10 +47,21 @@ public:
 	
 private:
 
+
+	int currentPosteffectShader = 0;
+	int chosenPosteffectShader = 0;
+	int chosenBlurPosteffectShader = 1;
+	int blurShaderFadeTimer = 3;
+
+
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
 	int64_t totalPauseTime = 0;
 	int64_t startPause = 0;
+	int64_t lastTeleport = horloge.GetTimeCount();;
+	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
+	int64_t chronoStart = horloge.GetTimeCount();
+	bool hardmode = true;
 	int64_t chronoStart;
 	bool isPause = false;
 	bool gameOverStatus = false;
