@@ -740,6 +740,65 @@ namespace PM3D
 		}
 	}
 
+	void CAfficheurSprite::changePauseToGameOver(bool _gameWon, std::unique_ptr<PM3D::CAfficheurTexte>& _timerTex)
+	{
+		// Erasing usual pause menu to replace it with a game over sprite
+		tabPauseSprite.clear();
+
+		int largeur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetLargeur();
+		int hauteur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetHauteur();
+
+		// Affichage Timer resultat
+		{
+			std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
+			pSprite->pTextureD3D = _timerTex->GetTextureView();
+
+			// Obtenir la dimension de la texture;
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+
+			const float dx = float(desc.Width);
+			const float dy = float(desc.Height);
+
+			// Dimension en facteur
+			const float facteurX = dx * 2.0f / pDispositif->GetLargeur();
+			const float facteurY = dy * 2.0f / pDispositif->GetHauteur();
+
+			// Position en coordonnées logiques
+			// 0,0 pixel = -1,1   
+			const float x = float(hauteur / 2);
+			const float y = float((largeur / 2));
+
+			const float posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+			const float posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+
+			pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+				XMMatrixTranslation(posX, posY, 0.0f);
+
+			// On l'ajoute à notre vecteur
+			tabPauseSprite.push_back(std::move(pSprite));
+		}
+
+		// Affichage GameOver
+		if (_gameWon)
+		{
+			this->AjouterPauseSprite(".\\modeles\\Billboards\\gameWon.dds"s, largeur / 2, hauteur / 3, (int)(largeur / 2), (int)(largeur / (2 * 2.24)));
+		}
+		else
+		{
+			this->AjouterPauseSprite(".\\modeles\\Billboards\\gameOver.dds"s, largeur / 2, hauteur / 3, (int)(largeur / 2), (int)(largeur / (2 * 2.24)));
+		}
+
+	}
+
+
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
 	void CAfficheurSprite::Anime(float) {
 

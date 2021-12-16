@@ -34,7 +34,8 @@ public:
 	void updateChrono();
 	void updateSpeed();
 
-	
+	void gameOver(bool _win);
+
 	void setChronoStart();
 	
 private:
@@ -45,6 +46,8 @@ private:
 	int64_t startPause = 0;
 	int64_t chronoStart;
 	bool isPause = false;
+	bool gameOverStatus = false;
+	bool gameWon = false;
 	Zone activeZone = Zone::ZONE1;
 	Zone nextZone = Zone::ZONE1;
 	bool greenKeyCollected = false;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Objet3D.h"
 #include <map>
+#include "AfficheurTexte.h"
 
 namespace PM3D
 {
@@ -38,10 +39,14 @@ namespace PM3D
 		void displayPauseSprite();
 		void hidePauseSprite();
 
+		void displayOutOfBoundsWarns() { tabUISprite[10]->displayed = true; tabUISprite[11]->displayed = true; }
+		void hideOutOfBoundsWarns() { tabUISprite[10]->displayed = false; tabUISprite[11]->displayed = false; }
+
 		void displayWarning() { tabUISprite[9]->displayed = true; };
 		void hideWarning() { tabUISprite[9]->displayed = false; };
 		
 		void displayFinalPortal() { tabUISprite.back()->displayed = true; };
+		bool isFinalPortalOn() { return tabUISprite.back()->displayed; };
 
 		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
@@ -59,6 +64,8 @@ namespace PM3D
 		void afficherCle(int _id) { tabUISprite[_id]->displayed = true; };
 		// Note : les jauges commencent a 3 dans le tableau et il y en a 6 sprites.
 		void updateGauge(int _speed);
+
+		void changePauseToGameOver(bool _gameWon, std::unique_ptr<CAfficheurTexte> & _timerTex);
 
 		int starAreaOffsetFromCenter = 17;
 	private:

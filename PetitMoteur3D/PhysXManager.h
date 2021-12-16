@@ -13,8 +13,8 @@ struct FilterGroup
 		eObstacle = (1 << 1),
 		eMonster = (1 << 2),
 		ePortal = (1 << 3),
-		ePickupObject = (1 << 4)
-		
+		ePickupObject = (1 << 4),
+		eFinalPortal = (1 << 5)		
 	};
 };
 //singleton de la classe du physX manager

@@ -5,6 +5,7 @@
 #include "AfficheurSprite.h"
 
 #include <functional>
+#include "MoteurWindows.h"
 
 using namespace std::literals;
 static std::mutex objMutex;
@@ -158,6 +159,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
 
+	// Initialisation du portail final
+	//pFinalPortal = std::make_unique<Portal>(".\\modeles\\Portal\\portal.obm"s, PM3D::CMoteurWindows::GetInstance().pDispositif, 20.0f, physx::PxVec3{ finalPortalPos.x, finalPortalPos.y, finalPortalPos.z });
+
 	for (int i = 0; i < NBMONSTRES; ++i) {
 		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
 		futures.push_back(std::async(loadMonster<Monster>, &Monsters, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
@@ -235,8 +239,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// | Tomato warning
 	int largeurPortal = largeur / 10;
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur - largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), 200, 200, false);
+	// | Avertissement Limite
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\demi_tour.dds"s, largeur / 2, hauteur / 4, (int)((largeur / 4) * 1.16), largeur / 4, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\demi_tour_texte.dds"s, largeur / 2, (hauteur / 4) * 3, largeur - 400, (int)((largeur - 400) / 10.5), false);
 	// | Portal status
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), (largeurCle * 3), (largeurCle * 3), false);
 	// \DONE WITH UI
 
 	// Effet "etoiles"
@@ -288,7 +295,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
-
+	pGameOverTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
 }
 
 SceneManager& SceneManager::get() noexcept {
@@ -344,16 +351,25 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	}
 
 	// Billboards, sprites et panneaux
-	spriteManager->Anime(tmps);
-	float distance = (player->body->getGlobalPose().p - Monsters[static_cast<int>(scene)]->getPosition().p).magnitude();
-	if (distance < 600.0f)
-	{
-		spriteManager->displayWarning();
+	{ // Distance monstre-joueur
+		spriteManager->Anime(tmps);
+		float distance = (player->body->getGlobalPose().p - Monsters[static_cast<int>(scene)]->getPosition().p).magnitude();
+		if (distance < 600.0f)
+			spriteManager->displayWarning();
+		else
+			spriteManager->hideWarning();
 	}
-	else
-	{
-		spriteManager->hideWarning();
+
+	{ // Distance joueur-centre zone
+		float distance = (player->body->getGlobalPose().p - zonesCenters[static_cast<int>(scene)]).magnitude();
+		if (distance > 2000.0f)
+		{
+			spriteManager->displayOutOfBoundsWarns();
+		}
+		else
+			spriteManager->hideOutOfBoundsWarns();
 	}
+
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
 }
 
@@ -404,11 +420,20 @@ const float SceneManager::getBoxSize() {
 
 void SceneManager::activateFinalPortal()
 {
-	// TODO
+	// TODO : activer un collider-portail
 	// Ajout du sprite du portail final
-	spriteManager->displayFinalPortal();
-	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
+	if (!spriteManager->isFinalPortalOn())
+	{
+		// Initialisation du portail final
+		std::unique_ptr<PM3D::CObjet3D> pFinalPortal = std::make_unique<Portal>(".\\modeles\\Portal\\portal.obm"s, PM3D::CMoteurWindows::GetInstance().pDispositif, 20.0f, physx::PxVec3{ finalPortalPos.x, finalPortalPos.y, finalPortalPos.z });
+		Scenes[3].push_back(std::move(pFinalPortal));
+		spriteManager->displayFinalPortal();
+		spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
+	}
 }
 
-
-
+void SceneManager::changePauseToGameOver(bool _gameWon, std::wstring _finalTime)
+{
+	pGameOverTexte->Ecrire(_finalTime, pBrush.get());
+	spriteManager->changePauseToGameOver(_gameWon, pGameOverTexte);
+}

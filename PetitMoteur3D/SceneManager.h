@@ -38,6 +38,7 @@ class SceneManager
 protected :
 	// Pour le texte
 	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::unique_ptr<PM3D::CAfficheurTexte> pGameOverTexte;
 	std::unique_ptr<PM3D::CAfficheurTexte> pVitesseTexte;
 	std::wstring str;
 	std::unique_ptr<Gdiplus::Font> pPolice;
@@ -69,18 +70,23 @@ public:
 
 	void displayPause();
 	void hidePause();
+
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
 	void activateFinalPortal();
 
+	void changePauseToGameOver(bool _gameWon, std::wstring _finalTime);
+
 private:
 	
+	//std::unique_ptr<PM3D::CObjet3D> pFinalPortal;
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
 	std::map<int, std::unique_ptr<Monster>> Monsters;
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
 	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
+
 	enum {
 
 		NBASTEROIDES = 100,
@@ -92,6 +98,7 @@ private:
 		NBETOILES = 256,
 		NBTUNNELCOMPONENTS = 4
 	};
+
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),
 	physx::PxVec3(-877.0f, -1252.0f, 296.0f),
@@ -114,8 +121,9 @@ private:
 	physx::PxVec3(1153.0f, -617.0f, 493.0f), physx::PxVec3(-1153.0f, 617.0f, -493.0f),		//Zone1
 	physx::PxVec3(-1365.0f, 4916.0f, 283.0f), physx::PxVec3(1411.0f, 7352.0f, -343.0f),		//Zone2
 	physx::PxVec3(4845.0f, 6825.0f, 602.0f), physx::PxVec3(6331.0f, 4896.0f, 602.0f),		//Zone3
-	physx::PxVec3(7038.0f, 871.0f, -1732.0f), physx::PxVec3(4807.0f, -1605.0f, -1732.0f)	//zone4
+	physx::PxVec3(7038.0f, 871.0f, 249.0f), physx::PxVec3(5823.0f, -923.0f, -1492.0f)		//zone4
 	};
+
 
 	const XMFLOAT3 finalPortalPos = { 6000.0f, 0.0f, 0.0f }; // Zone 3
 
@@ -159,6 +167,14 @@ private:
 	
 
 public:
+
+	const physx::PxVec3 zonesCenters[NBZONES] = {
+	physx::PxVec3(0.0f, 0.0f, 0.0f),
+	physx::PxVec3(0, BOXSIZE, 0),
+	physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f),
+	physx::PxVec3(BOXSIZE, 0.0f, 0.0f)
+	};
+
 	std::unique_ptr<Player> player;
 	std::unique_ptr<PM3D::CTerrain> terrain;
 };

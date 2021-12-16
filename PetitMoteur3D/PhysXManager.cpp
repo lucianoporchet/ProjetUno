@@ -236,6 +236,18 @@ PxFilterFlags FilterShader(
 		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
 		return PxFilterFlag::eDEFAULT;
 	}
+
+	if (((filterData0.word0 == FilterGroup::eFinalPortal) && (filterData1.word0 == FilterGroup::ePlayer)) ||
+		((filterData1.word0 == FilterGroup::eFinalPortal) && (filterData0.word0 == FilterGroup::ePlayer)))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else if ((filterData0.word0 == FilterGroup::eFinalPortal) || (filterData1.word0 == FilterGroup::eFinalPortal))
+	{
+		pairFlags = PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		return PxFilterFlag::eDEFAULT;
+	}
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	return PxFilterFlag::eDEFAULT;
 }
