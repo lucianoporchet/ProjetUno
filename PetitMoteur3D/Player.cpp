@@ -26,7 +26,6 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 
 	//vitesse influant sur les mouvements du joueur
 	speed = 300.0f;
-	
 }
 
 //fonction d'animation du player
@@ -63,7 +62,6 @@ void Player::Anime(float tempEcoule)
 	}
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_F2))
 	{
-		// breakpoint
 		// Toggle la cam 1ere personne
 		camera->toggleFirstPerson();
 	}
@@ -86,10 +84,8 @@ void Player::Anime(float tempEcoule)
 	const PxQuat quatY = PxQuat(angleY, { 0.0f, 1.0f, 0.0f });
 	const float angleZ = -atan2(vecDir.y, 1.0f);
 	const PxQuat quatZ = PxQuat(angleZ, { -1.0f, 0.0f, 0.0f });
-
 	const PxQuat quat = (quatY * quatZ);
 	PxQuat temp = pquat;
-	
 
 	if (pquat.w < quat.w - offset) temp.w = pquat.w + offset;
 	else if (pquat.w > quat.w + offset) temp.w = pquat.w - offset;
@@ -107,10 +103,8 @@ void Player::Anime(float tempEcoule)
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
 	body->setGlobalPose(PxTransform(pos, temp));
-	//PxTransform transformPlayer = body->getGlobalPose();
 
 	setMatWorld(XMMatrixScaling(scale, scale, scale) * XMMatrixRotationQuaternion(quatVec) * XMMatrixTranslationFromVector(posVec));
-
 }
 
 //avancer
@@ -134,6 +128,7 @@ void Player::rotateRight()
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
+//retourner la caméra liée au joueur
 PM3D::CCamera* Player::getCam()
 {
 	return camera;
@@ -146,14 +141,14 @@ void Player::rotateLeft()
 	body->setGlobalPose(PxTransform(body->getGlobalPose().p, body->getGlobalPose().q * quat.getNormalized()));
 }
 
-//roulis y gauche
+//monter
 void Player::moveUp()
 {
 	mUp.normalize();
 	body->addForce(mUp * 3.0f, PxForceMode::eIMPULSE);
 }
 
-//roulis y droite
+//descendre
 void Player::moveDown()
 {
 	mUp.normalize();
@@ -191,7 +186,6 @@ PxVec3 Player::getCameraDir() {
 	const float x = cameraDirection.vector4_f32[0];
 	const float y = cameraDirection.vector4_f32[1];
 	const float z = cameraDirection.vector4_f32[2];
-
 
 	return PxVec3{ x,y,z };
 }
