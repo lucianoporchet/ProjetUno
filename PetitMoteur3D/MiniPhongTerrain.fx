@@ -17,16 +17,17 @@ struct VS_Sortie
 	float3 vDirLum : TEXCOORD1;
 	float3 vDirCam : TEXCOORD2;
 	float2 coordTex : TEXCOORD3;
+	float3 WorldPos : POSITION;
 };
 
-static float3 WorldPos;
+//static float3 WorldPos;
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
 	VS_Sortie sortie = (VS_Sortie)0;
 
 	sortie.Pos = mul(Pos, matWorldViewProj);
-	WorldPos = mul(Pos, matWorld);
+	sortie.WorldPos = mul(Pos, matWorld);
 	sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
@@ -73,19 +74,19 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float3 couleurTexture = textureEntree[1].Sample(SampleState, vs.coordTex * 8).rgb * textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x
 	+ textureEntree[0].Sample(SampleState, vs.coordTex * 8).rgb * (1 - textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x);
 
-	float3 lightToPixelVec = lum1 - WorldPos.xyz;
+	float3 lightToPixelVec = lum1 - vs.WorldPos.xyz;
 	float d1 = length(lightToPixelVec);
 
-	lightToPixelVec = lum2 - WorldPos.xyz;
+	lightToPixelVec = lum2 - vs.WorldPos.xyz;
 	float d2 = length(lightToPixelVec);
 
-	lightToPixelVec = lum3 - WorldPos.xyz;
+	lightToPixelVec = lum3 - vs.WorldPos.xyz;
 	float d3 = length(lightToPixelVec);
 
-	lightToPixelVec = lum4 - WorldPos.xyz;
+	lightToPixelVec = lum4 - vs.WorldPos.xyz;
 	float d4 = length(lightToPixelVec);
 
-	lightToPixelVec = lum5 - WorldPos.xyz;
+	lightToPixelVec = lum5 - vs.WorldPos.xyz;
 	float d5 = length(lightToPixelVec);
 
 	float3 totalAbiant = vAEcl.rgb;
