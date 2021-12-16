@@ -19,11 +19,14 @@ struct VS_Sortie
 	float2 coordTex : TEXCOORD3;
 };
 
+static float3 WorldPos;
+
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
 	VS_Sortie sortie = (VS_Sortie)0;
 
 	sortie.Pos = mul(Pos, matWorldViewProj);
+	WorldPos = mul(Pos, matWorld);
 	sortie.Norm = mul(float4(Normale, 0.0f), matWorld).xyz;
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
@@ -40,36 +43,76 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 Texture2D textureEntree[8];  // la texture
 SamplerState SampleState;    // l'état de sampling
 
+static float3 lum1 = float3(398.0f, 5821.0f, -422.0f);
+static float3 lum2 = float3(31.0f, 5689.0f, 98.0f);
+static float3 lum3 = float3(-336.0f, 5514.0f, 528.0f);
+static float3 lum4 = float3(459.0f, 6244.0f, 353.0f);
+static float3 lum5 = float3(-334.0f, 5224.0f, -127.0f);
+static float3 coulLum = float3(1.0f, 0.0f, 0.0f);
+
+
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
+	float range = 500.0f;
+	float att = 0.000025f;
+	// Normaliser les paramètres
+	float3 N = normalize(vs.Norm);
+	float3 L = normalize(vs.vDirLum);
+	float3 V = normalize(vs.vDirCam);
 
-// Normaliser les paramètres
-float3 N = normalize(vs.Norm);
-float3 L = normalize(vs.vDirLum);
-float3 V = normalize(vs.vDirCam);
+	// Valeur de la composante diffuse
+	float3 diff = saturate(dot(N, L));
+	// R = 2 * (N.L) * N – L
+	float3 R = normalize(2 * diff * N - L);
+	// Puissance de 4 - pour l'exemple
+	float S = pow(saturate(dot(R, V)), 4.0f);
 
-// Valeur de la composante diffuse
-float3 diff = saturate(dot(N, L));
+	// Échantillonner la couleur du pixel à partir de la texture
+	// L'on utilise la 3e texture de filtre pour determiner quelle texture apposer sur notre objet
+	float3 couleurTexture = textureEntree[1].Sample(SampleState, vs.coordTex * 8).rgb * textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x
+	+ textureEntree[0].Sample(SampleState, vs.coordTex * 8).rgb * (1 - textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x);
 
-// R = 2 * (N.L) * N – L
-float3 R = normalize(2 * diff * N - L);
+	float3 lightToPixelVec = lum1 - WorldPos.xyz;
+	float d1 = length(lightToPixelVec);
 
-// Puissance de 4 - pour l'exemple
-float S = pow(saturate(dot(R, V)), 4.0f);
+	lightToPixelVec = lum2 - WorldPos.xyz;
+	float d2 = length(lightToPixelVec);
 
-// Échantillonner la couleur du pixel à partir de la texture
-// L'on utilise la 3e texture de filtre pour determiner quelle texture apposer sur notre objet
-float3 couleurTexture = textureEntree[1].Sample(SampleState, vs.coordTex * 8).rgb * textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x
-+ textureEntree[0].Sample(SampleState, vs.coordTex * 8).rgb * (1 - textureEntree[2].Sample(SampleState, vs.coordTex).rgb.x);
+	lightToPixelVec = lum3 - WorldPos.xyz;
+	float d3 = length(lightToPixelVec);
 
-// I = A + D * N.L + (R.V)n
-couleur = couleurTexture * vAEcl.rgb * vAMat.rgb +
-		   couleurTexture * vDEcl.rgb * vDMat.rgb * diff;
+	lightToPixelVec = lum4 - WorldPos.xyz;
+	float d4 = length(lightToPixelVec);
 
-couleur += S;
+	lightToPixelVec = lum5 - WorldPos.xyz;
+	float d5 = length(lightToPixelVec);
 
-return float4(couleur, 1.0f);
+	float3 totalAbiant = vAEcl.rgb;
+
+	if (d1 <= range) {
+		totalAbiant += coulLum.rgb / (att * d1 * d1);
+	}
+	if (d2 <= range) {
+		totalAbiant += coulLum.rgb / (att * d2 * d2);
+	}
+	if (d3 <= range) {
+		totalAbiant += coulLum.rgb / (att * d3 * d3);
+	}
+	if (d4 <= range) {
+		totalAbiant += coulLum.rgb / (att * d4 * d4);
+	}
+	if (d5 <= range) {
+		totalAbiant += coulLum.rgb / (att * d5 * d5);
+	}
+	
+	// I = A + D * N.L + (R.V)n
+	couleur = couleurTexture * totalAbiant * vAMat.rgb +
+			   couleurTexture * vDEcl.rgb * vDMat.rgb * diff;
+
+	couleur += S;
+
+	return float4(saturate(couleur), 1.0f);
 }
 
 technique11 MiniPhong

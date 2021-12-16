@@ -252,7 +252,7 @@ void CObjetMesh::Draw()
 	CMoteurWindows& moteur = CMoteurWindows::GetInstance();
 	camPos = moteur.GetFreeCamera().getPosition();
 
-	sp.vLumiere = XMVectorSet(3000.0f, 3000.0f, 0.0f, 1.0f);
+	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
 	sp.vCamera = camPos;
 	sp.vAEcl = lightColor[static_cast<int>(GameManager::get().getActiveZone())];
 	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
