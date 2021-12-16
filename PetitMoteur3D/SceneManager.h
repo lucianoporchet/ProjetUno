@@ -70,6 +70,7 @@ public:
 
 	void displayPause();
 	void hidePause();
+
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
 
@@ -84,6 +85,7 @@ private:
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
 	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
+
 	enum {
 
 		NBASTEROIDES = 100,
@@ -94,6 +96,12 @@ private:
 		NBPICKUPOBJECTS = 10,
 		NBETOILES = 256,
 		NBTUNNELCOMPONENTS = 4
+	};
+	const physx::PxVec3 zonesCenters[NBZONES] = {
+		physx::PxVec3(0.0f, 0.0f, 0.0f),
+		physx::PxVec3(0, BOXSIZE, 0),
+		physx::PxVec3(BOXSIZE, BOXSIZE, 0.0f),
+		physx::PxVec3(BOXSIZE, 0.0f, 0.0f)
 	};
 	const physx::PxVec3 planetePos1[NBPLANETES] = {
 	physx::PxVec3(1032.0f, -782.0f, 0.0f),

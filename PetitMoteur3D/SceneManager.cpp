@@ -223,8 +223,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// | Tomato warning
 	int largeurPortal = largeur / 10;
 	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\tomato_warn.dds"s, largeur - largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), 200, 200, false);
+	// | Avertissement Limite
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\demi_tour.dds"s, largeur / 2, hauteur / 4, (int)((largeur / 4) * 1.16), largeur / 4, false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\demi_tour_texte.dds"s, largeur / 2, (hauteur / 4) * 3, largeur - 400, (int)((largeur - 400) / 10.5), false);
 	// | Portal status
-	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle/2), (largeurCle * 3), (largeurCle * 3), false);
+	spriteManager->AjouterUISprite(".\\modeles\\Billboards\\finalPortalON.dds"s, largeurPortal, (int)(hauteur / 1.2) - (largeurPortal + hauteurCle / 2), (largeurCle * 3), (largeurCle * 3), false);
 	// \DONE WITH UI
 
 	// Effet "etoiles"
@@ -332,16 +335,29 @@ void SceneManager::Anime(Zone scene, float tmps) {
 	}
 
 	// Billboards, sprites et panneaux
-	spriteManager->Anime(tmps);
-	float distance = (player->body->getGlobalPose().p - Monsters[static_cast<int>(scene)]->getPosition().p).magnitude();
-	if (distance < 600.0f)
-	{
-		spriteManager->displayWarning();
+	{ // Distance monstre-joueur
+		spriteManager->Anime(tmps);
+		float distance = (player->body->getGlobalPose().p - Monsters[static_cast<int>(scene)]->getPosition().p).magnitude();
+		if (distance < 600.0f)
+			spriteManager->displayWarning();
+		else
+			spriteManager->hideWarning();
 	}
-	else
-	{
-		spriteManager->hideWarning();
+
+	{ // Distance joueur-centre zone
+		float distance = (player->body->getGlobalPose().p - zonesCenters[static_cast<int>(scene)]).magnitude();
+		if (distance > 2000.0f)
+		{
+			if (distance > 2500.0f)
+			{
+				// TODO put player in game over
+			}
+			spriteManager->displayOutOfBoundsWarns();
+		}
+		else
+			spriteManager->hideOutOfBoundsWarns();
 	}
+
 	spriteManager->AnimeZone(static_cast<int>(scene), tmps);
 }
 

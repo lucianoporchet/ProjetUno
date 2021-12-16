@@ -39,6 +39,9 @@ namespace PM3D
 		void displayPauseSprite();
 		void hidePauseSprite();
 
+		void displayOutOfBoundsWarns() { tabUISprite[10]->displayed = true; tabUISprite[11]->displayed = true; }
+		void hideOutOfBoundsWarns() { tabUISprite[10]->displayed = false; tabUISprite[11]->displayed = false; }
+
 		void displayWarning() { tabUISprite[9]->displayed = true; };
 		void hideWarning() { tabUISprite[9]->displayed = false; };
 		
