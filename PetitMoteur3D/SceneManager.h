@@ -155,8 +155,8 @@ private:
 
 	const PickUpObjectPlacementInfo pickupObjectsInfo[NBPICKUPOBJECTS]{
 		{ physx::PxVec3(500, 500, 500) , PickUpObjectType::RedKey , 0 },
-		{ physx::PxVec3(0, BOXSIZE + 500, 0) , PickUpObjectType::GreenKey , 1 },
-		{ physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0) , PickUpObjectType::BlueKey , 2 },
+		{ physx::PxVec3(96.0f, 5572.0f, -359.0f) , PickUpObjectType::GreenKey , 1 },
+		{ physx::PxVec3(5204.0f, 5439.0f, -505.0f) , PickUpObjectType::BlueKey , 2 },
 		{ physx::PxVec3(-300, -300, -300) , PickUpObjectType::SpeedBuff , 0 },
 		{ physx::PxVec3(-150, 300 + BOXSIZE, 100) , PickUpObjectType::SpeedBuff , 1 },
 		{ physx::PxVec3(-1000 + BOXSIZE, -300, 1000) , PickUpObjectType::SpeedBuff , 3 },
