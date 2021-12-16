@@ -173,6 +173,19 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_purple_light.dds"s, { portalPos[6].x, portalPos[6].y, portalPos[6].z }, true, 100.0f, 100.0f);
 	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\portal_blue_light.dds"s, { portalPos[7].x, portalPos[7].y, portalPos[7].z }, true, 100.0f, 100.0f);
 
+	// Ajout des sprites pour rendre les pickupObjects plus visibles
+	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
+		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff)
+		{
+			spriteManager->AjouterPanneau(pickupObjectsInfo[i].zoneNumber, false, ".\\modeles\\Billboards\\fastfood_billboard.dds"s, { pickupObjectsInfo[i].pos.x, pickupObjectsInfo[i].pos.y, pickupObjectsInfo[i].pos.z }, true, 50.0f, 50.0f);
+		}
+		else
+		{
+			spriteManager->AjouterPanneau(pickupObjectsInfo[i].zoneNumber, false, ".\\modeles\\Billboards\\key_billboard.dds"s, { pickupObjectsInfo[i].pos.x, pickupObjectsInfo[i].pos.y, pickupObjectsInfo[i].pos.z }, true, 50.0f, 50.0f);
+		}
+	}
+
+
 	// Ajout du sprite de pause
 	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\pausemenu.dds"s, largeur / 2, hauteur / 2);
 	spriteManager->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur/2, largeur, hauteur);
