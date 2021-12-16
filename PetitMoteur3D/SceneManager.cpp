@@ -5,6 +5,7 @@
 #include "AfficheurSprite.h"
 
 #include <functional>
+#include "MoteurWindows.h"
 
 using namespace std::literals;
 static std::mutex objMutex;
@@ -152,6 +153,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
 		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
+
+	// Initialisation du portail final
+	//pFinalPortal = std::make_unique<Portal>(".\\modeles\\Portal\\portal.obm"s, PM3D::CMoteurWindows::GetInstance().pDispositif, 20.0f, physx::PxVec3{ finalPortalPos.x, finalPortalPos.y, finalPortalPos.z });
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
 		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
@@ -406,8 +410,14 @@ void SceneManager::activateFinalPortal()
 {
 	// TODO : activer un collider-portail
 	// Ajout du sprite du portail final
-	spriteManager->displayFinalPortal();
-	spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
+	if (!spriteManager->isFinalPortalOn())
+	{
+		// Initialisation du portail final
+		std::unique_ptr<PM3D::CObjet3D> pFinalPortal = std::make_unique<Portal>(".\\modeles\\Portal\\portal.obm"s, PM3D::CMoteurWindows::GetInstance().pDispositif, 20.0f, physx::PxVec3{ finalPortalPos.x, finalPortalPos.y, finalPortalPos.z });
+		Scenes[3].push_back(std::move(pFinalPortal));
+		spriteManager->displayFinalPortal();
+		spriteManager->AjouterPanneau(3, true, ".\\modeles\\Billboards\\finalPortal.dds"s, finalPortalPos, true, 100.0f, 100.0f);
+	}
 }
 
 void SceneManager::changePauseToGameOver(bool _gameWon, std::wstring _finalTime)

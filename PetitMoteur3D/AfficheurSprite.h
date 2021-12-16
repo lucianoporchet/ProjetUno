@@ -46,6 +46,7 @@ namespace PM3D
 		void hideWarning() { tabUISprite[9]->displayed = false; };
 		
 		void displayFinalPortal() { tabUISprite.back()->displayed = true; };
+		bool isFinalPortalOn() { return tabUISprite.back()->displayed; };
 
 		// Ces fonctions doivent etre plus ou moins specialisees, mais restent a titre d'exemple pour les autres.
 		void AjouterSprite(int _zone, const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);

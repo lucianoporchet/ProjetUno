@@ -80,6 +80,7 @@ public:
 
 private:
 	
+	//std::unique_ptr<PM3D::CObjet3D> pFinalPortal;
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
 	std::map<int, std::unique_ptr<Monster>> Monsters;
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
@@ -122,6 +123,7 @@ private:
 	physx::PxVec3(4845.0f, 6825.0f, 602.0f), physx::PxVec3(6331.0f, 4896.0f, 602.0f),		//Zone3
 	physx::PxVec3(7038.0f, 871.0f, 249.0f), physx::PxVec3(5823.0f, -923.0f, -1492.0f)		//zone4
 	};
+
 
 	const XMFLOAT3 finalPortalPos = { 6000.0f, 0.0f, 0.0f }; // Zone 3
 

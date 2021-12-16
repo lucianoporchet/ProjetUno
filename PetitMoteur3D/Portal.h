@@ -13,6 +13,9 @@ class Portal : public PM3D::CObjetMesh {
 
 public:
 	Portal(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos, int scene);
+	
+	// Final portal constructor
+	Portal(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDispositif, float scale, PxVec3 pos);
 
 	//update la position et rotation de l'objet en fonction des calculs de physX
 	virtual void Anime(float tempEcoule) override;

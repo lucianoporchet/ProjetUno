@@ -73,6 +73,12 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
                     gm.activateFinalPortal();
                 }
             }
+            else if ((shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::eFinalPortal) ||
+                (shape2->getSimulationFilterData().word0 == FilterGroup::eFinalPortal && shape->getSimulationFilterData().word0 == FilterGroup::ePlayer))
+            {
+                GameManager& gm = GameManager::get();
+                gm.gameOver(true);
+            }
         }
     }
 }
