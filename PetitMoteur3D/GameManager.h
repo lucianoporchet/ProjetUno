@@ -32,6 +32,9 @@ public:
 	void activatePickUpObjectFromPos(PxVec3 pos);
 
 	void updateChrono();
+	void updateSpeed();
+
+	
 	void setChronoStart();
 	
 private:

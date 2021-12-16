@@ -38,6 +38,7 @@ class SceneManager
 protected :
 	// Pour le texte
 	std::unique_ptr<PM3D::CAfficheurTexte> pChronoTexte;
+	std::unique_ptr<PM3D::CAfficheurTexte> pVitesseTexte;
 	std::wstring str;
 	std::unique_ptr<Gdiplus::Font> pPolice;
 	std::unique_ptr<Gdiplus::SolidBrush> pBrush;
@@ -45,7 +46,7 @@ protected :
 	
 private:
 	std::unique_ptr<PM3D::CAfficheurSprite> spriteManager;
-
+	bool pauseStatus = false;
 	SceneManager();
 public:
 
@@ -63,14 +64,20 @@ public:
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
 	PM3D::CAfficheurTexte* GetpChronoTexte();
+	PM3D::CAfficheurTexte* GetpVitesseTexte();
 	Gdiplus::SolidBrush* GetpBrush();
 
+	void displayPause();
+	void hidePause();
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
+
+	void activateFinalPortal();
 
 private:
 	
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
+	std::map<int, std::unique_ptr<Monster>> Monsters;
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
 	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
@@ -110,6 +117,7 @@ private:
 	physx::PxVec3(7038.0f, 871.0f, -1732.0f), physx::PxVec3(4807.0f, -1605.0f, -1732.0f)	//zone4
 	};
 
+	const XMFLOAT3 finalPortalPos = { 6000.0f, 0.0f, 0.0f }; // Zone 3
 
 	const physx::PxVec3 monsterPos[NBMONSTRES] = {
 		physx::PxVec3(-1000.0f, -1000.0f, -1000.0f),

@@ -17,9 +17,11 @@ void GameManager::setPauseMenu(bool toShow) noexcept
 	isPause = toShow;
 	if (toShow)
 	{
+		sceneManager.displayPause();
 		startPause = horloge.GetTimeCount();
 	}
 	else {
+		sceneManager.hidePause();
 		totalPauseTime += startPause - horloge.GetTimeCount();
 	}
 	
@@ -77,7 +79,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 
 		
-
+		updateSpeed();
 		updateChrono();
 		sceneManager.Anime(activeZone, tempsEcoule);
 	}
@@ -135,7 +137,7 @@ bool GameManager::allKeysCollected()
 
 void GameManager::activateFinalPortal()
 {
-	// TODO
+	sceneManager.activateFinalPortal();
 }
 
 void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
@@ -152,19 +154,23 @@ void GameManager::activatePickUpObjectFromPos(PxVec3 pos)
 			if (obj->getType() == PickUpObjectType::GreenKey)
 			{
 				greenKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(1);
 			}
 			else if (obj->getType() == PickUpObjectType::BlueKey)
 			{
 				blueKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(0);
 			}
 			else if (obj->getType() == PickUpObjectType::RedKey)
 			{
 				redKeyCollected = true;
+				sceneManager.getSpriteManager()->afficherCle(2);
 			}
 			else if (obj->getType() == PickUpObjectType::SpeedBuff)
 			{
 				speedBuffCollected = true;
 				sm.player->setSpeed(sm.player->getSpeed() + 10);
+				sceneManager.getSpriteManager()->removeBillboardAtPos(static_cast<int>(activeZone), { pos.x, pos.y, pos.z });
 			}
 			PickUpObjectList.erase(It);
 			break;
@@ -189,8 +195,27 @@ void GameManager::updateChrono()
 	std::wstring secStr = std::to_wstring(sec); 
 	std::wstring millisecStr = std::to_wstring(millisec);
 
-	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s "s + millisecStr, sceneManager.GetpBrush());
+	if (sec < 10)
+		secStr = L"0"s + secStr; // affichage en style X:00	
+	if (min < 10)
+		minStr = L"0"s + minStr; // affichage en style X:00
+	if (millisec < 100)
+		millisecStr = L"0"s + millisecStr;
+	if (millisec < 10)
+		millisecStr = L"0"s + millisecStr;
 
+	sceneManager.GetpChronoTexte()->Ecrire(hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr, sceneManager.GetpBrush());
+}
+
+
+void GameManager::updateSpeed() 
+{
+	float plrSpeed = sceneManager.player->body->getLinearVelocity().magnitude();
+
+	std::wstring speedStr = std::to_wstring((int)plrSpeed);
+
+	sceneManager.GetpVitesseTexte()->Ecrire(speedStr, sceneManager.GetpBrush());
+	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
 }
 
 void GameManager::setChronoStart()
