@@ -79,31 +79,31 @@ float4 TestPS(VS_Sortie vs) : SV_Target
 	float4 ct;
 	float2 tc = vs.CoordTex;
 
-	// Niveaux de gris/Noir et blanc
-	ct = textureEntree.Sample(SampleState, tc);
-	couleur = (ct.r + ct.y + ct.z) / 3.0f;
-	//Noir et blanc
-	if (couleur.x < 0.2 || couleur.x >0.9) 
-	{
-		couleur.x = 0;
-	}
-	else {
-		couleur.x = 1.0f;
-	}
-	if (couleur.y < 0.2 || couleur.y >0.9)
-	{
-		couleur.y = 0;
-	}
-	else {
-		couleur.y = 1.0f;
-	}
-	if (couleur.z < 0.2 || couleur.z >0.9)
-	{
-		couleur.z = 0;
-	}
-	else {
-		couleur.z = 1.0f;
-	}
+	//// Niveaux de gris/Noir et blanc
+	//ct = textureEntree.Sample(SampleState, tc);
+	//couleur = (ct.r + ct.y + ct.z) / 3.0f;
+	////Noir et blanc
+	//if (couleur.x < 0.2 || couleur.x >0.9) 
+	//{
+	//	couleur.x = 0;
+	//}
+	//else {
+	//	couleur.x = 1.0f;
+	//}
+	//if (couleur.y < 0.2 || couleur.y >0.9)
+	//{
+	//	couleur.y = 0;
+	//}
+	//else {
+	//	couleur.y = 1.0f;
+	//}
+	//if (couleur.z < 0.2 || couleur.z >0.9)
+	//{
+	//	couleur.z = 0;
+	//}
+	//else {
+	//	couleur.z = 1.0f;
+	//}
 
 	//// DeepFried/Sepia
 	//couleur = 0;
