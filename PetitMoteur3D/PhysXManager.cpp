@@ -195,11 +195,12 @@ void PhysXManager::addForcesPlanet(float scale, PxRigidDynamic* body)
 void PhysXManager::addForcesAsteroid(float scale, PxRigidDynamic* body, PxVec3 dir) {
 
 	std::lock_guard<std::mutex> lock(mutexAsteroid);
-	body->addTorque(RandomGenerator::get().randomVec3(-2, 2) * 1000000.0f, PxForceMode::eIMPULSE);
+	body->addTorque(RandomGenerator::get().randomVec3(-20, 20) * static_cast<float>(pow(scale * 3, 4)), PxForceMode::eIMPULSE);
 	body->addForce(dir, PxForceMode::eIMPULSE);
 	body->setMass(scale * 10);
 	body->setLinearDamping(0);
 	body->setAngularDamping(0);
+
 }
 
 

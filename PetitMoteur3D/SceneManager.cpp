@@ -113,12 +113,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	}
 
 
-	LectureFichier lecteurHeightmap{ "smolOBJECT" };
-	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
-	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.6f, 5.02f), terrainRot);
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
+	
 
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
@@ -137,10 +132,13 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//La position des asteroides est une position aleatoire entre -1000 et -500 dans les 3 axes (posibilité de collision entre les asteroides a la creation)
 	float scale{};
 	PxVec3 pos;
+	int z = 1, sc = 1;
 	for (int j = 0; j < NBZONES; ++j) {
-		for (int i = 0; i < NBASTEROIDES; ++i) {
+		if (j == 3) {z = 2; sc = 10;}
+		else { z = 1; sc = 1; }
+		for (int i = 0; i < NBASTEROIDES * z; ++i) {
 			
-			scale = static_cast<float>(RandomGenerator::get().next(5, 20));
+			scale = static_cast<float>(RandomGenerator::get().next(5 * sc, 20 * sc));
 			pos = RandomGenerator::get().randomPosInZone(j);
 			futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, j, [](Asteroid*) noexcept {}));
 		}
@@ -169,6 +167,12 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		}
 	}
 
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.9f, 5.02f), terrainRot);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
