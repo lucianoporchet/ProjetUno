@@ -61,6 +61,7 @@ public:
 
 	
 	void InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
+	void initScene(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera);
 	physx::PxVec3 getPortalPos(Zone current, Zone past);
 	void Draw(Zone scene);
 	void Anime(Zone scene, float tmps);
@@ -70,6 +71,9 @@ public:
 
 	void displayPause();
 	void hidePause();
+	void createPickup();
+	void initVectorsScene();
+	void resetScene();
 
 	static SceneManager& get() noexcept;
 	const float getBoxSize();
@@ -84,6 +88,7 @@ private:
 	std::vector<std::vector<std::unique_ptr<PM3D::CObjet3D>>> Scenes{};
 	std::map<int, std::unique_ptr<Monster>> Monsters;
 	std::vector<std::vector<std::unique_ptr<PickUpObject>>> PickUpObjectsScenes{};
+	
 	/*std::unordered_map<PxVec3, std::shared_ptr<PM3D::CObjet3D>> pickUpObjectsPosition;*/
 	const float BOXSIZE{ 6000.0f };
 
@@ -177,6 +182,9 @@ public:
 
 	std::unique_ptr<Player> player;
 	std::unique_ptr<PM3D::CTerrain> terrain;
+	PM3D::CGestionnaireDeTextures* gestionnaireTexture;
+	PM3D::CDispositifD3D11* m_pDispositif;
+	
 };
 
 

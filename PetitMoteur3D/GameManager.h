@@ -33,13 +33,13 @@ public:
 
 	void updateChrono();
 	void updateSpeed();
-
+	void restartGame();
 	void gameOver(bool _win);
 
 	void setChronoStart();
 	
 private:
-
+	bool isDead = false;
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
 	int64_t totalPauseTime = 0;

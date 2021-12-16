@@ -33,11 +33,11 @@ public:
 	void updateCam();
 	physx::PxVec3 getDir();
 	physx::PxVec3 getCameraDir();
-
+	
 private:
 	
 	const float		offset{ 0.005f };
-	PM3D::CCamera*	camera;
+	PM3D::CCamera* camera;
 
 };
 

@@ -54,6 +54,12 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 	if (gameOverStatus)
 	{
+		//si le joueur est mort (meme chose que si il a gagné)
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_R))
+		{
+			restartGame();
+		}
+
 		// TODO placeholder. Calculate actual end time.
 		sceneManager.changePauseToGameOver(gameWon, L"time"s);
 		// TODO : Special pause for game over.
@@ -239,11 +245,30 @@ void GameManager::updateSpeed()
 	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
 }
 
+void GameManager::restartGame()
+{
+
+	//reset de la zone active
+	activeZone = Zone::ZONE1;
+	nextZone = Zone::ZONE1;
+
+	sceneManager.resetScene();
+	
+	//enlevement du menu pause
+	setPauseMenu(false);
+
+	//reset du chrono et du temps total de pause
+	setChronoStart();
+	totalPauseTime = 0;
+}
+
 void GameManager::gameOver(bool _win)
 {
 	// Do stuff that makes the game is over
 	sceneManager.changePauseToGameOver(_win, L"LOL TMORT"s);
 	setPauseMenu(true);
+	isDead = true;
+	gameOverStatus = true;
 }
 
 void GameManager::setChronoStart()
