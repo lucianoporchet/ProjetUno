@@ -112,6 +112,14 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		Scenes[1].push_back(std::move(tunnel));
 	}
 
+
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.6f, 5.02f), terrainRot);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
+
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
@@ -141,8 +149,8 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
 		PxVec3 portalposi = portalPos[i];
 		PxVec3 portalposiplus = portalPos[i+1];
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Planete\\2\\Planete.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
@@ -164,12 +172,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
-	
-	LectureFichier lecteurHeightmap{ "smolOBJECT" };
-	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(0.f),0, 1.0f);
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\grass.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\water.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
 	// Variables utiles
 	int largeur = pDispositif->GetLargeur();

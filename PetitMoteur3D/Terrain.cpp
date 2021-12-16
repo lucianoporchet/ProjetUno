@@ -20,7 +20,7 @@ struct ShadersParams
 	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
 };
 
-PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, float scale)
+PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, PxVec3 pos, int scene, PxVec3 scale, PxQuat rot)
 	: pDispositif(pDispositif) // Prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
 	, rotation(0.0f)
@@ -131,22 +131,20 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	PxTriangleMesh* triMesh = NULL;
 	triMesh = PhysXManager::get().getPxCooking()->createTriangleMesh(meshDesc, PhysXManager::get().getgPhysx()->getPhysicsInsertionCallback());
 	
-	PxMeshScale geomScale = PxMeshScale((PxVec3(scale)));
+	const PxMeshScale geomScale = PxMeshScale(scale);
 	PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh, geomScale);
 	
 	body = PhysXManager::get().createTerrain(PxTransform(pos), geom,scene);
-	
 
 	//placement du terrain
-	const PxVec3 pos2 = body->getGlobalPose().p;
-	const XMFLOAT3 posF3(pos2.x, pos2.y, pos2.z);
+	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
 	const XMVECTOR posVec = XMLoadFloat3(&posF3);
 
-	const PxQuat quat = body->getGlobalPose().q;
-	const XMFLOAT4 quatF3(quat.x, quat.y, quat.z, quat.w);
+	body->setGlobalPose(PxTransform(pos, rot));
+	const XMFLOAT4 quatF3(rot.x, rot.y, rot.z, rot.w);
 	const XMVECTOR quatVec = XMLoadFloat4(&quatF3);
 
-	matWorld = XMMatrixScaling(scale, scale, scale)* XMMatrixRotationQuaternion(quatVec)* XMMatrixTranslationFromVector(posVec);
+	matWorld = XMMatrixScaling(scale.x, scale.y, scale.z)* XMMatrixRotationQuaternion(quatVec)* XMMatrixTranslationFromVector(posVec);
 	// Initialisation de l'effet
 	InitEffet();
 }

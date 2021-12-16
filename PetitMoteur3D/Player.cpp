@@ -25,7 +25,7 @@ Player::Player(const std::string& nomfichier, PM3D::CDispositifD3D11* _pDisposit
 
 
 	//vitesse influant sur les mouvements du joueur
-	speed = 30.0f;
+	speed = 300.0f;
 	
 }
 

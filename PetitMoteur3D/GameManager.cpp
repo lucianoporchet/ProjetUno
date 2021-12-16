@@ -188,7 +188,7 @@ void GameManager::updateChrono()
 	const int hour = mintmp / 60;
 	const int min = mintmp % 60;
 	const int sec = static_cast<int>(diff * secPerCount) % 60;
-	const int  millisec = static_cast<int>(((diff * secPerCount) - sec) * 1000);
+	const int  millisec = static_cast<int>(((diff * secPerCount) - sec - (min*60)) * 1000);
 
 	std::wstring hourStr = std::to_wstring(hour);
 	std::wstring minStr = std::to_wstring(min);
