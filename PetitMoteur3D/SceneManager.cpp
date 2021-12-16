@@ -296,7 +296,11 @@ SceneManager::SceneManager() {
 }
 
 void SceneManager::Draw(Zone scene) {
-	player->Draw();
+	if (!player->getCam()->isCamera1st())
+	{
+		player->Draw();
+	}
+	
 	terrain->Draw();
 	for (auto& obj : Scenes[static_cast<int>(scene)])
 	{
