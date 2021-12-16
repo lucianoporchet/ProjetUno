@@ -129,7 +129,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	for (const auto& pos : planetePos2) {
 		float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
 		string NB = to_string(RandomGenerator::get().next(5, 8));
-		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\" + NB + "\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
+		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\" + NB + "\\Planete.obm"s, pDispositif, scale, pos, 2, [](Planet*) noexcept {}));
 	}
 
 
