@@ -28,6 +28,7 @@ void PhysXManager::initPhysics()
 	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 	if (!mCooking)
 		throw "quelquechose s'est mal passé lors de la création du meshCooking";
+	registry = PxSerialization::createSerializationRegistry(*gPhysics);
 
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, 0.0f, 0.0f);
@@ -89,6 +90,7 @@ void PhysXManager::cleanupPhysics()
 	PX_RELEASE(gDispatcher);
 	PX_RELEASE(gPhysics);
 	PX_RELEASE(mCooking);
+	PX_RELEASE(registry);
 
 	if (gPvd)
 	{
@@ -105,13 +107,38 @@ void PhysXManager::addToScene(PxActor* actor, int scene)
 	gScenes[scene]->addActor(*actor);
 }
 
-PxRigidStatic* PhysXManager::createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene) {
+//creation du terrain s'il n'as pas été cook
+void PhysXManager::createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene) {
+	
 	PxShape* shape = PhysXManager::get().getgPhysx()->createShape(geom, *gMaterial, true);
-	shape->setName("Terrain");
-	PxRigidStatic* body = gPhysics->createRigidStatic(t);
-	body->attachShape(*shape);
-	addToScene(body, scene);
-	return body;
+	PxRigidStatic* body = PxCreateStatic(*gPhysics, t, geom, *gMaterial);
+
+	collection = PxCreateCollection();
+	collection->add(*body);
+	PxSerialization::complete(*collection, *registry);
+
+	PxDefaultFileOutputStream outStream("serialized.dat");
+	PxSerialization::serializeCollectionToBinary(outStream, *collection, *registry);
+}
+
+//deserialize le cooking pour le mettre dans la scene
+PxRigidStatic* PhysXManager::createTerrainSerialized(PxCollection* collection,int scene) {
+	this->collection = collection;
+	//gScenes[scene]->addCollection(*this->collection);
+	PxU32 size = collection->getNbObjects();
+
+	PxRigidActor* actor;
+
+	for (PxU32 o = 0; o < this->collection->getNbObjects(); o++)
+	{
+		PxRigidActor* rigidActor = this->collection->getObject(o).is<PxRigidActor>();
+		if (rigidActor)
+		{
+			actor = rigidActor;
+		}
+	}
+	addToScene(static_cast<PxRigidStatic*>(actor), scene);
+	return static_cast<PxRigidStatic*>(actor);
 }
 
 
@@ -132,6 +159,11 @@ PxPhysics* PhysXManager::getgPhysx()
 PxCooking* PhysXManager::getPxCooking()
 {
 	return mCooking;
+}
+
+PxSerializationRegistry* PhysXManager::getRegistry()
+{
+	return registry;
 }
 
 PxRigidStatic* PhysXManager::createStatic(const PxTransform& t, const PxGeometry& geometry, int scene)
