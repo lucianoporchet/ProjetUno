@@ -212,6 +212,11 @@ void GameManager::setShaderTechniqueToClear()
 	currentPosteffectShader = chosenPosteffectShader;
 }
 
+bool GameManager::getNeedRestart()
+{
+	return needsRestart;
+}
+
 bool GameManager::IsHardModeOn()
 {
 	return hardmode;
@@ -327,11 +332,15 @@ void GameManager::updateSpeed()
 
 void GameManager::restartGame()
 {
+
 	//reset de la zone active
 	activeZone = Zone::ZONE1;
 	nextZone = Zone::ZONE1;
 	needsRestart = false;
-
+	blueKeyCollected = false;
+	redKeyCollected = false;
+	greenKeyCollected = false;
+	speedBuffCollected = false;
 
 	physXManager.cleanupPhysics();
 	physXManager.initVectorScenes();
