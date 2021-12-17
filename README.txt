@@ -31,15 +31,18 @@ Menu de démarrage:
 
 Menu Pause:
 Echap : Reprendre la partie
-0 a 9: changer de shader
+0 et 9: changer de shader (cyclique)
 
 Fin de jeu:
-R relancer la partie
+R relancer la partie. Prend un certain temps.
 
 ====================================================
 			Notes
 ====================================================
 
+ Le lancement du jeu prend un certain temps, et
+ c'est normal. Patientez.
+ 
  Pour mettre pause il faut appuyer sur Echap. On 
  reprend alors le contrôle de la souris et on peut
  fermer le jeu normalement.
@@ -77,28 +80,41 @@ R relancer la partie
 			LOD
 ====================================================
 
-Pour ce qui est du LOD nous avons mis en place la
-tesselation dans le shader Miniphong.fx. Nous avons
-également un shader nommé MiniphongClassic.fx qui
-est le shader de base.
-Lors de l'animation de chaque objet on teste la
-distance par rapport a la caméra et si l'on est
-assez proche on active alors la tesselation pour
-ajouter du détail. Nous pouvons voir un leger 
-flickering lors du changement. Nous pouvons voir
-clairement les effets de la tessellation notamment
-au niveau des asteroides géants présents dans la
-zone rouge.
+ Pour ce qui est du LOD nous avons mis en place la
+ tesselation dans le shader Miniphong.fx. Nous avons
+ également un shader nommé MiniphongClassic.fx qui
+ est le shader de base.
+ Lors de l'animation de chaque objet on teste la
+ distance par rapport a la caméra et si l'on est
+ assez proche on active alors la tesselation pour
+ ajouter du détail. Nous pouvons voir un leger 
+ flickering lors du changement. Nous pouvons voir
+ clairement les effets de la tessellation notamment
+ au niveau des asteroides géants présents dans la
+ zone rouge.
 
 ====================================================
-			Effets HLSL
+		    Effets HLSL
 ====================================================
 
-Tout d'abord nous avons le LOD mentionné plus haut
-mais nous avons également de l'alpha blending au niveau
-de la height map dans notre tunnel. Nous avons aussi
-mis en place plusieurs autres effets tels que le blur
-lors de la téléportation entre les zones, différents
-types de shaders pour les différentes formes de daltonisme,
-ainsi qu'un shader en niveux de gris pour donner un
-visuel plus retro au jeu.
+ Tout d'abord nous avons le LOD mentionné plus haut
+ mais nous avons également de l'alpha blending au 
+ niveau de la height map dans notre tunnel. Nous 
+ avons aussi mis en place plusieurs autres effets 
+ tels que le blur lors de la téléportation entre les
+ zones, différents types de shaders pour les 
+ différentes formes de  daltonisme, ainsi qu'un 
+ shader en niveux de gris  pour donner un visuel 
+ plus retro au jeu.
+ 
+====================================================
+		     BUGS CONNUS
+====================================================
+
+ Malgré tous nos efforts, quelques bugs se sont
+ glissés dans notre projet. Notamment, il se peut
+ qu'au lancement le menu ne s'affiche pas. Il est
+ pourtant bien présent et actif, il suffit d'appuyer
+ sur 1 ou 2 pour lancer en facile/difficile. Cette
+ situation est visible avec un ecran bleu-noir au
+ demarrage.
