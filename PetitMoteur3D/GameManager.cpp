@@ -379,7 +379,6 @@ void GameManager::gameOver(bool _win)
 	}
 	sceneManager.changePauseToGameOver(_win, hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr);
 	setPauseMenu(true);
-	isDead = true;
 	gameOverStatus = true;
 }
 
