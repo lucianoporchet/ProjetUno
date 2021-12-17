@@ -83,6 +83,7 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
                 (shape2->getSimulationFilterData().word0 == FilterGroup::eFinalPortal && shape->getSimulationFilterData().word0 == FilterGroup::ePlayer))
             {
                 GameManager& gm = GameManager::get();
+                gm.setShaderTechniqueToBlur();
                 gm.gameOver(true);
             }
         }

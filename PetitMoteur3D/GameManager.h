@@ -16,6 +16,7 @@ public:
 	void setPauseMenu(bool) noexcept;
 	bool getIsPauseStatus() noexcept;
 	bool hasBeenEnoughTimeSinceLastPause();
+	bool hasBeenEnoughTimeSinceLastInput();
 	bool AnimeScene(float tempsEcoule);
 	void setGestionnaireDeSaisie(PM3D::CDIManipulateur&);
 	inline PM3D::CDIManipulateur* GetGestionnaireDeSaisie() { return GestionnaireDeSaisie; }
@@ -53,9 +54,19 @@ private:
 	int chosenBlurPosteffectShader = 1;
 	int blurShaderFadeTimer = 3;
 
+	int indexShader = 0;
+	const std::vector<std::pair<int, int>> shadersVector = {
+		{0, 1},
+		{2, 6},
+		{3, 7},
+		{4, 8},
+		{5, 9}
+	};
+
 
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
+	int64_t lastInput = 0;
 	int64_t totalPauseTime = 0;
 	int64_t startPause = 0;
 	int64_t lastTeleport = horloge.GetTimeCount();;

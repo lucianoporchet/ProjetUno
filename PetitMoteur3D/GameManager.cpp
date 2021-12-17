@@ -44,6 +44,17 @@ bool GameManager::hasBeenEnoughTimeSinceLastPause()
 	return false;
 }
 
+//empeche de spam la pause et empeche la touche de bounce pour afficher le menu pause
+bool GameManager::hasBeenEnoughTimeSinceLastInput()
+{
+	if (horloge.GetTimeBetweenCounts(lastInput, horloge.GetTimeCount()) >= 0.5)
+	{
+		lastInput = horloge.GetTimeCount();
+		return true;
+	}
+	return false;
+}
+
 
 bool GameManager::AnimeScene(float tempsEcoule) {
 	
@@ -79,7 +90,8 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	}
 	else
 	{
-		// game running
+
+		// game not running if game over
 		if (gameOverStatus)
 		{
 			// TODO : Special pause for game over. Softlock.
@@ -87,6 +99,7 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		}
 		else
 		{
+			// game running here
 			if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
 			{
 				if (getIsPauseStatus())
@@ -112,19 +125,38 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 
 				physXManager.stepPhysics(static_cast<int>(activeZone));
 
+				updateShader();
 
-
-		updateShader();
-
-		
-		updateSpeed();
-		updateChrono();
-		sceneManager.Anime(activeZone, tempsEcoule);
+				updateSpeed();
+				updateChrono();
+				sceneManager.Anime(activeZone, tempsEcoule);
 
 				float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
 				if (distance > 2500.0f)
 				{
+					// TODO : change to shader mode black & white
 					gameOver(false);
+				}
+			}
+			else
+			{
+				if (GestionnaireDeSaisie->ToucheAppuyee(DIK_0) && hasBeenEnoughTimeSinceLastInput())
+				{
+					++indexShader;
+					indexShader = indexShader % shadersVector.size();
+					chosenBlurPosteffectShader = shadersVector[indexShader].second;
+					chosenPosteffectShader = shadersVector[indexShader].first;
+
+					currentPosteffectShader = chosenPosteffectShader;
+				}
+				if (GestionnaireDeSaisie->ToucheAppuyee(DIK_9) && hasBeenEnoughTimeSinceLastInput())
+				{
+					--indexShader;
+					indexShader = indexShader % shadersVector.size();
+					chosenBlurPosteffectShader = shadersVector[indexShader].second;
+					chosenPosteffectShader = shadersVector[indexShader].first;
+
+					currentPosteffectShader = chosenPosteffectShader;
 				}
 			}
 		}
@@ -318,6 +350,10 @@ void GameManager::gameOver(bool _win)
 	if (millisec < 10)
 		millisecStr = L"0"s + millisecStr;
 
+	if (!_win)
+	{
+		currentPosteffectShader = 2;
+	}
 	sceneManager.changePauseToGameOver(_win, hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr);
 	setPauseMenu(true);
 }
