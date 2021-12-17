@@ -33,6 +33,9 @@ Menu Pause:
 Echap : Reprendre la partie
 0 a 9: changer de shader
 
+Fin de jeu:
+R relancer la partie
+
 ====================================================
 			Notes
 ====================================================
