@@ -331,7 +331,10 @@ void GameManager::restartGame()
 	activeZone = Zone::ZONE1;
 	nextZone = Zone::ZONE1;
 	needsRestart = false;
-
+	blueKeyCollected = false;
+	redKeyCollected = false;
+	greenKeyCollected = false;
+	speedBuffCollected = false;
 
 	physXManager.cleanupPhysics();
 	physXManager.initVectorScenes();
