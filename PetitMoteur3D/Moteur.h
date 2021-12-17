@@ -8,6 +8,7 @@
 #include "PanneauPE.h"
 #include "PhysXManager.h"
 #include "SceneManager.h"
+#include <mmsystem.h>
 
 #include <chrono>
 #include <vector>
@@ -221,6 +222,7 @@ protected:
 	{
 		std::chrono::nanoseconds result1;
 		auto t = std::chrono::high_resolution_clock::now();
+		playMySound();
 		manager.getSceneManager().InitObjects(pDispositif, TexturesManager, freeCam);
 		result1 = std::chrono::high_resolution_clock::now() - t;
 		
@@ -238,9 +240,20 @@ protected:
 
 	bool AnimeScene(float tempsEcoule)
 	{
+		if (manager.getNeedRestart()) {
+			stopPlaySound();
+			playMySound();
+		}
 		manager.AnimeScene(tempsEcoule);
 
 		return true;
+	}
+
+	void playMySound() {
+		PlaySound(TEXT("sounds\\ambiance.wav"), NULL, SND_LOOP | SND_ASYNC | SND_FILENAME | SND_SYSTEM);
+	}
+	void stopPlaySound() {
+		PlaySound(NULL, 0, 0);
 	}
 
 public:

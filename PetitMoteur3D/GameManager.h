@@ -28,6 +28,7 @@ public:
 	int getShaderTechnique();
 	void setShaderTechniqueToBlur();
 	void setShaderTechniqueToClear();
+	bool getNeedRestart();
 
 	bool IsHardModeOn();
 
