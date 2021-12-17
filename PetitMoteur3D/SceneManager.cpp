@@ -87,11 +87,25 @@ std::vector<std::vector<std::unique_ptr<PickUpObject>>>& SceneManager::getPickUp
 
 
 void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera) {
+	
+	gestionnaireTexture = &TexturesManager;
+	m_pDispositif = pDispositif;
 
+	initScene(pDispositif,TexturesManager,camera);
+	
+}
+
+void SceneManager::initScene(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera)
+{
 	std::vector<std::future<void>> futures;
 
 	//auto f = [&](Player* p) { p->setCam(&camera); };
-
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.9f, 5.02f), terrainRot);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
@@ -99,11 +113,11 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		//ajoute une texture a la skybox
 		std::wstring texture = L".\\modeles\\SkyBoxes\\" + std::to_wstring(i);
 		skybox->SetTextures(TexturesManager.GetNewTexture(texture + L"\\up.dds"s, pDispositif),
-							TexturesManager.GetNewTexture(texture + L"\\down.dds", pDispositif),
-							TexturesManager.GetNewTexture(texture + L"\\left.dds", pDispositif),
-							TexturesManager.GetNewTexture(texture + L"\\right.dds", pDispositif),
-							TexturesManager.GetNewTexture(texture + L"\\back.dds", pDispositif),
-							TexturesManager.GetNewTexture(texture + L"\\front.dds", pDispositif));
+			TexturesManager.GetNewTexture(texture + L"\\down.dds", pDispositif),
+			TexturesManager.GetNewTexture(texture + L"\\left.dds", pDispositif),
+			TexturesManager.GetNewTexture(texture + L"\\right.dds", pDispositif),
+			TexturesManager.GetNewTexture(texture + L"\\back.dds", pDispositif),
+			TexturesManager.GetNewTexture(texture + L"\\front.dds", pDispositif));
 
 		Scenes[i].push_back(std::move(skybox));
 	}
@@ -113,9 +127,6 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 		Scenes[1].push_back(std::move(tunnel));
 	}
 
-
-	
-
 	player = std::make_unique<Player>(".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f));
 	player->setCam(&camera);
 
@@ -124,7 +135,9 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	//Creation de 15 Planetes avec des tailles aleatoires entre 75 et 150
 	for (const auto& pos : planetePos1) {
 		float scale = static_cast<float>(RandomGenerator::get().next(75, 150));
+
 		string NB = to_string(RandomGenerator::get().next(1, 4));
+
 		futures.push_back(std::async(load<Planet>, &Scenes, ".\\modeles\\Planete\\" + NB + "\\Planete.obm"s, pDispositif, scale, pos, 0, [](Planet*) noexcept {}));
 	}
 	for (const auto& pos : planetePos2) {
@@ -140,21 +153,21 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	PxVec3 pos;
 	int z = 1, sc = 1;
 	for (int j = 0; j < NBZONES; ++j) {
-		if (j == 3) {z = 2; sc = 10;}
+		if (j == 3) { z = 2; sc = 10; }
 		else { z = 1; sc = 1; }
 		for (int i = 0; i < NBASTEROIDES * z; ++i) {
-			
+
 			scale = static_cast<float>(RandomGenerator::get().next(5 * sc, 20 * sc));
 			pos = RandomGenerator::get().randomPosInZone(j);
 			futures.push_back(std::async(load<Asteroid>, &Scenes, ".\\modeles\\Asteroide\\1\\asteroide.obm"s, pDispositif, scale, pos, j, [](Asteroid*) noexcept {}));
 		}
 	}
 
-	for (int i = 0; i < NBPORTAILS - 1 ; i+=2) {
+	for (int i = 0; i < NBPORTAILS - 1; i += 2) {
 		PxVec3 portalposi = portalPos[i];
-		PxVec3 portalposiplus = portalPos[i+1];
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposi, i/2, [&](Portal*) noexcept {}));
-		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i/2, [&](Portal*) noexcept {}));
+		PxVec3 portalposiplus = portalPos[i + 1];
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposi, i / 2, [&](Portal*) noexcept {}));
+		futures.push_back(std::async(load<Portal>, &Scenes, ".\\modeles\\Portal\\portal.obm"s, pDispositif, 20.0f, portalposiplus, i / 2, [&](Portal*) noexcept {}));
 	}
 
 	// Initialisation du portail final
@@ -162,26 +175,21 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	for (int i = 0; i < NBMONSTRES; ++i) {
 		scale = static_cast<float>(RandomGenerator::get().next(50, 200));
-		futures.push_back(std::async(loadMonster<Monster>, &Monsters, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i%NBZONES, [](Monster*) noexcept {}));
+		futures.push_back(std::async(loadMonster<Monster>, &Monsters, ".\\modeles\\Monstre\\monstre.obm"s, pDispositif, scale, monsterPos[i], i % NBZONES, [](Monster*) noexcept {}));
 	}
 
 	for (int i = 0; i < NBPICKUPOBJECTS; ++i) {
-		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff) 
+		if (pickupObjectsInfo[i].objectType == PickUpObjectType::SpeedBuff)
 		{
 			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\burger.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
 		}
-		else 
+		else
 		{
 			futures.push_back(std::async(loadPickUp<PickUpObject>, &PickUpObjectsScenes, ".\\modeles\\PickUp\\key.obm"s, pDispositif, pickupObjectsInfo[i].objectType, 10.0f, pickupObjectsInfo[i].pos, pickupObjectsInfo[i].zoneNumber, [](PickUpObject*) noexcept {}));
 		}
 	}
 
-	LectureFichier lecteurHeightmap{ "smolOBJECT" };
-	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
-	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.9f, 5.02f), terrainRot);
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
+	
 
 	////Creation du player, constructeur avec format binaire
 	//futures.push_back(std::async(load<Player>, &Scenes, ".\\modeles\\Player\\Soucoupe1\\UFO1.obm"s, pDispositif, 2.0f, physx::PxVec3(0.0f), 0, f));
@@ -217,6 +225,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 
 	// Ajout des sprites du menu visuel
 	spriteManager->changePauseToTitleScreen();
+
 
 	// /UI ingame sprites. SURTOUT NE PAS TOUCHER A L'ORDRE.
 	// | keys
@@ -288,7 +297,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	// INIT DE LA VITESSE
 	pVitesseTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
 	pVitesseTexte->Ecrire(L"0"s, pBrush.get());
-	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170 , hauteur - 15);
+	spriteManager->AjouterSpriteTexte(pVitesseTexte->GetTextureView(), largeur - 170, hauteur - 15);
 
 	//INIT D'AUTRES ELEMENTS
 	pGameOverTexte = std::make_unique<PM3D::CAfficheurTexte>(pDispositif, 140, 100, pPolice.get());
@@ -300,13 +309,7 @@ SceneManager& SceneManager::get() noexcept {
 }
 
 SceneManager::SceneManager() {
-	for (int i = 0; i < NBZONES; ++i) {
-		Scenes.push_back(std::vector<std::unique_ptr<PM3D::CObjet3D>>{});
-	}
-	for (int i = 0; i < NBZONES; ++i) 
-	{
-		PickUpObjectsScenes.push_back(std::vector<std::unique_ptr<PickUpObject>>{});
-	}
+	initVectorsScene();
 }
 
 void SceneManager::Draw(Zone scene) {
@@ -395,6 +398,26 @@ void SceneManager::hidePause()
 {
 	pauseStatus = false;
 	spriteManager->hidePauseSprite();
+}
+
+void SceneManager::initVectorsScene()
+{
+	for (int i = 0; i < NBZONES; ++i) {
+		Scenes.push_back(std::vector<std::unique_ptr<PM3D::CObjet3D>>{});
+	}
+	for (int i = 0; i < NBZONES; ++i)
+	{
+		PickUpObjectsScenes.push_back(std::vector<std::unique_ptr<PickUpObject>>{});
+	}
+}
+
+void SceneManager::resetScene()
+{
+	Monsters.clear();
+	PickUpObjectsScenes.clear();
+	Scenes.clear();
+	initVectorsScene();
+	initScene(m_pDispositif, *gestionnaireTexture, *player->getCam());
 }
 
 physx::PxVec3 SceneManager::getPortalPos(Zone current, Zone past) {

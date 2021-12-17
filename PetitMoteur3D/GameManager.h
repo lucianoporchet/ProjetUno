@@ -41,13 +41,12 @@ public:
 	void updateChrono();
 	void updateShader();
 	void updateSpeed();
-
+	void restartGame();
 	void gameOver(bool _win);
 
 	void setChronoStart();
 	
 private:
-
 
 	int currentPosteffectShader = 0;
 	int chosenPosteffectShader = 0;
@@ -62,7 +61,6 @@ private:
 		{4, 8},
 		{5, 9}
 	};
-
 
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;

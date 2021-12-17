@@ -92,8 +92,10 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	{
 
 		// game not running if game over
-		if (gameOverStatus)
+		if (gameOverStatus && GestionnaireDeSaisie->ToucheAppuyee(DIK_R))
 		{
+      	//si le joueur est mort (meme chose que si il a gagné)
+	      restartGame();
 			// TODO : Special pause for game over. Softlock.
 			// Needs to watch for reset.
 		}
@@ -321,6 +323,27 @@ void GameManager::updateSpeed()
 	sceneManager.getSpriteManager()->updateGauge((int)plrSpeed);
 }
 
+void GameManager::restartGame()
+{
+
+	//reset de la zone active
+	activeZone = Zone::ZONE1;
+	nextZone = Zone::ZONE1;
+
+	physXManager.cleanupPhysics();
+	physXManager.initVectorScenes();
+	physXManager.initPhysics();
+	sceneManager.resetScene();
+	
+	
+	//enlevement du menu pause
+	setPauseMenu(false);
+
+	//reset du chrono et du temps total de pause
+	setChronoStart();
+	totalPauseTime = 0;
+}
+
 void GameManager::gameOver(bool _win)
 {
 	// Do stuff that makes the game is over
@@ -356,6 +379,7 @@ void GameManager::gameOver(bool _win)
 	}
 	sceneManager.changePauseToGameOver(_win, hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr);
 	setPauseMenu(true);
+	gameOverStatus = true;
 }
 
 void GameManager::setChronoStart()
