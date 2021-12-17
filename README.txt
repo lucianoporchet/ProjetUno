@@ -14,34 +14,37 @@
 		      Contrôles
 ====================================================
 
-En jeu :
-W : Avancer
-S : Reculer
-A/D : Roulis
-Shift/Espace : Monter/Descendre
-Echap : Pause
-F2 : Toggle 1ere/3e personne. 3e personne par
-défaut.
+ En jeu :
+  W : Avancer
+  S : Reculer
+  A/D : Roulis
+  Shift/Espace : Monter/Descendre
+  Echap : Pause
+  F2 : Toggle 1ere/3e personne. 3e personne par
+   défaut.
 
-Souris : Orientation de la caméra (détermine la
-direction vers laquelle on avance/recule)
+ Souris : Orientation de la caméra (détermine la
+  direction vers laquelle on avance/recule)
 
-Menu de démarrage:
-1/2 Choix de la difficulte
+ Menu de démarrage:
+  1/2 Choix de la difficulte
 
-Menu Pause:
-Echap : Reprendre la partie
-0 et 9: changer de shader (cyclique)
+ Menu Pause:
+  Echap : Reprendre la partie
+   0/9: Changer de shader (cyclique)
 
-Fin de jeu:
-R relancer la partie. Prend un certain temps.
+ Fin de jeu:
+  R relancer la partie.
 
 ====================================================
 			Notes
 ====================================================
 
- Le lancement du jeu prend un certain temps, et
- c'est normal. Patientez.
+ Le jeu ne se lance qu'en DEBUG.
+
+ Le premier lancement peut prendre un certain temps,
+ mais si c'est le cas, les suivants seront plus
+ courts.
  
  Pour mettre pause il faut appuyer sur Echap. On 
  reprend alors le contrôle de la souris et on peut
@@ -108,7 +111,7 @@ R relancer la partie. Prend un certain temps.
  plus retro au jeu.
  
 ====================================================
-		     BUGS CONNUS
+		     Bugs Connus
 ====================================================
 
  Malgré tous nos efforts, quelques bugs se sont
@@ -117,4 +120,5 @@ R relancer la partie. Prend un certain temps.
  pourtant bien présent et actif, il suffit d'appuyer
  sur 1 ou 2 pour lancer en facile/difficile. Cette
  situation est visible avec un ecran bleu-noir au
- demarrage.
+ demarrage. Ce bug semble généralement avoir lieu
+ lors du premier lancement après compilation.

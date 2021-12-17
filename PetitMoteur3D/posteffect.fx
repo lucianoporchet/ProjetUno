@@ -139,9 +139,9 @@ float4 ProtanopePS(VS_Sortie vs) : SV_Target
 	ct = textureEntree.Sample(SampleState, tc);
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Protanope - reds are greatly reduced
 	float l = 0.0f * L + 2.02344f * M + -2.52581f * S;
@@ -167,9 +167,9 @@ float4 DeuteranopePS(VS_Sortie vs) : SV_Target
 	ct = textureEntree.Sample(SampleState, tc);
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Deuteranope - greens are greatly reduced (1% men)
 	float l = 1.0f * L + 0.0f * M + 0.0f * S;
@@ -195,9 +195,9 @@ float4 TritanopePS(VS_Sortie vs) : SV_Target
 	ct = textureEntree.Sample(SampleState, tc);
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Tritanope - blues are greatly reduced (0.003% population)
 	float l = 1.0f * L + 0.0f * M + 0.0f * S;
@@ -297,9 +297,9 @@ float4 ProtanopeBlurPS(VS_Sortie vs) : SV_Target
 	ct = couleur;
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Protanope - reds are greatly reduced
 	float l = 0.0f * L + 2.02344f * M + -2.52581f * S;
@@ -354,9 +354,9 @@ float4 DeuteranopeBlurPS(VS_Sortie vs) : SV_Target
 	ct = couleur;
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Deuteranope - greens are greatly reduced (1% men)
 	float l = 1.0f * L + 0.0f * M + 0.0f * S;
@@ -411,9 +411,9 @@ float4 TritanopeBlurPS(VS_Sortie vs) : SV_Target
 	ct = couleur;
 
 	// RGB to LMS matrix conversion
-	float3 L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
-	float3 M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
-	float3 S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
+	float L = (17.8824f * ct.x) + (43.5161f * ct.y) + (4.11935f * ct.z);
+	float M = (3.45565f * ct.x) + (27.1554f * ct.y) + (3.86714f * ct.z);
+	float S = (0.0299566f * ct.x) + (0.184309f * ct.y) + (1.46709f * ct.z);
 
 	// Tritanope - blues are greatly reduced (0.003% population)
 	float l = 1.0f * L + 0.0f * M + 0.0f * S;
