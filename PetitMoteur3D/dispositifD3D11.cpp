@@ -33,7 +33,7 @@ namespace PM3D
 		DXRelacher(pD3DDevice);
 
 		// Remove any bound render target or depth/stencil buffer
-		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		ID3D11RenderTargetView* const nullViews[] = { nullptr };
 		pImmediateContext->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
 		if (pImmediateContext)
 		{
@@ -161,6 +161,7 @@ namespace PM3D
 		// Initialiser les états de mélange (blending states)
 		InitBlendStates();
 
+		
 		pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 
 		D3D11_VIEWPORT vp;
@@ -298,6 +299,8 @@ namespace PM3D
 
 		ID3D11RenderTargetView* tabRTV[1];
 		tabRTV[0] = pRenderTargetView;
+		ID3D11ShaderResourceView* const pSRV[1] = { NULL };     
+		pImmediateContext->PSSetShaderResources(0, 1, pSRV);
 		pImmediateContext->OMSetRenderTargets(1,
 			tabRTV,
 			pDepthStencilView);

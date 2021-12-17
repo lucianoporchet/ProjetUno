@@ -44,6 +44,17 @@ bool GameManager::hasBeenEnoughTimeSinceLastPause()
 	return false;
 }
 
+//empeche de spam la pause et empeche la touche de bounce pour afficher le menu pause
+bool GameManager::hasBeenEnoughTimeSinceLastInput()
+{
+	if (horloge.GetTimeBetweenCounts(lastInput, horloge.GetTimeCount()) >= 0.5)
+	{
+		lastInput = horloge.GetTimeCount();
+		return true;
+	}
+	return false;
+}
+
 
 bool GameManager::AnimeScene(float tempsEcoule) {
 	
@@ -52,62 +63,104 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	// Prendre en note l'état de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
 
-	if (gameOverStatus)
+	if (onTitleScreen)
 	{
-		//si le joueur est mort (meme chose que si il a gagné)
-		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_R))
+		// E-Z mode
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_1))
 		{
-			restartGame();
-		}
+			onTitleScreen = false;
+			isPause = false;
+			sceneManager.hidePause();
+			sceneManager.getSpriteManager()->changePauseToPauseUI();
+			chronoStart = horloge.GetTimeCount();
 
-		// TODO placeholder. Calculate actual end time.
-		sceneManager.changePauseToGameOver(gameWon, L"time"s);
-		// TODO : Special pause for game over.
-		if (!gameWon)
+			hardmode = false;
+		}
+		// HARD mode
+		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_2))
 		{
-			// TODO : change shader to black and white if game lost.
+			onTitleScreen = false;
+			isPause = false;
+			sceneManager.hidePause();
+			sceneManager.getSpriteManager()->changePauseToPauseUI();
+			chronoStart = horloge.GetTimeCount();
+
+			hardmode = true;
+		}
+	}
+	else
+	{
+
+		// game not running if game over
+		if (gameOverStatus && GestionnaireDeSaisie->ToucheAppuyee(DIK_R))
+		{
+      	//si le joueur est mort (meme chose que si il a gagné)
+	      restartGame();
+			// TODO : Special pause for game over. Softlock.
+			// Needs to watch for reset.
 		}
 		else
 		{
-			// TODO : Some other stuff?
-		}
-	}
+			// game running here
+			if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
+			{
+				if (getIsPauseStatus())
+				{
+					setPauseMenu(false);
+				}
+				else {
+					setPauseMenu(true);
+				}
+			}
 
-	if ((GestionnaireDeSaisie->ToucheAppuyee(DIK_ESCAPE)) && hasBeenEnoughTimeSinceLastPause())
-	{
-		if (getIsPauseStatus())
-		{
-			setPauseMenu(false);
-		}
-		else {
-			setPauseMenu(true);
-		}
-	}
+			//si on est pas sur le menu pause
+			if (!getIsPauseStatus()) {
 
-	//si on est pas sur le menu pause
-	if (!getIsPauseStatus()) {
+				if (activeZone != nextZone) {
+					Zone pastZone = activeZone;
+					physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
+					activeZone = nextZone;
+					physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
+					PxQuat qua = sceneManager.player->body->getGlobalPose().q;
+					sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
+				}
 
-		if (activeZone != nextZone) {
-			Zone pastZone = activeZone;
-			physXManager.removeActor(*sceneManager.player->body, static_cast<int>(activeZone));
-			activeZone = nextZone;
-			physXManager.addToScene(sceneManager.player->body, static_cast<int>(activeZone));
-			PxQuat qua = sceneManager.player->body->getGlobalPose().q;
-			sceneManager.player->body->setGlobalPose(PxTransform(sceneManager.getPortalPos(activeZone, pastZone), qua));
-		}
+				physXManager.stepPhysics(static_cast<int>(activeZone));
 
-		physXManager.stepPhysics(static_cast<int>(activeZone));
+				updateShader();
 
+				updateSpeed();
+				updateChrono();
+				sceneManager.Anime(activeZone, tempsEcoule);
 
-		
-		updateSpeed();
-		updateChrono();
-		sceneManager.Anime(activeZone, tempsEcoule);
+				float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
+				if (distance > 2500.0f)
+				{
+					// TODO : change to shader mode black & white
+					gameOver(false);
+				}
+			}
+			else
+			{
+				if (GestionnaireDeSaisie->ToucheAppuyee(DIK_0) && hasBeenEnoughTimeSinceLastInput())
+				{
+					++indexShader;
+					indexShader = indexShader % shadersVector.size();
+					chosenBlurPosteffectShader = shadersVector[indexShader].second;
+					chosenPosteffectShader = shadersVector[indexShader].first;
 
-		float distance = (sceneManager.player->body->getGlobalPose().p - sceneManager.zonesCenters[static_cast<int>(activeZone)]).magnitude();
-		if (distance > 2500.0f)
-		{
-			gameOver(false);
+					currentPosteffectShader = chosenPosteffectShader;
+				}
+				if (GestionnaireDeSaisie->ToucheAppuyee(DIK_9) && hasBeenEnoughTimeSinceLastInput())
+				{
+					--indexShader;
+					indexShader = indexShader % shadersVector.size();
+					chosenBlurPosteffectShader = shadersVector[indexShader].second;
+					chosenPosteffectShader = shadersVector[indexShader].first;
+
+					currentPosteffectShader = chosenPosteffectShader;
+				}
+			}
 		}
 	}
 
@@ -137,6 +190,31 @@ void GameManager::setNextZone(Zone zone) {
 	nextZone = zone;
 }
 
+void GameManager::setLastTeleportTime()
+{
+	lastTeleport = horloge.GetTimeCount();
+}
+
+int GameManager::getShaderTechnique()
+{
+	return currentPosteffectShader;
+}
+
+void GameManager::setShaderTechniqueToBlur()
+{
+	currentPosteffectShader = chosenBlurPosteffectShader;
+}
+
+void GameManager::setShaderTechniqueToClear()
+{
+	currentPosteffectShader = chosenPosteffectShader;
+}
+
+bool GameManager::IsHardModeOn()
+{
+	return hardmode;
+}
+
 
 bool GameManager::isGreenKeyCollected()
 {
@@ -150,7 +228,7 @@ bool GameManager::isBlueKeyCollected()
 
 bool GameManager::isRedKeyCollected()
 {
-	return false;
+	return hardmode;
 }
 
 bool GameManager::allKeysCollected()
@@ -269,7 +347,37 @@ void GameManager::restartGame()
 void GameManager::gameOver(bool _win)
 {
 	// Do stuff that makes the game is over
-	sceneManager.changePauseToGameOver(_win, L"LOL TMORT"s);
+	gameOverStatus = true;
+
+	// stuff for the timer
+	const int64_t currentTime = horloge.GetTimeCount();
+	const int64_t diff = currentTime + totalPauseTime - chronoStart;
+	const double secPerCount = horloge.GetSecPerCount();
+	const int mintmp = static_cast<int>((diff * secPerCount) / 60);
+	const int hour = mintmp / 60;
+	const int min = mintmp % 60;
+	const int sec = static_cast<int>(diff * secPerCount) % 60;
+	const int  millisec = static_cast<int>(((diff * secPerCount) - sec - (min * 60)) * 1000);
+
+	std::wstring hourStr = std::to_wstring(hour);
+	std::wstring minStr = std::to_wstring(min);
+	std::wstring secStr = std::to_wstring(sec);
+	std::wstring millisecStr = std::to_wstring(millisec);
+
+	if (sec < 10)
+		secStr = L"0"s + secStr; // affichage en style X:00	
+	if (min < 10)
+		minStr = L"0"s + minStr; // affichage en style X:00
+	if (millisec < 100)
+		millisecStr = L"0"s + millisecStr;
+	if (millisec < 10)
+		millisecStr = L"0"s + millisecStr;
+
+	if (!_win)
+	{
+		currentPosteffectShader = 2;
+	}
+	sceneManager.changePauseToGameOver(_win, hourStr + L"h"s + minStr + L"m"s + secStr + L"s" + millisecStr);
 	setPauseMenu(true);
 	isDead = true;
 	gameOverStatus = true;
@@ -278,4 +386,15 @@ void GameManager::gameOver(bool _win)
 void GameManager::setChronoStart()
 {
 	chronoStart = horloge.GetTimeCount();
+}
+
+void GameManager::updateShader()
+{
+	if (currentPosteffectShader == chosenBlurPosteffectShader) 
+	{
+		if (horloge.GetTimeBetweenCounts(lastTeleport, horloge.GetTimeCount()) > blurShaderFadeTimer)
+		{
+			setShaderTechniqueToClear();
+		}
+	}
 }

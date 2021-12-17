@@ -122,6 +122,24 @@ private:
 	physx::PxVec3(834.0f, -1237.0f, -1163.0f)
 	};
 
+	const physx::PxVec3 planetePos2[NBPLANETES] = {
+		physx::PxVec3(6627.0f, 7576.0f, -1136.0f),
+		physx::PxVec3(4594.0f, 7326.0f, 349.0f),
+		physx::PxVec3(6135.0f, 7286.0f, 735.0f),
+		physx::PxVec3(7084.0f, 7040.0f, -332.0f),
+		physx::PxVec3(5459.0f, 6994.0f, -985.0f),
+		physx::PxVec3(6488.0f, 6473.0f, -24.0f),
+		physx::PxVec3(4767.0f, 6359.0f, 783.0f),
+		physx::PxVec3(5173.0f, 6168.0f, -321.0f),
+		physx::PxVec3(7077.0f, 6078.0f, 754.0f),
+		physx::PxVec3(4663.0f, 5850.0f, -1208.0f),
+		physx::PxVec3(6049.0f, 5779.0f, -762.0f),
+		physx::PxVec3(7034.0f, 5482.0f, -50.0f),
+		physx::PxVec3(5897.0f, 5317.0f, 840.0f),
+		physx::PxVec3(6835.0f, 5027.0f, -1213.0f),
+		physx::PxVec3(5123.0f, 5011.0f, 246.0f)
+	};
+
 	const physx::PxVec3 portalPos[NBPORTAILS] = {
 	physx::PxVec3(1153.0f, -617.0f, 493.0f), physx::PxVec3(-1153.0f, 617.0f, -493.0f),		//Zone1
 	physx::PxVec3(-1365.0f, 4916.0f, 283.0f), physx::PxVec3(1411.0f, 7352.0f, -343.0f),		//Zone2
@@ -142,8 +160,8 @@ private:
 
 	const PickUpObjectPlacementInfo pickupObjectsInfo[NBPICKUPOBJECTS]{
 		{ physx::PxVec3(500, 500, 500) , PickUpObjectType::RedKey , 0 },
-		{ physx::PxVec3(0, BOXSIZE + 500, 0) , PickUpObjectType::GreenKey , 1 },
-		{ physx::PxVec3(BOXSIZE + 500, BOXSIZE + 500, 0) , PickUpObjectType::BlueKey , 2 },
+		{ physx::PxVec3(96.0f, 5572.0f, -359.0f) , PickUpObjectType::GreenKey , 1 },
+		{ physx::PxVec3(5204.0f, 5439.0f, -505.0f) , PickUpObjectType::BlueKey , 2 },
 		{ physx::PxVec3(-300, -300, -300) , PickUpObjectType::SpeedBuff , 0 },
 		{ physx::PxVec3(-150, 300 + BOXSIZE, 100) , PickUpObjectType::SpeedBuff , 1 },
 		{ physx::PxVec3(-1000 + BOXSIZE, -300, 1000) , PickUpObjectType::SpeedBuff , 3 },

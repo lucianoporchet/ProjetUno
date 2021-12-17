@@ -45,12 +45,18 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
             PxShape* shape2 = pairs[i].shapes[1];
 
             if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePortal) {
+                GameManager& gm = GameManager::get();
                 PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape2->getActor());
-                GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
+                gm.setLastTeleportTime();
+                gm.setShaderTechniqueToBlur();
+                gm.setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
             }
             else if (shape2->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape->getSimulationFilterData().word0 == FilterGroup::ePortal) {
+                GameManager& gm = GameManager::get();
                 PxRigidDynamic* a = static_cast<PxRigidDynamic*>(shape->getActor());
-                GameManager::get().setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
+                gm.setLastTeleportTime();
+                gm.setShaderTechniqueToBlur();
+                gm.setNextZone(getNextZoneFromPos(a->getGlobalPose().p));
             }
             else if (shape->getSimulationFilterData().word0 == FilterGroup::ePlayer && shape2->getSimulationFilterData().word0 == FilterGroup::ePickupObject) 
             {
@@ -77,6 +83,7 @@ void MyContactModification::onContact(const PxContactPairHeader& pairHeader, con
                 (shape2->getSimulationFilterData().word0 == FilterGroup::eFinalPortal && shape->getSimulationFilterData().word0 == FilterGroup::ePlayer))
             {
                 GameManager& gm = GameManager::get();
+                gm.setShaderTechniqueToBlur();
                 gm.gameOver(true);
             }
         }

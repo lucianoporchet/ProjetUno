@@ -23,6 +23,7 @@ struct VS_Sortie
 	float3 vDirLum2 : TEXCOORD2;
 	float3 vDirCam : TEXCOORD3;
 	float2 coordTex : TEXCOORD4;
+	float3 WorldPos : POSITION;
 };
 
 static VS_Sortie sortie = (VS_Sortie)0;
@@ -31,6 +32,7 @@ static VS_Sortie sortie = (VS_Sortie)0;
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
 {
 	sortie.Pos = Pos;
+	sortie.WorldPos = mul(Pos, matWorld);
 	sortie.coordTex = coordTex;
 
 	
@@ -55,8 +57,6 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	vs.vDirLum = vLumiere.xyz - PosWorld;
 	vs.vDirCam = vCamera.xyz - PosWorld;
 
-	float3 WorldPos = mul(vs.Pos, matWorld);
-
 	float range = 500.0f;
 	float att = 0.000025f;
 
@@ -65,19 +65,19 @@ float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 	float3 L = normalize(vs.vDirLum);
 	float3 V = normalize(vs.vDirCam);
 
-	float3 lightToPixelVec = lum1 - WorldPos.xyz;
+	float3 lightToPixelVec = lum1 - vs.WorldPos.xyz;
 	float d1 = length(lightToPixelVec);
 
-	lightToPixelVec = lum2 - WorldPos.xyz;
+	lightToPixelVec = lum2 - vs.WorldPos.xyz;
 	float d2 = length(lightToPixelVec);
 
-	lightToPixelVec = lum3 - WorldPos.xyz;
+	lightToPixelVec = lum3 - vs.WorldPos.xyz;
 	float d3 = length(lightToPixelVec);
 
-	lightToPixelVec = lum4 - WorldPos.xyz;
+	lightToPixelVec = lum4 - vs.WorldPos.xyz;
 	float d4 = length(lightToPixelVec);
 
-	lightToPixelVec = lum5 - WorldPos.xyz;
+	lightToPixelVec = lum5 - vs.WorldPos.xyz;
 	float d5 = length(lightToPixelVec);
 
 	// Valeur de la composante diffuse
@@ -146,6 +146,7 @@ void MiniPhongGS(triangle VS_Sortie input[3],
 			sortie.Pos = mul(input[i].Pos, matWorldViewProj);
 			sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 			sortie.coordTex = input[i].coordTex;
+			sortie.WorldPos = mul(input[i].Pos, matWorld);
 			TriStream.Append(sortie);
 		}
 		// Point supplémentaire
@@ -153,12 +154,14 @@ void MiniPhongGS(triangle VS_Sortie input[3],
 		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[0].coordTex +
 			(input[2].coordTex - input[0].coordTex) / 2;
+		sortie.WorldPos = mul(PointSupp, matWorld);
 		TriStream.Append(sortie);
+		
 		// Point 2
 		sortie.Pos = mul(input[2].Pos, matWorldViewProj);
 		sortie.Norm = -mul(float4(Normale, 0.0f), matWorld).xyz;
 		sortie.coordTex = input[2].coordTex;
-	
+		sortie.WorldPos = mul(input[2].Pos, matWorld);
 		TriStream.Append(sortie);
 	
 }
@@ -174,3 +177,5 @@ technique11 MiniPhong
 		
 	}
 }
+
+
