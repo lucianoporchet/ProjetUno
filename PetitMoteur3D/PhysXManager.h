@@ -39,6 +39,7 @@ public:
 	//ajouter ou enlever des acteurs de la scene de physX
 	void addToScene(PxActor* actor, int scene);
 	void removeActor(PxActor& actor, int scene);
+	void initVectorScenes();
 
 	//creer un rigid body
 	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
