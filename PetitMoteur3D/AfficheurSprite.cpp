@@ -805,8 +805,6 @@ namespace PM3D
 
 		// Title display
 		this->AjouterPauseSprite(".\\modeles\\Billboards\\title.dds"s, largeur / 2, hauteur / 2, 0, 0);
-		// Options display
-		//this->AjouterPauseSprite(".\\modeles\\Billboards\\titleScreen.dds"s, largeur / 2, hauteur / 2);
 	}
 
 	void CAfficheurSprite::changePauseToPauseUI()

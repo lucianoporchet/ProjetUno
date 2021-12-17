@@ -64,8 +64,6 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			chronoStart = horloge.GetTimeCount();
 
 			hardmode = false;
-
-			// TODO set ai in ez mode
 		}
 		// HARD mode
 		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_2))
@@ -77,8 +75,6 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 			chronoStart = horloge.GetTimeCount();
 
 			hardmode = true;
-
-			// TODO set ai in hard mode
 		}
 	}
 	else
