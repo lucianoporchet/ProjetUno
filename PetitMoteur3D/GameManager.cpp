@@ -252,7 +252,11 @@ void GameManager::restartGame()
 	activeZone = Zone::ZONE1;
 	nextZone = Zone::ZONE1;
 
+	physXManager.cleanupPhysics();
+	physXManager.initVectorScenes();
+	physXManager.initPhysics();
 	sceneManager.resetScene();
+	
 	
 	//enlevement du menu pause
 	setPauseMenu(false);

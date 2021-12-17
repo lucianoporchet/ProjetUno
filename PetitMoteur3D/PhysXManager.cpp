@@ -208,6 +208,14 @@ void PhysXManager::removeActor(PxActor& actor, int scene) {
 	gScenes[scene]->removeActor(actor);
 }
 
+void PhysXManager::initVectorScenes()
+{
+	for (int i = 0; i < NBSCENES; ++i) {
+		PxScene* s = NULL;
+		gScenes.push_back(s);
+	}
+}
+
 
 PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,

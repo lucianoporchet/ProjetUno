@@ -92,12 +92,7 @@ void SceneManager::InitObjects(PM3D::CDispositifD3D11* pDispositif, PM3D::CGesti
 	m_pDispositif = pDispositif;
 
 	initScene(pDispositif,TexturesManager,camera);
-	LectureFichier lecteurHeightmap{ "smolOBJECT" };
-	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
-	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.9f, 5.02f), terrainRot);
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
-	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
+	
 }
 
 void SceneManager::initScene(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestionnaireDeTextures& TexturesManager, PM3D::CCamera& camera)
@@ -105,7 +100,12 @@ void SceneManager::initScene(PM3D::CDispositifD3D11* pDispositif, PM3D::CGestion
 	std::vector<std::future<void>> futures;
 
 	//auto f = [&](Player* p) { p->setCam(&camera); };
-
+	LectureFichier lecteurHeightmap{ "smolOBJECT" };
+	physx::PxQuat terrainRot = physx::PxQuat(-0.394f, 0.707f, 0.107f, 0.578f);
+	terrain = std::make_unique<PM3D::CTerrain>(pDispositif, lecteurHeightmap, physx::PxVec3(-546.29f, 5567.4f, 1147.1f), 1, physx::PxVec3(4.05f, 0.9f, 5.02f), terrainRot);
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal2.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\metal1.dds", pDispositif));
+	terrain->AddTexture(TexturesManager.GetNewTexture(L".\\modeles\\Terrain\\filtre.dds", pDispositif));
 
 	for (int i = 0; i < NBZONES; ++i) {
 		//Creation de la fausse skyBox (cube avec le culling inversÃ©)
