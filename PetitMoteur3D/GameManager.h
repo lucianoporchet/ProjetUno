@@ -42,6 +42,7 @@ public:
 	void updateShader();
 	void updateSpeed();
 	void restartGame();
+	void setupRestart();
 	void gameOver(bool _win);
 
 	void setChronoStart();
@@ -61,7 +62,6 @@ private:
 		{4, 8},
 		{5, 9}
 	};
-
 	PM3D::Horloge horloge;
 	int64_t lastPaused = 0;
 	int64_t lastInput = 0;
@@ -70,6 +70,7 @@ private:
 	int64_t lastTeleport = horloge.GetTimeCount();;
 	//attention a modifier si on implémente un menu de démarrage car le chrono ne commencerait pas avant sinon
 	int64_t chronoStart = horloge.GetTimeCount();
+	bool needsRestart = false;
 	bool hardmode = true;
 	bool isPause = true;
 	bool onTitleScreen = true;

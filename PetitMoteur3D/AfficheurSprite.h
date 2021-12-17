@@ -68,6 +68,7 @@ namespace PM3D
 		void changePauseToGameOver(bool _gameWon, std::unique_ptr<CAfficheurTexte> & _timerTex);
 		void changePauseToTitleScreen();
 		void changePauseToPauseUI();
+		void changePauseToLoading();
 
 		int starAreaOffsetFromCenter = 17;
 	private:

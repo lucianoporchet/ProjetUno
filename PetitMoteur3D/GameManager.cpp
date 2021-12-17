@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include "MoteurWindows.h"
 
 //instance du game manager
 GameManager GameManager::instance;
@@ -62,8 +63,11 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 	GestionnaireDeSaisie->StatutClavier();
 	// Prendre en note l'état de la souris
 	GestionnaireDeSaisie->SaisirEtatSouris();
-
-	if (onTitleScreen)
+	if (needsRestart)
+	{
+		restartGame();
+	}
+	else if (onTitleScreen)
 	{
 		// E-Z mode
 		if (GestionnaireDeSaisie->ToucheAppuyee(DIK_1))
@@ -94,10 +98,8 @@ bool GameManager::AnimeScene(float tempsEcoule) {
 		// game not running if game over
 		if (gameOverStatus && GestionnaireDeSaisie->ToucheAppuyee(DIK_R))
 		{
-      	//si le joueur est mort (meme chose que si il a gagné)
-	      restartGame();
-			// TODO : Special pause for game over. Softlock.
-			// Needs to watch for reset.
+      		//si le joueur est mort (meme chose que si il a gagné)
+			setupRestart();
 		}
 		else
 		{
@@ -325,16 +327,16 @@ void GameManager::updateSpeed()
 
 void GameManager::restartGame()
 {
-
 	//reset de la zone active
 	activeZone = Zone::ZONE1;
 	nextZone = Zone::ZONE1;
+	needsRestart = false;
+
 
 	physXManager.cleanupPhysics();
 	physXManager.initVectorScenes();
 	physXManager.initPhysics();
 	sceneManager.resetScene();
-	
 	
 	//enlevement du menu pause
 	setPauseMenu(false);
@@ -342,6 +344,16 @@ void GameManager::restartGame()
 	//reset du chrono et du temps total de pause
 	setChronoStart();
 	totalPauseTime = 0;
+
+	// reset des shaders vers le shader selectionne
+	currentPosteffectShader = chosenPosteffectShader;
+	sceneManager.getSpriteManager()->changePauseToPauseUI();
+}
+
+void GameManager::setupRestart()
+{
+	sceneManager.getSpriteManager()->changePauseToLoading();
+	needsRestart = true;
 }
 
 void GameManager::gameOver(bool _win)

@@ -818,6 +818,16 @@ namespace PM3D
 		this->AjouterPauseSprite(".\\modeles\\Billboards\\transparent.dds"s, largeur / 2, hauteur / 2, largeur, hauteur);
 	}
 
+	void CAfficheurSprite::changePauseToLoading()
+	{
+		int largeur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetLargeur();
+		int hauteur = PM3D::CMoteurWindows::GetInstance().pDispositif->GetHauteur();
+
+		tabPauseSprite.clear();
+
+		this->AjouterPauseSprite(".\\modeles\\Billboards\\loading.dds"s, largeur / 2, hauteur / 2);
+	}
+
 
 	// Methode anime custom pour faire tourner les panneaux en accord avec la camera
 	void CAfficheurSprite::Anime(float) {
