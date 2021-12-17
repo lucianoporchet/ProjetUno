@@ -2,6 +2,7 @@
 #include "PxPhysicsAPI.h"
 #include "MyContactModification.h"
 #include <mutex>
+#include <vector>
 
 using namespace physx;
 //filter group pour gerer les collission dans physX
@@ -42,8 +43,8 @@ public:
 
 	//creer un rigid body
 	PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity, int scene);
-	PxRigidStatic* createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene);
-	void PhysXManager::createTerrainSerialized(PxCollection* collection, int scene);
+	void createTerrain(const PxTransform& t, PxTriangleMeshGeometry& geom, int scene);
+	PxRigidStatic* PhysXManager::createTerrainSerialized(PxCollection* collection, int scene);
 	PxPhysics* getgPhysx();
 	PxCooking* getPxCooking();
 	PxSerializationRegistry* getRegistry();
@@ -65,6 +66,7 @@ private:
 	PxPvd* gPvd = NULL;
 	PxCooking* mCooking;
 	PxSerializationRegistry* registry;
+	PxCollection* collection;
 	
 	enum {
 		NBSCENES = 4

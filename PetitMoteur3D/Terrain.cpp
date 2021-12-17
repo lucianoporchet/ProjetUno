@@ -107,31 +107,33 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 		DXE_CREATIONINDEXBUFFER);
 
-	//on ignore de manière intentionnelle les warnings car narrow cast throw une exception en cas 
-	//de troncation, meme si cela ne devrait pas arriver, on préfère ne pas essayer 
-	//Input mesh triangle's vertex index exceeds specified numVerts --> HUM HUM POURQUOI? DIEU POURQUOI
-	meshDesc.points.count = static_cast<PxU32>(vertexes.size());
-	meshDesc.points.data = vertices;
-	meshDesc.points.stride = sizeof(PxVec3);
-	meshDesc.triangles.count = static_cast<PxU32>(faces.size())/3;
-	meshDesc.triangles.data = indices;
-	meshDesc.triangles.stride = 3 * sizeof(PxU32);
 
-	PxTolerancesScale scale1;
-	PxCookingParams params(scale1);
-	//ces flags permettent un chargement plus rapide du cooking, mais certains devraient etre désactivés en release
-	// disable mesh cleaning - perform mesh validation on development configurations
-	//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-	// disable edge precompute, edges are set for each triangle, slows contact generation
-	//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-	// lower hierarchy for internal mesh
-	params.midphaseDesc.mBVH33Desc.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
 
 	FILE* fp;
 	int err = fopen_s(&fp, "serialized.dat", "rb");
 	//Si on arrive pas a open le fichier ce qui veut dire qu'on a pas encore serialize le terrain
 	if (err != 0)
 	{
+		//on ignore de manière intentionnelle les warnings car narrow cast throw une exception en cas 
+		//de troncation, meme si cela ne devrait pas arriver, on préfère ne pas essayer 
+		//Input mesh triangle's vertex index exceeds specified numVerts --> HUM HUM POURQUOI? DIEU POURQUOI
+		meshDesc.points.count = static_cast<PxU32>(vertexes.size());
+		meshDesc.points.data = vertices;
+		meshDesc.points.stride = sizeof(PxVec3);
+		meshDesc.triangles.count = static_cast<PxU32>(faces.size()) / 3;
+		meshDesc.triangles.data = indices;
+		meshDesc.triangles.stride = 3 * sizeof(PxU32);
+
+		PxTolerancesScale scale1;
+		PxCookingParams params(scale1);
+		//ces flags permettent un chargement plus rapide du cooking, mais certains devraient etre désactivés en release
+		// disable mesh cleaning - perform mesh validation on development configurations
+		//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+		// disable edge precompute, edges are set for each triangle, slows contact generation
+		//params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+		// lower hierarchy for internal mesh
+		//params.midphaseDesc.mBVH33Desc.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
+
 		PhysXManager::get().getPxCooking()->setParams(params);
 		PxTriangleMesh* triMesh = NULL;
 		triMesh = PhysXManager::get().getPxCooking()->createTriangleMesh(meshDesc, PhysXManager::get().getgPhysx()->getPhysicsInsertionCallback());
@@ -139,15 +141,14 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 		const PxMeshScale geomScale = PxMeshScale(scale);
 		PxTriangleMeshGeometry geom = physx::PxTriangleMeshGeometry(triMesh, geomScale);
 
-		body = PhysXManager::get().createTerrain(PxTransform(pos), geom, scene);
+		PhysXManager::get().createTerrain(PxTransform(pos), geom, scene);
 		fopen_s(&fp, "serialized.dat", "rb");
 	}
-	//ici le terrain est donc déja serialize
+	//ici le terrain est donc déja serialize et le fichier existe de sur
 	
 	fseek(fp, 0, SEEK_END);
 	unsigned fileSize = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
-
 
 	// Allocate aligned memory, load data and deserialize
 	void* memory = malloc(fileSize + PX_SERIAL_FILE_ALIGN);
@@ -156,7 +157,8 @@ PM3D::CTerrain::CTerrain(CDispositifD3D11* pDispositif, LectureFichier lecteur, 
 	fclose(fp);
 	PxSerializationRegistry* registry = PhysXManager::get().getRegistry();
 	PxCollection* collection = PxSerialization::createCollectionFromBinary(memory128, *registry);
-	PhysXManager::get().createTerrainSerialized(collection, scene);
+	body = PhysXManager::get().createTerrainSerialized(collection, scene);
+	body->setGlobalPose(PxTransform(PxVec3(-546.29f, 5567.4f, 1147.1f), PxQuat(-0.394f, 0.707f, 0.107f, 0.578f)));
 	
 	//placement du terrain
 	const XMFLOAT3 posF3(pos.x, pos.y, pos.z);
