@@ -230,12 +230,12 @@ bool GameManager::isGreenKeyCollected()
 
 bool GameManager::isBlueKeyCollected()
 {
-	return false;
+	return blueKeyCollected;
 }
 
 bool GameManager::isRedKeyCollected()
 {
-	return hardmode;
+	return redKeyCollected;
 }
 
 bool GameManager::allKeysCollected()
